@@ -1,0 +1,4 @@
+Bar.java:    DynamicTable createBar () {
+Bar.java:        DynamicTable tab = new DynamicTable(1);
+JSLLib.java://    DynamicTable tab2 = new DynamicTable(2);
+MenuItem.java:        DynamicTable tab = new DynamicTable(2);

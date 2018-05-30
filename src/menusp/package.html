@@ -1,0 +1,33 @@
+<html>
+<BODY BGCOLOR="white">
+This package contains contains all the classes that make up the menu system,
+and is used by all the menu applications.  The menu items are contained in 4 tables
+in the dba2 Oracle schema, namely DMN_MENU_ITEMS, DMN_PARAMETERS, DMN_PARAM_SELECT
+and DMN_SCRIPT_TYPE.  Any application that uses tables out of another Oracle schema,
+must have synonyms with the same names for these 4 tables.
+<p>All applications using this package should have the following:
+<ul>
+  <li>A args2 String array defined, e.g.
+<tt>String[] args2 = {
+   "papplication=EdmMenuP",
+   "powner=edm",
+    "pttitle=EDM",
+    "put=1",  // 1 == admin user, 2 == normal user
+    "pdate=27 May 2002"
+};</tt>
+    <ul>with
+      <li>papplication = the name of the application using the package</li>
+      <li>powner = the name of the Oracle schema</li>
+      <li>pttitle = the title that will be displayed in the top bar</li>
+      <li>put = the user type of the menu system</li>
+      <li>pdate = the date the application was last updated which appears in the bottom bar</li>
+    </ul>
+  </li>
+  <li>The Tables.userid and Tables.password variables must be set, e.g.<br>
+    menusp.Tables.userid = "edm";<br>
+    menusp.Tables.password = "ter91qes";</li>
+  <li>
+<ul>
+
+</BODY>
+</html>

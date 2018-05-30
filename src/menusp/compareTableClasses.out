@@ -1,0 +1,516 @@
+Comparing files MnuMenuItems.java and TABLECLASSES040203\MNUMENUITEMS.JAVA
+***** MnuMenuItems.java
+   10:   *
+   11:   * @author 040203 - SIT Group
+   12:   * @version
+   13:   * 040203 - GenTableClassB class - create class<br>
+   14:   */
+***** TABLECLASSES040203\MNUMENUITEMS.JAVA
+   10:   *
+   11:   * @author 040130 - SIT Group
+   12:   * @version
+   13:   * 020528 - Ursula von St Ange - now uses second constructor in Tables
+   14:   *                               where one can specify the userid/password
+   15:   *                               They are set in the calling application.<br>
+   16:   * 040130 - GenTableClassB class - create class<br>
+   17:   */
+*****
+
+***** MnuMenuItems.java
+   85:      /** The min-max constants for all numerics */
+   86:      public static final int       CODE_MN = INTMIN;
+   87:      public static final int       CODE_MX = INTMAX;
+   88:      public static final int       SEQUENCE_NUMBER_MN = INTMIN;
+   89:      public static final int       SEQUENCE_NUMBER_MX = INTMAX;
+   90:      public static final int       CHILD_OF_MN = INTMIN;
+   91:      public static final int       CHILD_OF_MX = INTMAX;
+   92:      public static final int       MENU_LEVEL_MN = INTMIN;
+   93:      public static final int       MENU_LEVEL_MX = INTMAX;
+   94:      public static final int       SCRIPT_TYPE_CODE_MN = INTMIN;
+   95:      public static final int       SCRIPT_TYPE_CODE_MX = INTMAX;
+   96:      public static final int       USER_TYPE_MN = INTMIN;
+   97:      public static final int       USER_TYPE_MX = INTMAX;
+   98:  
+***** TABLECLASSES040203\MNUMENUITEMS.JAVA
+   88:      /** The min-max constants for all numerics */
+   89:      public static final int   CODE_MN = INTNULL;
+   90:      public static final int   CODE_MX = INTMAX;
+   91:      public static final int   SEQUENCE_NUMBER_MN = INTNULL;
+   92:      public static final int   SEQUENCE_NUMBER_MX = INTMAX;
+   93:      public static final int   CHILD_OF_MN = INTNULL;
+   94:      public static final int   CHILD_OF_MX = INTMAX;
+   95:      public static final int   MENU_LEVEL_MN = INTNULL;
+   96:      public static final int   MENU_LEVEL_MX = INTMAX;
+   97:      public static final int   SCRIPT_TYPE_CODE_MN = INTNULL;
+   98:      public static final int   SCRIPT_TYPE_CODE_MX = INTMAX;
+   99:      public static final int   USER_TYPE_MN = INTNULL;
+  100:      public static final int   USER_TYPE_MX = INTMAX;
+  101:  
+*****
+
+***** MnuMenuItems.java
+  127:      public MnuMenuItems() {
+  128:          clearVars();
+***** TABLECLASSES040203\MNUMENUITEMS.JAVA
+  130:      public MnuMenuItems() {
+  131:          super("");
+  132:          clearVars();
+*****
+
+***** MnuMenuItems.java
+ 1218:       * are returned in an array of MnuMenuItems. e.g.<pre>
+ 1219:       * MnuMenuItems dmnMenuItems = new MnuMenuItems(<val1>);
+ 1220:       * MnuMenuItems dmnMenuItemsArray[] = dmnMenuItems.get();</pre>
+ 1221:       * will get the MnuMenuItems record where code = <val1>.
+***** TABLECLASSES040203\MNUMENUITEMS.JAVA
+ 1222:       * are returned in an array of MnuMenuItems. e.g.<pre>
+ 1223:       * MnuMenuItems MnuMenuItems = new MnuMenuItems(<val1>);
+ 1224:       * MnuMenuItems MnuMenuItemsArray[] = MnuMenuItems.get();</pre>
+ 1225:       * will get the MnuMenuItems record where code = <val1>.
+*****
+
+***** MnuMenuItems.java
+ 1231:       * e.g.<pre>
+ 1232:       * MnuMenuItems dmnMenuItemsArray[] =
+ 1233:       *     new MnuMenuItems().get(MnuMenuItems.CODE+"=<val1>");</pre>
+***** TABLECLASSES040203\MNUMENUITEMS.JAVA
+ 1235:       * e.g.<pre>
+ 1236:       * MnuMenuItems MnuMenuItemsArray[] =
+ 1237:       *     new MnuMenuItems().get(MnuMenuItems.CODE+"=<val1>");</pre>
+*****
+
+***** MnuMenuItems.java
+ 1245:       * <b>get(where)</b>, but an order is specified. e.g.<pre>
+ 1246:       * MnuMenuItems dmnMenuItemsArray[] =
+ 1247:       *     new MnuMenuItems().get("1=1",dmnMenuItems.CODE);</pre>
+ 1248:       * will get the all the MnuMenuItems records, and order them by code.
+***** TABLECLASSES040203\MNUMENUITEMS.JAVA
+ 1249:       * <b>get(where)</b>, but an order is specified. e.g.<pre>
+ 1250:       * MnuMenuItems MnuMenuItemsArray[] =
+ 1251:       *     new MnuMenuItems().get("1=1",MnuMenuItems.CODE);</pre>
+ 1252:       * will get the all the MnuMenuItems records, and order them by code.
+*****
+
+***** MnuMenuItems.java
+ 1264:       * String order = MnuMenuItems.CODE;
+ 1265:       * MnuMenuItems dmnMenuItemsArray[] =
+ 1266:       *     new MnuMenuItems().get(columns, where, order);</pre>
+***** TABLECLASSES040203\MNUMENUITEMS.JAVA
+ 1268:       * String order = MnuMenuItems.CODE;
+ 1269:       * MnuMenuItems MnuMenuItemsArray[] =
+ 1270:       *     new MnuMenuItems().get(columns, where, order);</pre>
+*****
+
+***** MnuMenuItems.java
+ 1403:       * Boolean success
+ 1404:       * MnuMenuItems dmnMenuItems = new MnuMenuItems();
+ 1405:       * success = dmnMenuItems.del(MnuMenuItems.CODE+"=<val1>");</pre>
+ 1406:       * will delete all records where code = <val1>.
+***** TABLECLASSES040203\MNUMENUITEMS.JAVA
+ 1407:       * Boolean success
+ 1408:       * MnuMenuItems MnuMenuItems = new MnuMenuItems();
+ 1409:       * success = MnuMenuItems.del(MnuMenuItems.CODE+"=<val1>");</pre>
+ 1410:       * will delete all records where code = <val1>.
+*****
+
+***** MnuMenuItems.java
+ 1432:       */
+ 1433:      public boolean upd(MnuMenuItems dmnMenuItems) {
+ 1434:          return db.update (TABLE, createColVals(dmnMenuItems), createWhere());
+ 1435:      } // method upd
+***** TABLECLASSES040203\MNUMENUITEMS.JAVA
+ 1436:       */
+ 1437:      public boolean upd(MnuMenuItems MnuMenuItems) {
+ 1438:          return db.update (TABLE, createColVals(MnuMenuItems), createWhere());
+ 1439:      } // method upd
+*****
+
+***** MnuMenuItems.java
+ 1452:       */
+ 1453:      public boolean upd(MnuMenuItems dmnMenuItems, String where) {
+ 1454:          return db.update (TABLE, createColVals(dmnMenuItems), where);
+ 1455:      } // method upd
+***** TABLECLASSES040203\MNUMENUITEMS.JAVA
+ 1456:       */
+ 1457:      public boolean upd(MnuMenuItems MnuMenuItems, String where) {
+ 1458:          return db.update (TABLE, createColVals(MnuMenuItems), where);
+ 1459:      } // method upd
+*****
+
+Comparing files MnuParameters.java and TABLECLASSES040203\MNUPARAMETERS.JAVA
+***** MnuParameters.java
+   10:   *
+   11:   * @author 040203 - SIT Group
+   12:   * @version
+   13:   * 040203 - GenTableClassB class - create class<br>
+   14:   */
+***** TABLECLASSES040203\MNUPARAMETERS.JAVA
+   10:   *
+   11:   * @author 040130 - SIT Group
+   12:   * @version
+   13:   * 020528 - Ursula von St Ange - now uses second constructor in Tables
+   14:   *                               where one can specify the userid/password
+   15:   *                               They are set in the calling application.<br>
+   16:   * 040130 - GenTableClassB class - create class<br>
+   17:   */
+*****
+
+***** MnuParameters.java
+  115:      /** The min-max constants for all numerics */
+  116:      public static final int       CODE_MN = INTMIN;
+  117:      public static final int       CODE_MX = INTMAX;
+  118:      public static final int       MENU_ITEM_CODE_MN = INTMIN;
+  119:      public static final int       MENU_ITEM_CODE_MX = INTMAX;
+  120:      public static final int       SEQUENCE_NUMBER_MN = INTMIN;
+  121:      public static final int       SEQUENCE_NUMBER_MX = INTMAX;
+  122:      public static final int       DATA_LENGTH_MN = INTMIN;
+  123:      public static final int       DATA_LENGTH_MX = INTMAX;
+  124:      public static final int       DATA_PRECISION_MN = INTMIN;
+  125:      public static final int       DATA_PRECISION_MX = INTMAX;
+  126:      public static final int       DATA_SCALE_MN = INTMIN;
+  127:      public static final int       DATA_SCALE_MX = INTMAX;
+  128:  
+***** TABLECLASSES040203\MNUPARAMETERS.JAVA
+  118:      /** The min-max constants for all numerics */
+  119:      public static final int   CODE_MN = INTNULL;
+  120:      public static final int   CODE_MX = INTMAX;
+  121:      public static final int   MENU_ITEM_CODE_MN = INTNULL;
+  122:      public static final int   MENU_ITEM_CODE_MX = INTMAX;
+  123:      public static final int   SEQUENCE_NUMBER_MN = INTNULL;
+  124:      public static final int   SEQUENCE_NUMBER_MX = INTMAX;
+  125:      public static final int   DATA_LENGTH_MN = INTNULL;
+  126:      public static final int   DATA_LENGTH_MX = INTMAX;
+  127:      public static final int   DATA_PRECISION_MN = INTNULL;
+  128:      public static final int   DATA_PRECISION_MX = INTMAX;
+  129:      public static final int   DATA_SCALE_MN = INTNULL;
+  130:      public static final int   DATA_SCALE_MX = INTMAX;
+  131:  
+*****
+
+***** MnuParameters.java
+  157:      public MnuParameters() {
+  158:          clearVars();
+***** TABLECLASSES040203\MNUPARAMETERS.JAVA
+  160:      public MnuParameters() {
+  161:          super("");
+  162:          clearVars();
+*****
+
+***** MnuParameters.java
+ 1668:       * are returned in an array of MnuParameters. e.g.<pre>
+ 1669:       * MnuParameters dmnParameters = new MnuParameters(<val1>);
+ 1670:       * MnuParameters dmnParametersArray[] = dmnParameters.get();</pre>
+ 1671:       * will get the MnuParameters record where code = <val1>.
+***** TABLECLASSES040203\MNUPARAMETERS.JAVA
+ 1672:       * are returned in an array of MnuParameters. e.g.<pre>
+ 1673:       * MnuParameters MnuParameters = new MnuParameters(<val1>);
+ 1674:       * MnuParameters MnuParametersArray[] = MnuParameters.get();</pre>
+ 1675:       * will get the MnuParameters record where code = <val1>.
+*****
+
+***** MnuParameters.java
+ 1681:       * e.g.<pre>
+ 1682:       * MnuParameters dmnParametersArray[] =
+ 1683:       *     new MnuParameters().get(MnuParameters.CODE+"=<val1>");</pre>
+***** TABLECLASSES040203\MNUPARAMETERS.JAVA
+ 1685:       * e.g.<pre>
+ 1686:       * MnuParameters MnuParametersArray[] =
+ 1687:       *     new MnuParameters().get(MnuParameters.CODE+"=<val1>");</pre>
+*****
+
+***** MnuParameters.java
+ 1695:       * <b>get(where)</b>, but an order is specified. e.g.<pre>
+ 1696:       * MnuParameters dmnParametersArray[] =
+ 1697:       *     new MnuParameters().get("1=1",dmnParameters.CODE);</pre>
+ 1698:       * will get the all the MnuParameters records, and order them by code.
+***** TABLECLASSES040203\MNUPARAMETERS.JAVA
+ 1699:       * <b>get(where)</b>, but an order is specified. e.g.<pre>
+ 1700:       * MnuParameters MnuParametersArray[] =
+ 1701:       *     new MnuParameters().get("1=1",MnuParameters.CODE);</pre>
+ 1702:       * will get the all the MnuParameters records, and order them by code.
+*****
+
+***** MnuParameters.java
+ 1714:       * String order = MnuParameters.CODE;
+ 1715:       * MnuParameters dmnParametersArray[] =
+ 1716:       *     new MnuParameters().get(columns, where, order);</pre>
+***** TABLECLASSES040203\MNUPARAMETERS.JAVA
+ 1718:       * String order = MnuParameters.CODE;
+ 1719:       * MnuParameters MnuParametersArray[] =
+ 1720:       *     new MnuParameters().get(columns, where, order);</pre>
+*****
+
+***** MnuParameters.java
+ 1889:       * Boolean success
+ 1890:       * MnuParameters dmnParameters = new MnuParameters();
+ 1891:       * success = dmnParameters.del(MnuParameters.CODE+"=<val1>");</pre>
+ 1892:       * will delete all records where code = <val1>.
+***** TABLECLASSES040203\MNUPARAMETERS.JAVA
+ 1893:       * Boolean success
+ 1894:       * MnuParameters MnuParameters = new MnuParameters();
+ 1895:       * success = MnuParameters.del(MnuParameters.CODE+"=<val1>");</pre>
+ 1896:       * will delete all records where code = <val1>.
+*****
+
+***** MnuParameters.java
+ 1918:       */
+ 1919:      public boolean upd(MnuParameters dmnParameters) {
+ 1920:          return db.update (TABLE, createColVals(dmnParameters), createWhere());
+ 1921:      } // method upd
+***** TABLECLASSES040203\MNUPARAMETERS.JAVA
+ 1922:       */
+ 1923:      public boolean upd(MnuParameters MnuParameters) {
+ 1924:          return db.update (TABLE, createColVals(MnuParameters), createWhere());
+ 1925:      } // method upd
+*****
+
+***** MnuParameters.java
+ 1938:       */
+ 1939:      public boolean upd(MnuParameters dmnParameters, String where) {
+ 1940:          return db.update (TABLE, createColVals(dmnParameters), where);
+ 1941:      } // method upd
+***** TABLECLASSES040203\MNUPARAMETERS.JAVA
+ 1942:       */
+ 1943:      public boolean upd(MnuParameters MnuParameters, String where) {
+ 1944:          return db.update (TABLE, createColVals(MnuParameters), where);
+ 1945:      } // method upd
+*****
+
+Comparing files MnuParamSelect.java and TABLECLASSES040203\MNUPARAMSELECT.JAVA
+***** MnuParamSelect.java
+   10:   *
+   11:   * @author 040203 - SIT Group
+   12:   * @version
+   13:   * 040203 - GenTableClassB class - create class<br>
+   14:   */
+***** TABLECLASSES040203\MNUPARAMSELECT.JAVA
+   10:   *
+   11:   * @author 040130 - SIT Group
+   12:   * @version
+   13:   * 020528 - Ursula von St Ange - now uses second constructor in Tables
+   14:   *                               where one can specify the userid/password
+   15:   *                               They are set in the calling application.<br>
+   16:   * 040130 - GenTableClassB class - create class<br>
+   17:   */
+*****
+
+***** MnuParamSelect.java
+   50:      /** The min-max constants for all numerics */
+   51:      public static final int       PARAMETER_CODE_MN = INTMIN;
+   52:      public static final int       PARAMETER_CODE_MX = INTMAX;
+   53:  
+***** TABLECLASSES040203\MNUPARAMSELECT.JAVA
+   53:      /** The min-max constants for all numerics */
+   54:      public static final int   PARAMETER_CODE_MN = INTNULL;
+   55:      public static final int   PARAMETER_CODE_MX = INTMAX;
+   56:  
+*****
+
+***** MnuParamSelect.java
+   67:      public MnuParamSelect() {
+   68:          clearVars();
+***** TABLECLASSES040203\MNUPARAMSELECT.JAVA
+   70:      public MnuParamSelect() {
+   71:          super("");
+   72:          clearVars();
+*****
+
+***** MnuParamSelect.java
+  422:       * are returned in an array of MnuParamSelect. e.g.<pre>
+  423:       * MnuParamSelect dmnParamSelect = new MnuParamSelect(<val1>);
+  424:       * MnuParamSelect dmnParamSelectArray[] = dmnParamSelect.get();</pre>
+  425:       * will get the MnuParamSelect record where parameterCode = <val1>.
+***** TABLECLASSES040203\MNUPARAMSELECT.JAVA
+  426:       * are returned in an array of MnuParamSelect. e.g.<pre>
+  427:       * MnuParamSelect MnuParamSelect = new MnuParamSelect(<val1>);
+  428:       * MnuParamSelect MnuParamSelectArray[] = MnuParamSelect.get();</pre>
+  429:       * will get the MnuParamSelect record where parameterCode = <val1>.
+*****
+
+***** MnuParamSelect.java
+  435:       * e.g.<pre>
+  436:       * MnuParamSelect dmnParamSelectArray[] =
+  437:       *     new MnuParamSelect().get(MnuParamSelect.PARAMETER_CODE+"=<val1>");</pre>
+***** TABLECLASSES040203\MNUPARAMSELECT.JAVA
+  439:       * e.g.<pre>
+  440:       * MnuParamSelect MnuParamSelectArray[] =
+  441:       *     new MnuParamSelect().get(MnuParamSelect.PARAMETER_CODE+"=<val1>");</pre>
+*****
+
+***** MnuParamSelect.java
+  449:       * <b>get(where)</b>, but an order is specified. e.g.<pre>
+  450:       * MnuParamSelect dmnParamSelectArray[] =
+  451:       *     new MnuParamSelect().get("1=1",dmnParamSelect.PARAMETER_CODE);</pre>
+  452:       * will get the all the MnuParamSelect records, and order them by parameterCode.
+***** TABLECLASSES040203\MNUPARAMSELECT.JAVA
+  453:       * <b>get(where)</b>, but an order is specified. e.g.<pre>
+  454:       * MnuParamSelect MnuParamSelectArray[] =
+  455:       *     new MnuParamSelect().get("1=1",MnuParamSelect.PARAMETER_CODE);</pre>
+  456:       * will get the all the MnuParamSelect records, and order them by parameterCode.
+*****
+
+***** MnuParamSelect.java
+  468:       * String order = MnuParamSelect.PARAMETER_CODE;
+  469:       * MnuParamSelect dmnParamSelectArray[] =
+  470:       *     new MnuParamSelect().get(columns, where, order);</pre>
+***** TABLECLASSES040203\MNUPARAMSELECT.JAVA
+  472:       * String order = MnuParamSelect.PARAMETER_CODE;
+  473:       * MnuParamSelect MnuParamSelectArray[] =
+  474:       *     new MnuParamSelect().get(columns, where, order);</pre>
+*****
+
+***** MnuParamSelect.java
+  565:       * Boolean success
+  566:       * MnuParamSelect dmnParamSelect = new MnuParamSelect();
+  567:       * success = dmnParamSelect.del(MnuParamSelect.PARAMETER_CODE+"=<val1>");</pre>
+  568:       * will delete all records where parameterCode = <val1>.
+***** TABLECLASSES040203\MNUPARAMSELECT.JAVA
+  569:       * Boolean success
+  570:       * MnuParamSelect MnuParamSelect = new MnuParamSelect();
+  571:       * success = MnuParamSelect.del(MnuParamSelect.PARAMETER_CODE+"=<val1>");</pre>
+  572:       * will delete all records where parameterCode = <val1>.
+*****
+
+***** MnuParamSelect.java
+  594:       */
+  595:      public boolean upd(MnuParamSelect dmnParamSelect) {
+  596:          return db.update (TABLE, createColVals(dmnParamSelect), createWhere());
+  597:      } // method upd
+***** TABLECLASSES040203\MNUPARAMSELECT.JAVA
+  598:       */
+  599:      public boolean upd(MnuParamSelect MnuParamSelect) {
+  600:          return db.update (TABLE, createColVals(MnuParamSelect), createWhere());
+  601:      } // method upd
+*****
+
+***** MnuParamSelect.java
+  614:       */
+  615:      public boolean upd(MnuParamSelect dmnParamSelect, String where) {
+  616:          return db.update (TABLE, createColVals(dmnParamSelect), where);
+  617:      } // method upd
+***** TABLECLASSES040203\MNUPARAMSELECT.JAVA
+  618:       */
+  619:      public boolean upd(MnuParamSelect MnuParamSelect, String where) {
+  620:          return db.update (TABLE, createColVals(MnuParamSelect), where);
+  621:      } // method upd
+*****
+
+Comparing files MnuScriptType.java and TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+***** MnuScriptType.java
+   10:   *
+   11:   * @author 040203 - SIT Group
+   12:   * @version
+   13:   * 040203 - GenTableClassB class - create class<br>
+   14:   */
+***** TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+   10:   *
+   11:   * @author 040130 - SIT Group
+   12:   * @version
+   13:   * 020528 - Ursula von St Ange - now uses second constructor in Tables
+   14:   *                               where one can specify the userid/password
+   15:   *                               They are set in the calling application.<br>
+   16:   * 040130 - GenTableClassB class - create class<br>
+   17:   */
+*****
+
+***** MnuScriptType.java
+   50:      /** The min-max constants for all numerics */
+   51:      public static final int       CODE_MN = INTMIN;
+   52:      public static final int       CODE_MX = INTMAX;
+   53:  
+***** TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+   53:      /** The min-max constants for all numerics */
+   54:      public static final int   CODE_MN = INTNULL;
+   55:      public static final int   CODE_MX = INTMAX;
+   56:  
+*****
+
+***** MnuScriptType.java
+   67:      public MnuScriptType() {
+   68:          clearVars();
+***** TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+   70:      public MnuScriptType() {
+   71:          super("");
+   72:          clearVars();
+*****
+
+***** MnuScriptType.java
+  433:       * are returned in an array of MnuScriptType. e.g.<pre>
+  434:       * MnuScriptType dmnScriptType = new MnuScriptType(<val1>);
+  435:       * MnuScriptType dmnScriptTypeArray[] = dmnScriptType.get();</pre>
+  436:       * will get the MnuScriptType record where code = <val1>.
+***** TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+  437:       * are returned in an array of MnuScriptType. e.g.<pre>
+  438:       * MnuScriptType MnuScriptType = new MnuScriptType(<val1>);
+  439:       * MnuScriptType MnuScriptTypeArray[] = MnuScriptType.get();</pre>
+  440:       * will get the MnuScriptType record where code = <val1>.
+*****
+
+***** MnuScriptType.java
+  446:       * e.g.<pre>
+  447:       * MnuScriptType dmnScriptTypeArray[] =
+  448:       *     new MnuScriptType().get(MnuScriptType.CODE+"=<val1>");</pre>
+***** TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+  450:       * e.g.<pre>
+  451:       * MnuScriptType MnuScriptTypeArray[] =
+  452:       *     new MnuScriptType().get(MnuScriptType.CODE+"=<val1>");</pre>
+*****
+
+***** MnuScriptType.java
+  460:       * <b>get(where)</b>, but an order is specified. e.g.<pre>
+  461:       * MnuScriptType dmnScriptTypeArray[] =
+  462:       *     new MnuScriptType().get("1=1",dmnScriptType.CODE);</pre>
+  463:       * will get the all the MnuScriptType records, and order them by code.
+***** TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+  464:       * <b>get(where)</b>, but an order is specified. e.g.<pre>
+  465:       * MnuScriptType MnuScriptTypeArray[] =
+  466:       *     new MnuScriptType().get("1=1",MnuScriptType.CODE);</pre>
+  467:       * will get the all the MnuScriptType records, and order them by code.
+*****
+
+***** MnuScriptType.java
+  479:       * String order = MnuScriptType.CODE;
+  480:       * MnuScriptType dmnScriptTypeArray[] =
+  481:       *     new MnuScriptType().get(columns, where, order);</pre>
+***** TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+  483:       * String order = MnuScriptType.CODE;
+  484:       * MnuScriptType MnuScriptTypeArray[] =
+  485:       *     new MnuScriptType().get(columns, where, order);</pre>
+*****
+
+***** MnuScriptType.java
+  576:       * Boolean success
+  577:       * MnuScriptType dmnScriptType = new MnuScriptType();
+  578:       * success = dmnScriptType.del(MnuScriptType.CODE+"=<val1>");</pre>
+  579:       * will delete all records where code = <val1>.
+***** TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+  580:       * Boolean success
+  581:       * MnuScriptType MnuScriptType = new MnuScriptType();
+  582:       * success = MnuScriptType.del(MnuScriptType.CODE+"=<val1>");</pre>
+  583:       * will delete all records where code = <val1>.
+*****
+
+***** MnuScriptType.java
+  605:       */
+  606:      public boolean upd(MnuScriptType dmnScriptType) {
+  607:          return db.update (TABLE, createColVals(dmnScriptType), createWhere());
+  608:      } // method upd
+***** TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+  609:       */
+  610:      public boolean upd(MnuScriptType MnuScriptType) {
+  611:          return db.update (TABLE, createColVals(MnuScriptType), createWhere());
+  612:      } // method upd
+*****
+
+***** MnuScriptType.java
+  625:       */
+  626:      public boolean upd(MnuScriptType dmnScriptType, String where) {
+  627:          return db.update (TABLE, createColVals(dmnScriptType), where);
+  628:      } // method upd
+***** TABLECLASSES040203\MNUSCRIPTTYPE.JAVA
+  629:       */
+  630:      public boolean upd(MnuScriptType MnuScriptType, String where) {
+  631:          return db.update (TABLE, createColVals(MnuScriptType), where);
+  632:      } // method upd
+*****
+

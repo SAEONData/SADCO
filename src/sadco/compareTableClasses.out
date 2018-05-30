@@ -1,0 +1,2607 @@
+Comparing files MrnStation.java and TABLECLASSES040324\MRNSTATION.JAVA
+***** MrnStation.java
+   10:   *
+   11:   * @author 040324 - SIT Group
+   12:   * @version
+   13:   * 040324 - GenTableClassB class - create class<br>
+   14:   */
+***** TABLECLASSES040324\MRNSTATION.JAVA
+   10:   *
+   11:   * @author 040203 - SIT Group
+   12:   * @version
+   13:   * 040203 - GenTableClassB class - create class<br>
+   14:   */
+*****
+
+***** MrnStation.java
+   59:      public static final String STATUS_CODE = "STATUS_CODE";
+   60:      /** The stnRef field name */
+   61:      public static final String STN_REF = "STN_REF";
+   62:      /** The notes field name */
+   63:      public static final String NOTES = "NOTES";
+   64:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+   59:      public static final String STATUS_CODE = "STATUS_CODE";
+   60:  
+*****
+
+***** MrnStation.java
+   84:      private int       statusCode;
+   85:      private String    stnRef;
+   86:      private String    notes;
+   87:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+   80:      private int       statusCode;
+   81:  
+*****
+
+***** MrnStation.java
+  105:      private int statusCodeError = ERROR_NORMAL;
+  106:      private int stnRefError     = ERROR_NORMAL;
+  107:      private int notesError      = ERROR_NORMAL;
+  108:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+   99:      private int statusCodeError = ERROR_NORMAL;
+  100:  
+*****
+
+***** MrnStation.java
+  126:      private String statusCodeErrorMessage = "";
+  127:      private String stnRefErrorMessage     = "";
+  128:      private String notesErrorMessage      = "";
+  129:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+  118:      private String statusCodeErrorMessage = "";
+  119:  
+*****
+
+***** MrnStation.java
+  231:       * @param statusCode  The statusCode (int)
+  232:       * @param stnRef      The stnRef     (String)
+  233:       * @param notes       The notes      (String)
+  234:       * @return A MrnStation object
+***** TABLECLASSES040324\MRNSTATION.JAVA
+  221:       * @param statusCode  The statusCode (int)
+  222:       * @return A MrnStation object
+*****
+
+***** MrnStation.java
+  252:              String         yearmon,
+  253:              int            statusCode,
+  254:              String         stnRef,
+  255:              String         notes) {
+  256:          this();
+***** TABLECLASSES040324\MRNSTATION.JAVA
+  240:              String         yearmon,
+  241:              int            statusCode) {
+  242:          this();
+*****
+
+***** MrnStation.java
+  273:          setStatusCode (statusCode);
+  274:          setStnRef     (stnRef    );
+  275:          setNotes      (notes     );
+  276:          if (dbg) System.out.println ("<br>in MrnStation constructor 3"); // debug
+***** TABLECLASSES040324\MRNSTATION.JAVA
+  259:          setStatusCode (statusCode);
+  260:          if (dbg) System.out.println ("<br>in MrnStation constructor 3"); // debug
+*****
+
+***** MrnStation.java
+  299:          setStatusCode (INTNULL  );
+  300:          setStnRef     (CHARNULL );
+  301:          setNotes      (CHARNULL );
+  302:      } // method clearVars
+***** TABLECLASSES040324\MRNSTATION.JAVA
+  283:          setStatusCode (INTNULL  );
+  284:      } // method clearVars
+*****
+
+***** MrnStation.java
+ 1228:  
+ 1229:      /**
+ 1230:       * Set the 'stnRef' class variable
+ 1231:       * @param  stnRef (String)
+ 1232:       */
+ 1233:      public int setStnRef(String stnRef) {
+ 1234:          try {
+ 1235:              this.stnRef = stnRef;
+ 1236:              if (this.stnRef != CHARNULL) {
+ 1237:                  this.stnRef = stripCRLF(this.stnRef.replace('\'','"'));
+ 1238:              }
+ 1239:              if (dbg) System.out.println ("<br>stnRef = " + this.stnRef);
+ 1240:          } catch (Exception e) {
+ 1241:              setStnRefError(CHARNULL, e, ERROR_SYSTEM);
+ 1242:          } // try
+ 1243:          return stnRefError;
+ 1244:      } // method setStnRef
+ 1245:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1210:  
+ 1211:      //=================//
+ 1212:      // All the getters //
+ 1213:      //=================//
+ 1214:  
+*****
+
+***** MrnStation.java
+ 1246:      /**
+ 1247:       * Called when an exception has occured
+ 1248:       * @param  stnRef (String)
+ 1249:       */
+ 1250:      private void setStnRefError (String stnRef, Exception e, int error) {
+ 1251:          this.stnRef = stnRef;
+ 1252:          stnRefErrorMessage = e.toString();
+ 1253:          stnRefError = error;
+ 1254:      } // method setStnRefError
+ 1255:  
+ 1256:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1215:      /**
+ 1216:       * Return the 'stationId' class variable
+ 1217:       * @return stationId (String)
+ 1218:       */
+ 1219:      public String getStationId() {
+ 1220:          return stationId;
+ 1221:      } // method getStationId
+ 1222:  
+*****
+
+***** MrnStation.java
+ 1257:      /**
+ 1258:       * Set the 'notes' class variable
+ 1259:       * @param  notes (String)
+ 1260:       */
+ 1261:      public int setNotes(String notes) {
+ 1262:          try {
+ 1263:              this.notes = notes;
+ 1264:              if (this.notes != CHARNULL) {
+ 1265:                  this.notes = stripCRLF(this.notes.replace('\'','"'));
+ 1266:              }
+ 1267:              if (dbg) System.out.println ("<br>notes = " + this.notes);
+ 1268:          } catch (Exception e) {
+ 1269:              setNotesError(CHARNULL, e, ERROR_SYSTEM);
+ 1270:          } // try
+ 1271:          return notesError;
+ 1272:      } // method setNotes
+ 1273:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1223:      /**
+ 1224:       * Return the 'stationId' class variable: if NULL returns ""
+ 1225:       * @param  s  Any String variable
+ 1226:       *  - used to differentiate between the 2 getStationId methods
+ 1227:       * @return stationId (String)
+ 1228:       */
+ 1229:      public String getStationId(String s) {
+ 1230:          return (stationId != CHARNULL ? stationId.replace('"','\'') : "");
+ 1231:      } // method getStationId
+ 1232:  
+ 1233:  
+*****
+
+***** MrnStation.java
+ 1274:      /**
+ 1275:       * Called when an exception has occured
+ 1276:       * @param  notes (String)
+ 1277:       */
+ 1278:      private void setNotesError (String notes, Exception e, int error) {
+ 1279:          this.notes = notes;
+ 1280:          notesErrorMessage = e.toString();
+ 1281:          notesError = error;
+ 1282:      } // method setNotesError
+ 1283:  
+ 1284:  
+ 1285:      //=================//
+ 1286:      // All the getters //
+ 1287:      //=================//
+ 1288:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1234:      /**
+ 1235:       * Return the 'surveyId' class variable
+ 1236:       * @return surveyId (String)
+ 1237:       */
+ 1238:      public String getSurveyId() {
+ 1239:          return surveyId;
+ 1240:      } // method getSurveyId
+ 1241:  
+*****
+
+***** MrnStation.java
+ 1289:      /**
+ 1290:       * Return the 'stationId' class variable
+ 1291:       * @return stationId (String)
+ 1292:       */
+ 1293:      public String getStationId() {
+ 1294:          return stationId;
+ 1295:      } // method getStationId
+ 1296:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1242:      /**
+ 1243:       * Return the 'surveyId' class variable: if NULL returns ""
+ 1244:       * @param  s  Any String variable
+ 1245:       *  - used to differentiate between the 2 getSurveyId methods
+ 1246:       * @return surveyId (String)
+ 1247:       */
+ 1248:      public String getSurveyId(String s) {
+ 1249:          return (surveyId != CHARNULL ? surveyId.replace('"','\'') : "");
+ 1250:      } // method getSurveyId
+ 1251:  
+ 1252:  
+*****
+
+***** MrnStation.java
+ 1297:      /**
+ 1298:       * Return the 'stationId' class variable: if NULL returns ""
+ 1299:       * @param  s  Any String variable
+ 1300:       *  - used to differentiate between the 2 getStationId methods
+ 1301:       * @return stationId (String)
+ 1302:       */
+ 1303:      public String getStationId(String s) {
+ 1304:          return (stationId != CHARNULL ? stationId.replace('"','\'') : "");
+ 1305:      } // method getStationId
+ 1306:  
+ 1307:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1253:      /**
+ 1254:       * Return the 'latitude' class variable
+ 1255:       * @return latitude (float)
+ 1256:       */
+ 1257:      public float getLatitude() {
+ 1258:          return latitude;
+ 1259:      } // method getLatitude
+ 1260:  
+*****
+
+***** MrnStation.java
+ 1308:      /**
+ 1309:       * Return the 'surveyId' class variable
+ 1310:       * @return surveyId (String)
+ 1311:       */
+ 1312:      public String getSurveyId() {
+ 1313:          return surveyId;
+ 1314:      } // method getSurveyId
+ 1315:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1261:      /**
+ 1262:       * Return the 'latitude' class variable as a String
+ 1263:       * @param  s  Any String variable
+ 1264:       *  - used to differentiate between the 2 getLatitude methods
+ 1265:       * @return latitude (String)
+ 1266:       */
+ 1267:      public String getLatitude(String s) {
+ 1268:          return ((latitude != FLOATNULL) ? new Float(latitude).toString() : "");
+ 1269:      } // method getLatitude
+ 1270:  
+ 1271:  
+*****
+
+***** MrnStation.java
+ 1316:      /**
+ 1317:       * Return the 'surveyId' class variable: if NULL returns ""
+ 1318:       * @param  s  Any String variable
+ 1319:       *  - used to differentiate between the 2 getSurveyId methods
+ 1320:       * @return surveyId (String)
+ 1321:       */
+ 1322:      public String getSurveyId(String s) {
+ 1323:          return (surveyId != CHARNULL ? surveyId.replace('"','\'') : "");
+ 1324:      } // method getSurveyId
+ 1325:  
+ 1326:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1272:      /**
+ 1273:       * Return the 'longitude' class variable
+ 1274:       * @return longitude (float)
+ 1275:       */
+ 1276:      public float getLongitude() {
+ 1277:          return longitude;
+ 1278:      } // method getLongitude
+ 1279:  
+*****
+
+***** MrnStation.java
+ 1327:      /**
+ 1328:       * Return the 'latitude' class variable
+ 1329:       * @return latitude (float)
+ 1330:       */
+ 1331:      public float getLatitude() {
+ 1332:          return latitude;
+ 1333:      } // method getLatitude
+ 1334:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1280:      /**
+ 1281:       * Return the 'longitude' class variable as a String
+ 1282:       * @param  s  Any String variable
+ 1283:       *  - used to differentiate between the 2 getLongitude methods
+ 1284:       * @return longitude (String)
+ 1285:       */
+ 1286:      public String getLongitude(String s) {
+ 1287:          return ((longitude != FLOATNULL) ? new Float(longitude).toString() : "");
+ 1288:      } // method getLongitude
+ 1289:  
+ 1290:  
+*****
+
+***** MrnStation.java
+ 1335:      /**
+ 1336:       * Return the 'latitude' class variable as a String
+ 1337:       * @param  s  Any String variable
+ 1338:       *  - used to differentiate between the 2 getLatitude methods
+ 1339:       * @return latitude (String)
+ 1340:       */
+ 1341:      public String getLatitude(String s) {
+ 1342:          return ((latitude != FLOATNULL) ? new Float(latitude).toString() : "");
+ 1343:      } // method getLatitude
+ 1344:  
+ 1345:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1291:      /**
+ 1292:       * Return the 'dateStart' class variable
+ 1293:       * @return dateStart (Timestamp)
+ 1294:       */
+ 1295:      public Timestamp getDateStart() {
+ 1296:          return dateStart;
+ 1297:      } // method getDateStart
+ 1298:  
+*****
+
+***** MrnStation.java
+ 1346:      /**
+ 1347:       * Return the 'longitude' class variable
+ 1348:       * @return longitude (float)
+ 1349:       */
+ 1350:      public float getLongitude() {
+ 1351:          return longitude;
+ 1352:      } // method getLongitude
+ 1353:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1299:      /**
+ 1300:       * Return the 'dateStart' class variable: if NULL returns ""
+ 1301:       * @param  s  Any String variable
+ 1302:       *  - used to differentiate between the 2 getDateStart methods
+ 1303:       * @return dateStart (String)
+ 1304:       */
+ 1305:      public String getDateStart(String s) {
+ 1306:          if (dateStart.equals(DATENULL)) {
+ 1307:              return ("");
+ 1308:          } else {
+ 1309:              String dateStartStr = dateStart.toString();
+ 1310:              return dateStartStr.substring(0,dateStartStr.indexOf('.'));
+ 1311:          } // if
+ 1312:      } // method getDateStart
+ 1313:  
+ 1314:  
+*****
+
+***** MrnStation.java
+ 1354:      /**
+ 1355:       * Return the 'longitude' class variable as a String
+ 1356:       * @param  s  Any String variable
+ 1357:       *  - used to differentiate between the 2 getLongitude methods
+ 1358:       * @return longitude (String)
+ 1359:       */
+ 1360:      public String getLongitude(String s) {
+ 1361:          return ((longitude != FLOATNULL) ? new Float(longitude).toString() : "");
+ 1362:      } // method getLongitude
+ 1363:  
+ 1364:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1315:      /**
+ 1316:       * Return the 'dateEnd' class variable
+ 1317:       * @return dateEnd (Timestamp)
+ 1318:       */
+ 1319:      public Timestamp getDateEnd() {
+ 1320:          return dateEnd;
+ 1321:      } // method getDateEnd
+ 1322:  
+*****
+
+***** MrnStation.java
+ 1365:      /**
+ 1366:       * Return the 'dateStart' class variable
+ 1367:       * @return dateStart (Timestamp)
+ 1368:       */
+ 1369:      public Timestamp getDateStart() {
+ 1370:          return dateStart;
+ 1371:      } // method getDateStart
+ 1372:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1323:      /**
+ 1324:       * Return the 'dateEnd' class variable: if NULL returns ""
+ 1325:       * @param  s  Any String variable
+ 1326:       *  - used to differentiate between the 2 getDateEnd methods
+ 1327:       * @return dateEnd (String)
+ 1328:       */
+ 1329:      public String getDateEnd(String s) {
+ 1330:          if (dateEnd.equals(DATENULL)) {
+ 1331:              return ("");
+ 1332:          } else {
+ 1333:              String dateEndStr = dateEnd.toString();
+ 1334:              return dateEndStr.substring(0,dateEndStr.indexOf('.'));
+ 1335:          } // if
+ 1336:      } // method getDateEnd
+ 1337:  
+ 1338:  
+*****
+
+***** MrnStation.java
+ 1373:      /**
+ 1374:       * Return the 'dateStart' class variable: if NULL returns ""
+ 1375:       * @param  s  Any String variable
+ 1376:       *  - used to differentiate between the 2 getDateStart methods
+ 1377:       * @return dateStart (String)
+ 1378:       */
+ 1379:      public String getDateStart(String s) {
+ 1380:          if (dateStart.equals(DATENULL)) {
+ 1381:              return ("");
+ 1382:          } else {
+ 1383:              String dateStartStr = dateStart.toString();
+ 1384:              return dateStartStr.substring(0,dateStartStr.indexOf('.'));
+ 1385:          } // if
+ 1386:      } // method getDateStart
+ 1387:  
+ 1388:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1339:      /**
+ 1340:       * Return the 'daynull' class variable
+ 1341:       * @return daynull (String)
+ 1342:       */
+ 1343:      public String getDaynull() {
+ 1344:          return daynull;
+ 1345:      } // method getDaynull
+ 1346:  
+*****
+
+***** MrnStation.java
+ 1389:      /**
+ 1390:       * Return the 'dateEnd' class variable
+ 1391:       * @return dateEnd (Timestamp)
+ 1392:       */
+ 1393:      public Timestamp getDateEnd() {
+ 1394:          return dateEnd;
+ 1395:      } // method getDateEnd
+ 1396:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1347:      /**
+ 1348:       * Return the 'daynull' class variable: if NULL returns ""
+ 1349:       * @param  s  Any String variable
+ 1350:       *  - used to differentiate between the 2 getDaynull methods
+ 1351:       * @return daynull (String)
+ 1352:       */
+ 1353:      public String getDaynull(String s) {
+ 1354:          return (daynull != CHARNULL ? daynull.replace('"','\'') : "");
+ 1355:      } // method getDaynull
+ 1356:  
+ 1357:  
+*****
+
+***** MrnStation.java
+ 1397:      /**
+ 1398:       * Return the 'dateEnd' class variable: if NULL returns ""
+ 1399:       * @param  s  Any String variable
+ 1400:       *  - used to differentiate between the 2 getDateEnd methods
+ 1401:       * @return dateEnd (String)
+ 1402:       */
+ 1403:      public String getDateEnd(String s) {
+ 1404:          if (dateEnd.equals(DATENULL)) {
+ 1405:              return ("");
+ 1406:          } else {
+ 1407:              String dateEndStr = dateEnd.toString();
+ 1408:              return dateEndStr.substring(0,dateEndStr.indexOf('.'));
+ 1409:          } // if
+ 1410:      } // method getDateEnd
+ 1411:  
+ 1412:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1358:      /**
+ 1359:       * Return the 'stnnam' class variable
+ 1360:       * @return stnnam (String)
+ 1361:       */
+ 1362:      public String getStnnam() {
+ 1363:          return stnnam;
+ 1364:      } // method getStnnam
+ 1365:  
+*****
+
+***** MrnStation.java
+ 1413:      /**
+ 1414:       * Return the 'daynull' class variable
+ 1415:       * @return daynull (String)
+ 1416:       */
+ 1417:      public String getDaynull() {
+ 1418:          return daynull;
+ 1419:      } // method getDaynull
+ 1420:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1366:      /**
+ 1367:       * Return the 'stnnam' class variable: if NULL returns ""
+ 1368:       * @param  s  Any String variable
+ 1369:       *  - used to differentiate between the 2 getStnnam methods
+ 1370:       * @return stnnam (String)
+ 1371:       */
+ 1372:      public String getStnnam(String s) {
+ 1373:          return (stnnam != CHARNULL ? stnnam.replace('"','\'') : "");
+ 1374:      } // method getStnnam
+ 1375:  
+ 1376:  
+*****
+
+***** MrnStation.java
+ 1421:      /**
+ 1422:       * Return the 'daynull' class variable: if NULL returns ""
+ 1423:       * @param  s  Any String variable
+ 1424:       *  - used to differentiate between the 2 getDaynull methods
+ 1425:       * @return daynull (String)
+ 1426:       */
+ 1427:      public String getDaynull(String s) {
+ 1428:          return (daynull != CHARNULL ? daynull.replace('"','\'') : "");
+ 1429:      } // method getDaynull
+ 1430:  
+ 1431:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1377:      /**
+ 1378:       * Return the 'stndep' class variable
+ 1379:       * @return stndep (float)
+ 1380:       */
+ 1381:      public float getStndep() {
+ 1382:          return stndep;
+ 1383:      } // method getStndep
+ 1384:  
+*****
+
+***** MrnStation.java
+ 1432:      /**
+ 1433:       * Return the 'stnnam' class variable
+ 1434:       * @return stnnam (String)
+ 1435:       */
+ 1436:      public String getStnnam() {
+ 1437:          return stnnam;
+ 1438:      } // method getStnnam
+ 1439:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1385:      /**
+ 1386:       * Return the 'stndep' class variable as a String
+ 1387:       * @param  s  Any String variable
+ 1388:       *  - used to differentiate between the 2 getStndep methods
+ 1389:       * @return stndep (String)
+ 1390:       */
+ 1391:      public String getStndep(String s) {
+ 1392:          return ((stndep != FLOATNULL) ? new Float(stndep).toString() : "");
+ 1393:      } // method getStndep
+ 1394:  
+ 1395:  
+*****
+
+***** MrnStation.java
+ 1440:      /**
+ 1441:       * Return the 'stnnam' class variable: if NULL returns ""
+ 1442:       * @param  s  Any String variable
+ 1443:       *  - used to differentiate between the 2 getStnnam methods
+ 1444:       * @return stnnam (String)
+ 1445:       */
+ 1446:      public String getStnnam(String s) {
+ 1447:          return (stnnam != CHARNULL ? stnnam.replace('"','\'') : "");
+ 1448:      } // method getStnnam
+ 1449:  
+ 1450:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1396:      /**
+ 1397:       * Return the 'offshd' class variable
+ 1398:       * @return offshd (float)
+ 1399:       */
+ 1400:      public float getOffshd() {
+ 1401:          return offshd;
+ 1402:      } // method getOffshd
+ 1403:  
+*****
+
+***** MrnStation.java
+ 1451:      /**
+ 1452:       * Return the 'stndep' class variable
+ 1453:       * @return stndep (float)
+ 1454:       */
+ 1455:      public float getStndep() {
+ 1456:          return stndep;
+ 1457:      } // method getStndep
+ 1458:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1404:      /**
+ 1405:       * Return the 'offshd' class variable as a String
+ 1406:       * @param  s  Any String variable
+ 1407:       *  - used to differentiate between the 2 getOffshd methods
+ 1408:       * @return offshd (String)
+ 1409:       */
+ 1410:      public String getOffshd(String s) {
+ 1411:          return ((offshd != FLOATNULL) ? new Float(offshd).toString() : "");
+ 1412:      } // method getOffshd
+ 1413:  
+ 1414:  
+*****
+
+***** MrnStation.java
+ 1459:      /**
+ 1460:       * Return the 'stndep' class variable as a String
+ 1461:       * @param  s  Any String variable
+ 1462:       *  - used to differentiate between the 2 getStndep methods
+ 1463:       * @return stndep (String)
+ 1464:       */
+ 1465:      public String getStndep(String s) {
+ 1466:          return ((stndep != FLOATNULL) ? new Float(stndep).toString() : "");
+ 1467:      } // method getStndep
+ 1468:  
+ 1469:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1415:      /**
+ 1416:       * Return the 'passkey' class variable
+ 1417:       * @return passkey (String)
+ 1418:       */
+ 1419:      public String getPasskey() {
+ 1420:          return passkey;
+ 1421:      } // method getPasskey
+ 1422:  
+*****
+
+***** MrnStation.java
+ 1470:      /**
+ 1471:       * Return the 'offshd' class variable
+ 1472:       * @return offshd (float)
+ 1473:       */
+ 1474:      public float getOffshd() {
+ 1475:          return offshd;
+ 1476:      } // method getOffshd
+ 1477:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1423:      /**
+ 1424:       * Return the 'passkey' class variable: if NULL returns ""
+ 1425:       * @param  s  Any String variable
+ 1426:       *  - used to differentiate between the 2 getPasskey methods
+ 1427:       * @return passkey (String)
+ 1428:       */
+ 1429:      public String getPasskey(String s) {
+ 1430:          return (passkey != CHARNULL ? passkey.replace('"','\'') : "");
+ 1431:      } // method getPasskey
+ 1432:  
+ 1433:  
+*****
+
+***** MrnStation.java
+ 1478:      /**
+ 1479:       * Return the 'offshd' class variable as a String
+ 1480:       * @param  s  Any String variable
+ 1481:       *  - used to differentiate between the 2 getOffshd methods
+ 1482:       * @return offshd (String)
+ 1483:       */
+ 1484:      public String getOffshd(String s) {
+ 1485:          return ((offshd != FLOATNULL) ? new Float(offshd).toString() : "");
+ 1486:      } // method getOffshd
+ 1487:  
+ 1488:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1434:      /**
+ 1435:       * Return the 'dupflag' class variable
+ 1436:       * @return dupflag (String)
+ 1437:       */
+ 1438:      public String getDupflag() {
+ 1439:          return dupflag;
+ 1440:      } // method getDupflag
+ 1441:  
+*****
+
+***** MrnStation.java
+ 1489:      /**
+ 1490:       * Return the 'passkey' class variable
+ 1491:       * @return passkey (String)
+ 1492:       */
+ 1493:      public String getPasskey() {
+ 1494:          return passkey;
+ 1495:      } // method getPasskey
+ 1496:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1442:      /**
+ 1443:       * Return the 'dupflag' class variable: if NULL returns ""
+ 1444:       * @param  s  Any String variable
+ 1445:       *  - used to differentiate between the 2 getDupflag methods
+ 1446:       * @return dupflag (String)
+ 1447:       */
+ 1448:      public String getDupflag(String s) {
+ 1449:          return (dupflag != CHARNULL ? dupflag.replace('"','\'') : "");
+ 1450:      } // method getDupflag
+ 1451:  
+ 1452:  
+*****
+
+***** MrnStation.java
+ 1497:      /**
+ 1498:       * Return the 'passkey' class variable: if NULL returns ""
+ 1499:       * @param  s  Any String variable
+ 1500:       *  - used to differentiate between the 2 getPasskey methods
+ 1501:       * @return passkey (String)
+ 1502:       */
+ 1503:      public String getPasskey(String s) {
+ 1504:          return (passkey != CHARNULL ? passkey.replace('"','\'') : "");
+ 1505:      } // method getPasskey
+ 1506:  
+ 1507:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1453:      /**
+ 1454:       * Return the 'maxSpldep' class variable
+ 1455:       * @return maxSpldep (float)
+ 1456:       */
+ 1457:      public float getMaxSpldep() {
+ 1458:          return maxSpldep;
+ 1459:      } // method getMaxSpldep
+ 1460:  
+*****
+
+***** MrnStation.java
+ 1508:      /**
+ 1509:       * Return the 'dupflag' class variable
+ 1510:       * @return dupflag (String)
+ 1511:       */
+ 1512:      public String getDupflag() {
+ 1513:          return dupflag;
+ 1514:      } // method getDupflag
+ 1515:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1461:      /**
+ 1462:       * Return the 'maxSpldep' class variable as a String
+ 1463:       * @param  s  Any String variable
+ 1464:       *  - used to differentiate between the 2 getMaxSpldep methods
+ 1465:       * @return maxSpldep (String)
+ 1466:       */
+ 1467:      public String getMaxSpldep(String s) {
+ 1468:          return ((maxSpldep != FLOATNULL) ? new Float(maxSpldep).toString() : "");
+ 1469:      } // method getMaxSpldep
+ 1470:  
+ 1471:  
+*****
+
+***** MrnStation.java
+ 1516:      /**
+ 1517:       * Return the 'dupflag' class variable: if NULL returns ""
+ 1518:       * @param  s  Any String variable
+ 1519:       *  - used to differentiate between the 2 getDupflag methods
+ 1520:       * @return dupflag (String)
+ 1521:       */
+ 1522:      public String getDupflag(String s) {
+ 1523:          return (dupflag != CHARNULL ? dupflag.replace('"','\'') : "");
+ 1524:      } // method getDupflag
+ 1525:  
+ 1526:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1472:      /**
+ 1473:       * Return the 'lat' class variable
+ 1474:       * @return lat (int)
+ 1475:       */
+ 1476:      public int getLat() {
+ 1477:          return lat;
+ 1478:      } // method getLat
+ 1479:  
+*****
+
+***** MrnStation.java
+ 1527:      /**
+ 1528:       * Return the 'maxSpldep' class variable
+ 1529:       * @return maxSpldep (float)
+ 1530:       */
+ 1531:      public float getMaxSpldep() {
+ 1532:          return maxSpldep;
+ 1533:      } // method getMaxSpldep
+ 1534:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1480:      /**
+ 1481:       * Return the 'lat' class variable as a String
+ 1482:       * @param  s  Any String variable
+ 1483:       *  - used to differentiate between the 2 getLat methods
+ 1484:       * @return lat (String)
+ 1485:       */
+ 1486:      public String getLat(String s) {
+ 1487:          return ((lat != INTNULL) ? new Integer(lat).toString() : "");
+ 1488:      } // method getLat
+ 1489:  
+ 1490:  
+*****
+
+***** MrnStation.java
+ 1535:      /**
+ 1536:       * Return the 'maxSpldep' class variable as a String
+ 1537:       * @param  s  Any String variable
+ 1538:       *  - used to differentiate between the 2 getMaxSpldep methods
+ 1539:       * @return maxSpldep (String)
+ 1540:       */
+ 1541:      public String getMaxSpldep(String s) {
+ 1542:          return ((maxSpldep != FLOATNULL) ? new Float(maxSpldep).toString() : "");
+ 1543:      } // method getMaxSpldep
+ 1544:  
+ 1545:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1491:      /**
+ 1492:       * Return the 'lon' class variable
+ 1493:       * @return lon (int)
+ 1494:       */
+ 1495:      public int getLon() {
+ 1496:          return lon;
+ 1497:      } // method getLon
+ 1498:  
+*****
+
+***** MrnStation.java
+ 1546:      /**
+ 1547:       * Return the 'lat' class variable
+ 1548:       * @return lat (int)
+ 1549:       */
+ 1550:      public int getLat() {
+ 1551:          return lat;
+ 1552:      } // method getLat
+ 1553:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1499:      /**
+ 1500:       * Return the 'lon' class variable as a String
+ 1501:       * @param  s  Any String variable
+ 1502:       *  - used to differentiate between the 2 getLon methods
+ 1503:       * @return lon (String)
+ 1504:       */
+ 1505:      public String getLon(String s) {
+ 1506:          return ((lon != INTNULL) ? new Integer(lon).toString() : "");
+ 1507:      } // method getLon
+ 1508:  
+ 1509:  
+*****
+
+***** MrnStation.java
+ 1554:      /**
+ 1555:       * Return the 'lat' class variable as a String
+ 1556:       * @param  s  Any String variable
+ 1557:       *  - used to differentiate between the 2 getLat methods
+ 1558:       * @return lat (String)
+ 1559:       */
+ 1560:      public String getLat(String s) {
+ 1561:          return ((lat != INTNULL) ? new Integer(lat).toString() : "");
+ 1562:      } // method getLat
+ 1563:  
+ 1564:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1510:      /**
+ 1511:       * Return the 'yearmon' class variable
+ 1512:       * @return yearmon (String)
+ 1513:       */
+ 1514:      public String getYearmon() {
+ 1515:          return yearmon;
+ 1516:      } // method getYearmon
+ 1517:  
+*****
+
+***** MrnStation.java
+ 1565:      /**
+ 1566:       * Return the 'lon' class variable
+ 1567:       * @return lon (int)
+ 1568:       */
+ 1569:      public int getLon() {
+ 1570:          return lon;
+ 1571:      } // method getLon
+ 1572:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1518:      /**
+ 1519:       * Return the 'yearmon' class variable: if NULL returns ""
+ 1520:       * @param  s  Any String variable
+ 1521:       *  - used to differentiate between the 2 getYearmon methods
+ 1522:       * @return yearmon (String)
+ 1523:       */
+ 1524:      public String getYearmon(String s) {
+ 1525:          return (yearmon != CHARNULL ? yearmon.replace('"','\'') : "");
+ 1526:      } // method getYearmon
+ 1527:  
+ 1528:  
+*****
+
+***** MrnStation.java
+ 1573:      /**
+ 1574:       * Return the 'lon' class variable as a String
+ 1575:       * @param  s  Any String variable
+ 1576:       *  - used to differentiate between the 2 getLon methods
+ 1577:       * @return lon (String)
+ 1578:       */
+ 1579:      public String getLon(String s) {
+ 1580:          return ((lon != INTNULL) ? new Integer(lon).toString() : "");
+ 1581:      } // method getLon
+ 1582:  
+ 1583:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1529:      /**
+ 1530:       * Return the 'statusCode' class variable
+ 1531:       * @return statusCode (int)
+ 1532:       */
+ 1533:      public int getStatusCode() {
+ 1534:          return statusCode;
+ 1535:      } // method getStatusCode
+ 1536:  
+*****
+
+***** MrnStation.java
+ 1584:      /**
+ 1585:       * Return the 'yearmon' class variable
+ 1586:       * @return yearmon (String)
+ 1587:       */
+ 1588:      public String getYearmon() {
+ 1589:          return yearmon;
+ 1590:      } // method getYearmon
+ 1591:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1537:      /**
+ 1538:       * Return the 'statusCode' class variable as a String
+ 1539:       * @param  s  Any String variable
+ 1540:       *  - used to differentiate between the 2 getStatusCode methods
+ 1541:       * @return statusCode (String)
+ 1542:       */
+ 1543:      public String getStatusCode(String s) {
+ 1544:          return ((statusCode != INTNULL) ? new Integer(statusCode).toString() : "");
+ 1545:      } // method getStatusCode
+ 1546:  
+ 1547:  
+*****
+
+***** MrnStation.java
+ 1592:      /**
+ 1593:       * Return the 'yearmon' class variable: if NULL returns ""
+ 1594:       * @param  s  Any String variable
+ 1595:       *  - used to differentiate between the 2 getYearmon methods
+ 1596:       * @return yearmon (String)
+ 1597:       */
+ 1598:      public String getYearmon(String s) {
+ 1599:          return (yearmon != CHARNULL ? yearmon.replace('"','\'') : "");
+ 1600:      } // method getYearmon
+ 1601:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1548:      /**
+ 1549:       * Gets the number of records in the table
+ 1550:       * @return number of records (int)
+ 1551:       */
+ 1552:      public int getRecCnt () {
+ 1553:          return (getRecCnt("1=1"));
+ 1554:      } // method getRecCnt
+ 1555:  
+*****
+
+***** MrnStation.java
+ 1603:      /**
+ 1604:       * Return the 'statusCode' class variable
+ 1605:       * @return statusCode (int)
+ 1606:       */
+ 1607:      public int getStatusCode() {
+ 1608:          return statusCode;
+ 1609:      } // method getStatusCode
+ 1610:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1557:      /**
+ 1558:       * Gets the number of records in the table
+ 1559:       * @param  where  The where clause (String)
+ 1560:       * @return number of records (int)
+ 1561:       */
+ 1562:      public int getRecCnt (String where) {
+ 1563:          Vector result = db.select ("count(*)",TABLE, where);
+ 1564:          Vector row = (Vector) result.elementAt(0);
+ 1565:          return (new Integer((String) row.elementAt(0)).intValue());
+ 1566:      } // method getRecCnt
+ 1567:  
+ 1568:  
+ 1569:      //=========================//
+ 1570:      // The isNullRecord method //
+ 1571:      //=========================//
+ 1572:  
+*****
+
+***** MrnStation.java
+ 1611:      /**
+ 1612:       * Return the 'statusCode' class variable as a String
+ 1613:       * @param  s  Any String variable
+ 1614:       *  - used to differentiate between the 2 getStatusCode methods
+ 1615:       * @return statusCode (String)
+ 1616:       */
+ 1617:      public String getStatusCode(String s) {
+ 1618:          return ((statusCode != INTNULL) ? new Integer(statusCode).toString() : "");
+ 1619:      } // method getStatusCode
+ 1620:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1573:      /**
+ 1574:       * Checks whether all the instance variables are NULL
+ 1575:       * @return true/false (boolean)
+ 1576:       */
+ 1577:      public boolean isNullRecord () {
+ 1578:          if ((stationId == CHARNULL) &&
+ 1579:              (surveyId == CHARNULL) &&
+ 1580:              (latitude == FLOATNULL) &&
+ 1581:              (longitude == FLOATNULL) &&
+ 1582:              (dateStart.equals(DATENULL)) &&
+ 1583:              (dateEnd.equals(DATENULL)) &&
+ 1584:              (daynull == CHARNULL) &&
+ 1585:              (stnnam == CHARNULL) &&
+ 1586:              (stndep == FLOATNULL) &&
+ 1587:              (offshd == FLOATNULL) &&
+ 1588:              (passkey == CHARNULL) &&
+ 1589:              (dupflag == CHARNULL) &&
+ 1590:              (maxSpldep == FLOATNULL) &&
+ 1591:              (lat == INTNULL) &&
+ 1592:              (lon == INTNULL) &&
+ 1593:              (yearmon == CHARNULL) &&
+ 1594:              (statusCode == INTNULL)) {
+ 1595:              return true;
+ 1596:          } else {
+ 1597:              return false;
+ 1598:          } // if ...
+ 1599:      } // method isNullRecord
+ 1600:  
+*****
+
+***** MrnStation.java
+ 1621:  
+ 1622:      /**
+ 1623:       * Return the 'stnRef' class variable
+ 1624:       * @return stnRef (String)
+ 1625:       */
+ 1626:      public String getStnRef() {
+ 1627:          return stnRef;
+ 1628:      } // method getStnRef
+ 1629:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1601:  
+ 1602:      //===================//
+ 1603:      // The error methods //
+ 1604:      //===================//
+ 1605:  
+*****
+
+***** MrnStation.java
+ 1630:      /**
+ 1631:       * Return the 'stnRef' class variable: if NULL returns ""
+ 1632:       * @param  s  Any String variable
+ 1633:       *  - used to differentiate between the 2 getStnRef methods
+ 1634:       * @return stnRef (String)
+ 1635:       */
+ 1636:      public String getStnRef(String s) {
+ 1637:          return (stnRef != CHARNULL ? stnRef.replace('"','\'') : "");
+ 1638:      } // method getStnRef
+ 1639:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1606:      /**
+ 1607:       * Checks whether all the instance variables were valid
+ 1608:       * @return true/false (boolean)
+ 1609:       */
+ 1610:      public boolean isValidRecord () {
+ 1611:          int sumError = stationIdError +
+ 1612:              surveyIdError +
+ 1613:              latitudeError +
+ 1614:              longitudeError +
+ 1615:              dateStartError +
+ 1616:              dateEndError +
+ 1617:              daynullError +
+ 1618:              stnnamError +
+ 1619:              stndepError +
+ 1620:              offshdError +
+ 1621:              passkeyError +
+ 1622:              dupflagError +
+ 1623:              maxSpldepError +
+ 1624:              latError +
+ 1625:              lonError +
+ 1626:              yearmonError +
+ 1627:              statusCodeError;
+ 1628:          return (sumError == 0 ? true : false);
+ 1629:      } // method isValidRecord
+ 1630:  
+*****
+
+***** MrnStation.java
+ 1641:      /**
+ 1642:       * Return the 'notes' class variable
+ 1643:       * @return notes (String)
+ 1644:       */
+ 1645:      public String getNotes() {
+ 1646:          return notes;
+ 1647:      } // method getNotes
+ 1648:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1632:      /**
+ 1633:       * Gets the errorcode for the stationId instance variable
+ 1634:       * @return errorcode (int)
+ 1635:       */
+ 1636:      public int getStationIdError() {
+ 1637:          return stationIdError;
+ 1638:      } // method getStationIdError
+ 1639:  
+*****
+
+***** MrnStation.java
+ 1649:      /**
+ 1650:       * Return the 'notes' class variable: if NULL returns ""
+ 1651:       * @param  s  Any String variable
+ 1652:       *  - used to differentiate between the 2 getNotes methods
+ 1653:       * @return notes (String)
+ 1654:       */
+ 1655:      public String getNotes(String s) {
+ 1656:          return (notes != CHARNULL ? notes.replace('"','\'') : "");
+ 1657:      } // method getNotes
+ 1658:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1640:      /**
+ 1641:       * Gets the errorMessage for the stationId instance variable
+ 1642:       * @return errorMessage (String)
+ 1643:       */
+ 1644:      public String getStationIdErrorMessage() {
+ 1645:          return stationIdErrorMessage;
+ 1646:      } // method getStationIdErrorMessage
+ 1647:  
+*****
+
+***** MrnStation.java
+ 1660:      /**
+ 1661:       * Gets the number of records in the table
+ 1662:       * @return number of records (int)
+ 1663:       */
+ 1664:      public int getRecCnt () {
+ 1665:          return (getRecCnt("1=1"));
+ 1666:      } // method getRecCnt
+ 1667:  
+ 1668:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1649:      /**
+ 1650:       * Gets the errorcode for the surveyId instance variable
+ 1651:       * @return errorcode (int)
+ 1652:       */
+ 1653:      public int getSurveyIdError() {
+ 1654:          return surveyIdError;
+ 1655:      } // method getSurveyIdError
+ 1656:  
+*****
+
+***** MrnStation.java
+ 1669:      /**
+ 1670:       * Gets the number of records in the table
+ 1671:       * @param  where  The where clause (String)
+ 1672:       * @return number of records (int)
+ 1673:       */
+ 1674:      public int getRecCnt (String where) {
+ 1675:          Vector result = db.select ("count(*)",TABLE, where);
+ 1676:          Vector row = (Vector) result.elementAt(0);
+ 1677:          return (new Integer((String) row.elementAt(0)).intValue());
+ 1678:      } // method getRecCnt
+ 1679:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1657:      /**
+ 1658:       * Gets the errorMessage for the surveyId instance variable
+ 1659:       * @return errorMessage (String)
+ 1660:       */
+ 1661:      public String getSurveyIdErrorMessage() {
+ 1662:          return surveyIdErrorMessage;
+ 1663:      } // method getSurveyIdErrorMessage
+ 1664:  
+*****
+
+***** MrnStation.java
+ 1680:  
+ 1681:      //=========================//
+ 1682:      // The isNullRecord method //
+ 1683:      //=========================//
+ 1684:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1665:  
+ 1666:      /**
+ 1667:       * Gets the errorcode for the latitude instance variable
+ 1668:       * @return errorcode (int)
+ 1669:       */
+ 1670:      public int getLatitudeError() {
+ 1671:          return latitudeError;
+ 1672:      } // method getLatitudeError
+ 1673:  
+*****
+
+***** MrnStation.java
+ 1685:      /**
+ 1686:       * Checks whether all the instance variables are NULL
+ 1687:       * @return true/false (boolean)
+ 1688:       */
+ 1689:      public boolean isNullRecord () {
+ 1690:          if ((stationId == CHARNULL) &&
+ 1691:              (surveyId == CHARNULL) &&
+ 1692:              (latitude == FLOATNULL) &&
+ 1693:              (longitude == FLOATNULL) &&
+ 1694:              (dateStart.equals(DATENULL)) &&
+ 1695:              (dateEnd.equals(DATENULL)) &&
+ 1696:              (daynull == CHARNULL) &&
+ 1697:              (stnnam == CHARNULL) &&
+ 1698:              (stndep == FLOATNULL) &&
+ 1699:              (offshd == FLOATNULL) &&
+ 1700:              (passkey == CHARNULL) &&
+ 1701:              (dupflag == CHARNULL) &&
+ 1702:              (maxSpldep == FLOATNULL) &&
+ 1703:              (lat == INTNULL) &&
+ 1704:              (lon == INTNULL) &&
+ 1705:              (yearmon == CHARNULL) &&
+ 1706:              (statusCode == INTNULL) &&
+ 1707:              (stnRef == CHARNULL) &&
+ 1708:              (notes == CHARNULL)) {
+ 1709:              return true;
+ 1710:          } else {
+ 1711:              return false;
+ 1712:          } // if ...
+ 1713:      } // method isNullRecord
+ 1714:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1674:      /**
+ 1675:       * Gets the errorMessage for the latitude instance variable
+ 1676:       * @return errorMessage (String)
+ 1677:       */
+ 1678:      public String getLatitudeErrorMessage() {
+ 1679:          return latitudeErrorMessage;
+ 1680:      } // method getLatitudeErrorMessage
+ 1681:  
+*****
+
+***** MrnStation.java
+ 1715:  
+ 1716:      //===================//
+ 1717:      // The error methods //
+ 1718:      //===================//
+ 1719:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1682:  
+ 1683:      /**
+ 1684:       * Gets the errorcode for the longitude instance variable
+ 1685:       * @return errorcode (int)
+ 1686:       */
+ 1687:      public int getLongitudeError() {
+ 1688:          return longitudeError;
+ 1689:      } // method getLongitudeError
+ 1690:  
+*****
+
+***** MrnStation.java
+ 1720:      /**
+ 1721:       * Checks whether all the instance variables were valid
+ 1722:       * @return true/false (boolean)
+ 1723:       */
+ 1724:      public boolean isValidRecord () {
+ 1725:          int sumError = stationIdError +
+ 1726:              surveyIdError +
+ 1727:              latitudeError +
+ 1728:              longitudeError +
+ 1729:              dateStartError +
+ 1730:              dateEndError +
+ 1731:              daynullError +
+ 1732:              stnnamError +
+ 1733:              stndepError +
+ 1734:              offshdError +
+ 1735:              passkeyError +
+ 1736:              dupflagError +
+ 1737:              maxSpldepError +
+ 1738:              latError +
+ 1739:              lonError +
+ 1740:              yearmonError +
+ 1741:              statusCodeError +
+ 1742:              stnRefError +
+ 1743:              notesError;
+ 1744:          return (sumError == 0 ? true : false);
+ 1745:      } // method isValidRecord
+ 1746:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1691:      /**
+ 1692:       * Gets the errorMessage for the longitude instance variable
+ 1693:       * @return errorMessage (String)
+ 1694:       */
+ 1695:      public String getLongitudeErrorMessage() {
+ 1696:          return longitudeErrorMessage;
+ 1697:      } // method getLongitudeErrorMessage
+ 1698:  
+*****
+
+***** MrnStation.java
+ 1748:      /**
+ 1749:       * Gets the errorcode for the stationId instance variable
+ 1750:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1700:      /**
+ 1701:       * Gets the errorcode for the dateStart instance variable
+ 1702:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1751:       */
+ 1752:      public int getStationIdError() {
+ 1753:          return stationIdError;
+ 1754:      } // method getStationIdError
+ 1755:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1703:       */
+ 1704:      public int getDateStartError() {
+ 1705:          return dateStartError;
+ 1706:      } // method getDateStartError
+ 1707:  
+*****
+
+***** MrnStation.java
+ 1756:      /**
+ 1757:       * Gets the errorMessage for the stationId instance variable
+ 1758:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1708:      /**
+ 1709:       * Gets the errorMessage for the dateStart instance variable
+ 1710:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1759:       */
+ 1760:      public String getStationIdErrorMessage() {
+ 1761:          return stationIdErrorMessage;
+ 1762:      } // method getStationIdErrorMessage
+ 1763:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1711:       */
+ 1712:      public String getDateStartErrorMessage() {
+ 1713:          return dateStartErrorMessage;
+ 1714:      } // method getDateStartErrorMessage
+ 1715:  
+*****
+
+***** MrnStation.java
+ 1765:      /**
+ 1766:       * Gets the errorcode for the surveyId instance variable
+ 1767:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1717:      /**
+ 1718:       * Gets the errorcode for the dateEnd instance variable
+ 1719:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1768:       */
+ 1769:      public int getSurveyIdError() {
+ 1770:          return surveyIdError;
+ 1771:      } // method getSurveyIdError
+ 1772:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1720:       */
+ 1721:      public int getDateEndError() {
+ 1722:          return dateEndError;
+ 1723:      } // method getDateEndError
+ 1724:  
+*****
+
+***** MrnStation.java
+ 1773:      /**
+ 1774:       * Gets the errorMessage for the surveyId instance variable
+ 1775:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1725:      /**
+ 1726:       * Gets the errorMessage for the dateEnd instance variable
+ 1727:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1776:       */
+ 1777:      public String getSurveyIdErrorMessage() {
+ 1778:          return surveyIdErrorMessage;
+ 1779:      } // method getSurveyIdErrorMessage
+ 1780:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1728:       */
+ 1729:      public String getDateEndErrorMessage() {
+ 1730:          return dateEndErrorMessage;
+ 1731:      } // method getDateEndErrorMessage
+ 1732:  
+*****
+
+***** MrnStation.java
+ 1782:      /**
+ 1783:       * Gets the errorcode for the latitude instance variable
+ 1784:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1734:      /**
+ 1735:       * Gets the errorcode for the daynull instance variable
+ 1736:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1785:       */
+ 1786:      public int getLatitudeError() {
+ 1787:          return latitudeError;
+ 1788:      } // method getLatitudeError
+ 1789:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1737:       */
+ 1738:      public int getDaynullError() {
+ 1739:          return daynullError;
+ 1740:      } // method getDaynullError
+ 1741:  
+*****
+
+***** MrnStation.java
+ 1790:      /**
+ 1791:       * Gets the errorMessage for the latitude instance variable
+ 1792:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1742:      /**
+ 1743:       * Gets the errorMessage for the daynull instance variable
+ 1744:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1793:       */
+ 1794:      public String getLatitudeErrorMessage() {
+ 1795:          return latitudeErrorMessage;
+ 1796:      } // method getLatitudeErrorMessage
+ 1797:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1745:       */
+ 1746:      public String getDaynullErrorMessage() {
+ 1747:          return daynullErrorMessage;
+ 1748:      } // method getDaynullErrorMessage
+ 1749:  
+*****
+
+***** MrnStation.java
+ 1799:      /**
+ 1800:       * Gets the errorcode for the longitude instance variable
+ 1801:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1751:      /**
+ 1752:       * Gets the errorcode for the stnnam instance variable
+ 1753:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1802:       */
+ 1803:      public int getLongitudeError() {
+ 1804:          return longitudeError;
+ 1805:      } // method getLongitudeError
+ 1806:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1754:       */
+ 1755:      public int getStnnamError() {
+ 1756:          return stnnamError;
+ 1757:      } // method getStnnamError
+ 1758:  
+*****
+
+***** MrnStation.java
+ 1807:      /**
+ 1808:       * Gets the errorMessage for the longitude instance variable
+ 1809:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1759:      /**
+ 1760:       * Gets the errorMessage for the stnnam instance variable
+ 1761:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1810:       */
+ 1811:      public String getLongitudeErrorMessage() {
+ 1812:          return longitudeErrorMessage;
+ 1813:      } // method getLongitudeErrorMessage
+ 1814:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1762:       */
+ 1763:      public String getStnnamErrorMessage() {
+ 1764:          return stnnamErrorMessage;
+ 1765:      } // method getStnnamErrorMessage
+ 1766:  
+*****
+
+***** MrnStation.java
+ 1816:      /**
+ 1817:       * Gets the errorcode for the dateStart instance variable
+ 1818:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1768:      /**
+ 1769:       * Gets the errorcode for the stndep instance variable
+ 1770:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1819:       */
+ 1820:      public int getDateStartError() {
+ 1821:          return dateStartError;
+ 1822:      } // method getDateStartError
+ 1823:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1771:       */
+ 1772:      public int getStndepError() {
+ 1773:          return stndepError;
+ 1774:      } // method getStndepError
+ 1775:  
+*****
+
+***** MrnStation.java
+ 1824:      /**
+ 1825:       * Gets the errorMessage for the dateStart instance variable
+ 1826:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1776:      /**
+ 1777:       * Gets the errorMessage for the stndep instance variable
+ 1778:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1827:       */
+ 1828:      public String getDateStartErrorMessage() {
+ 1829:          return dateStartErrorMessage;
+ 1830:      } // method getDateStartErrorMessage
+ 1831:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1779:       */
+ 1780:      public String getStndepErrorMessage() {
+ 1781:          return stndepErrorMessage;
+ 1782:      } // method getStndepErrorMessage
+ 1783:  
+*****
+
+***** MrnStation.java
+ 1833:      /**
+ 1834:       * Gets the errorcode for the dateEnd instance variable
+ 1835:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1785:      /**
+ 1786:       * Gets the errorcode for the offshd instance variable
+ 1787:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1836:       */
+ 1837:      public int getDateEndError() {
+ 1838:          return dateEndError;
+ 1839:      } // method getDateEndError
+ 1840:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1788:       */
+ 1789:      public int getOffshdError() {
+ 1790:          return offshdError;
+ 1791:      } // method getOffshdError
+ 1792:  
+*****
+
+***** MrnStation.java
+ 1841:      /**
+ 1842:       * Gets the errorMessage for the dateEnd instance variable
+ 1843:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1793:      /**
+ 1794:       * Gets the errorMessage for the offshd instance variable
+ 1795:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1844:       */
+ 1845:      public String getDateEndErrorMessage() {
+ 1846:          return dateEndErrorMessage;
+ 1847:      } // method getDateEndErrorMessage
+ 1848:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1796:       */
+ 1797:      public String getOffshdErrorMessage() {
+ 1798:          return offshdErrorMessage;
+ 1799:      } // method getOffshdErrorMessage
+ 1800:  
+*****
+
+***** MrnStation.java
+ 1850:      /**
+ 1851:       * Gets the errorcode for the daynull instance variable
+ 1852:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1802:      /**
+ 1803:       * Gets the errorcode for the passkey instance variable
+ 1804:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1853:       */
+ 1854:      public int getDaynullError() {
+ 1855:          return daynullError;
+ 1856:      } // method getDaynullError
+ 1857:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1805:       */
+ 1806:      public int getPasskeyError() {
+ 1807:          return passkeyError;
+ 1808:      } // method getPasskeyError
+ 1809:  
+*****
+
+***** MrnStation.java
+ 1858:      /**
+ 1859:       * Gets the errorMessage for the daynull instance variable
+ 1860:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1810:      /**
+ 1811:       * Gets the errorMessage for the passkey instance variable
+ 1812:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1861:       */
+ 1862:      public String getDaynullErrorMessage() {
+ 1863:          return daynullErrorMessage;
+ 1864:      } // method getDaynullErrorMessage
+ 1865:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1813:       */
+ 1814:      public String getPasskeyErrorMessage() {
+ 1815:          return passkeyErrorMessage;
+ 1816:      } // method getPasskeyErrorMessage
+ 1817:  
+*****
+
+***** MrnStation.java
+ 1867:      /**
+ 1868:       * Gets the errorcode for the stnnam instance variable
+ 1869:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1819:      /**
+ 1820:       * Gets the errorcode for the dupflag instance variable
+ 1821:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1870:       */
+ 1871:      public int getStnnamError() {
+ 1872:          return stnnamError;
+ 1873:      } // method getStnnamError
+ 1874:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1822:       */
+ 1823:      public int getDupflagError() {
+ 1824:          return dupflagError;
+ 1825:      } // method getDupflagError
+ 1826:  
+*****
+
+***** MrnStation.java
+ 1875:      /**
+ 1876:       * Gets the errorMessage for the stnnam instance variable
+ 1877:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1827:      /**
+ 1828:       * Gets the errorMessage for the dupflag instance variable
+ 1829:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1878:       */
+ 1879:      public String getStnnamErrorMessage() {
+ 1880:          return stnnamErrorMessage;
+ 1881:      } // method getStnnamErrorMessage
+ 1882:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1830:       */
+ 1831:      public String getDupflagErrorMessage() {
+ 1832:          return dupflagErrorMessage;
+ 1833:      } // method getDupflagErrorMessage
+ 1834:  
+*****
+
+***** MrnStation.java
+ 1884:      /**
+ 1885:       * Gets the errorcode for the stndep instance variable
+ 1886:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1836:      /**
+ 1837:       * Gets the errorcode for the maxSpldep instance variable
+ 1838:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1887:       */
+ 1888:      public int getStndepError() {
+ 1889:          return stndepError;
+ 1890:      } // method getStndepError
+ 1891:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1839:       */
+ 1840:      public int getMaxSpldepError() {
+ 1841:          return maxSpldepError;
+ 1842:      } // method getMaxSpldepError
+ 1843:  
+*****
+
+***** MrnStation.java
+ 1892:      /**
+ 1893:       * Gets the errorMessage for the stndep instance variable
+ 1894:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1844:      /**
+ 1845:       * Gets the errorMessage for the maxSpldep instance variable
+ 1846:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1895:       */
+ 1896:      public String getStndepErrorMessage() {
+ 1897:          return stndepErrorMessage;
+ 1898:      } // method getStndepErrorMessage
+ 1899:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1847:       */
+ 1848:      public String getMaxSpldepErrorMessage() {
+ 1849:          return maxSpldepErrorMessage;
+ 1850:      } // method getMaxSpldepErrorMessage
+ 1851:  
+*****
+
+***** MrnStation.java
+ 1901:      /**
+ 1902:       * Gets the errorcode for the offshd instance variable
+ 1903:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1853:      /**
+ 1854:       * Gets the errorcode for the lat instance variable
+ 1855:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1904:       */
+ 1905:      public int getOffshdError() {
+ 1906:          return offshdError;
+ 1907:      } // method getOffshdError
+ 1908:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1856:       */
+ 1857:      public int getLatError() {
+ 1858:          return latError;
+ 1859:      } // method getLatError
+ 1860:  
+*****
+
+***** MrnStation.java
+ 1909:      /**
+ 1910:       * Gets the errorMessage for the offshd instance variable
+ 1911:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1861:      /**
+ 1862:       * Gets the errorMessage for the lat instance variable
+ 1863:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1912:       */
+ 1913:      public String getOffshdErrorMessage() {
+ 1914:          return offshdErrorMessage;
+ 1915:      } // method getOffshdErrorMessage
+ 1916:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1864:       */
+ 1865:      public String getLatErrorMessage() {
+ 1866:          return latErrorMessage;
+ 1867:      } // method getLatErrorMessage
+ 1868:  
+*****
+
+***** MrnStation.java
+ 1918:      /**
+ 1919:       * Gets the errorcode for the passkey instance variable
+ 1920:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1870:      /**
+ 1871:       * Gets the errorcode for the lon instance variable
+ 1872:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1921:       */
+ 1922:      public int getPasskeyError() {
+ 1923:          return passkeyError;
+ 1924:      } // method getPasskeyError
+ 1925:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1873:       */
+ 1874:      public int getLonError() {
+ 1875:          return lonError;
+ 1876:      } // method getLonError
+ 1877:  
+*****
+
+***** MrnStation.java
+ 1926:      /**
+ 1927:       * Gets the errorMessage for the passkey instance variable
+ 1928:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1878:      /**
+ 1879:       * Gets the errorMessage for the lon instance variable
+ 1880:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1929:       */
+ 1930:      public String getPasskeyErrorMessage() {
+ 1931:          return passkeyErrorMessage;
+ 1932:      } // method getPasskeyErrorMessage
+ 1933:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1881:       */
+ 1882:      public String getLonErrorMessage() {
+ 1883:          return lonErrorMessage;
+ 1884:      } // method getLonErrorMessage
+ 1885:  
+*****
+
+***** MrnStation.java
+ 1935:      /**
+ 1936:       * Gets the errorcode for the dupflag instance variable
+ 1937:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1887:      /**
+ 1888:       * Gets the errorcode for the yearmon instance variable
+ 1889:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1938:       */
+ 1939:      public int getDupflagError() {
+ 1940:          return dupflagError;
+ 1941:      } // method getDupflagError
+ 1942:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1890:       */
+ 1891:      public int getYearmonError() {
+ 1892:          return yearmonError;
+ 1893:      } // method getYearmonError
+ 1894:  
+*****
+
+***** MrnStation.java
+ 1943:      /**
+ 1944:       * Gets the errorMessage for the dupflag instance variable
+ 1945:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1895:      /**
+ 1896:       * Gets the errorMessage for the yearmon instance variable
+ 1897:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1946:       */
+ 1947:      public String getDupflagErrorMessage() {
+ 1948:          return dupflagErrorMessage;
+ 1949:      } // method getDupflagErrorMessage
+ 1950:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1898:       */
+ 1899:      public String getYearmonErrorMessage() {
+ 1900:          return yearmonErrorMessage;
+ 1901:      } // method getYearmonErrorMessage
+ 1902:  
+*****
+
+***** MrnStation.java
+ 1952:      /**
+ 1953:       * Gets the errorcode for the maxSpldep instance variable
+ 1954:       * @return errorcode (int)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1904:      /**
+ 1905:       * Gets the errorcode for the statusCode instance variable
+ 1906:       * @return errorcode (int)
+*****
+
+***** MrnStation.java
+ 1955:       */
+ 1956:      public int getMaxSpldepError() {
+ 1957:          return maxSpldepError;
+ 1958:      } // method getMaxSpldepError
+ 1959:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1907:       */
+ 1908:      public int getStatusCodeError() {
+ 1909:          return statusCodeError;
+ 1910:      } // method getStatusCodeError
+ 1911:  
+*****
+
+***** MrnStation.java
+ 1960:      /**
+ 1961:       * Gets the errorMessage for the maxSpldep instance variable
+ 1962:       * @return errorMessage (String)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1912:      /**
+ 1913:       * Gets the errorMessage for the statusCode instance variable
+ 1914:       * @return errorMessage (String)
+*****
+
+***** MrnStation.java
+ 1963:       */
+ 1964:      public String getMaxSpldepErrorMessage() {
+ 1965:          return maxSpldepErrorMessage;
+ 1966:      } // method getMaxSpldepErrorMessage
+ 1967:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1915:       */
+ 1916:      public String getStatusCodeErrorMessage() {
+ 1917:          return statusCodeErrorMessage;
+ 1918:      } // method getStatusCodeErrorMessage
+ 1919:  
+*****
+
+***** MrnStation.java
+ 1968:  
+ 1969:      /**
+ 1970:       * Gets the errorcode for the lat instance variable
+ 1971:       * @return errorcode (int)
+ 1972:       */
+ 1973:      public int getLatError() {
+ 1974:          return latError;
+ 1975:      } // method getLatError
+ 1976:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1920:  
+ 1921:      //=============================//
+ 1922:      // All the get & doGet methods //
+ 1923:      //=============================//
+ 1924:  
+*****
+
+***** MrnStation.java
+ 1977:      /**
+ 1978:       * Gets the errorMessage for the lat instance variable
+ 1979:       * @return errorMessage (String)
+ 1980:       */
+ 1981:      public String getLatErrorMessage() {
+ 1982:          return latErrorMessage;
+ 1983:      } // method getLatErrorMessage
+ 1984:  
+ 1985:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1925:      /**
+ 1926:       * Select all the fields from the table.  A where clause is created
+ 1927:       * with the current values of the class variables. The results
+ 1928:       * are returned in an array of MrnStation. e.g.<pre>
+ 1929:       * MrnStation station = new MrnStation(<val1>);
+ 1930:       * MrnStation stationArray[] = station.get();</pre>
+ 1931:       * will get the MrnStation record where stationId = <val1>.
+ 1932:       * @return Array of MrnStation (MrnStation[])
+ 1933:       */
+ 1934:      public MrnStation[] get() {
+ 1935:          return doGet(db.select(TABLE, createWhere()));
+ 1936:      } // method get
+ 1937:  
+*****
+
+***** MrnStation.java
+ 1986:      /**
+ 1987:       * Gets the errorcode for the lon instance variable
+ 1988:       * @return errorcode (int)
+ 1989:       */
+ 1990:      public int getLonError() {
+ 1991:          return lonError;
+ 1992:      } // method getLonError
+ 1993:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1938:      /**
+ 1939:       * Select all the fields from the table, restrict records with a 'where'
+ 1940:       * clause.  Same as <b>get()</b>, but the 'where' is explicitly given.
+ 1941:       * e.g.<pre>
+ 1942:       * MrnStation stationArray[] = 
+ 1943:       *     new MrnStation().get(MrnStation.STATION_ID+"=<val1>");</pre>
+ 1944:       * will get the MrnStation record where stationId = <val1>.
+ 1945:       * @param  where  The where clause for the select statement. (String)
+ 1946:       *     If where == "" / null, it is ignored.
+ 1947:       * @return Array of MrnStation (MrnStation[])
+ 1948:       */
+ 1949:      public MrnStation[] get (String where) {
+ 1950:          return doGet(db.select(TABLE, where));
+ 1951:      } // method get
+ 1952:  
+*****
+
+***** MrnStation.java
+ 1994:      /**
+ 1995:       * Gets the errorMessage for the lon instance variable
+ 1996:       * @return errorMessage (String)
+ 1997:       */
+ 1998:      public String getLonErrorMessage() {
+ 1999:          return lonErrorMessage;
+ 2000:      } // method getLonErrorMessage
+ 2001:  
+ 2002:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1953:      /**
+ 1954:       * Select all the fields from the table, and order the result.  Same as
+ 1955:       * <b>get(where)</b>, but an order is specified. e.g.<pre>
+ 1956:       * MrnStation stationArray[] = 
+ 1957:       *     new MrnStation().get("1=1",station.STATION_ID);</pre>
+ 1958:       * will get the all the MrnStation records, and order them by stationId.
+ 1959:       * @param  where  The where clause for the select statement. (String)
+ 1960:       *     If where == "" / null, it is ignored.
+ 1961:       * @param  order  A comma-delimited string of the fields to sort on. (String)
+ 1962:       *     If order == "" / null, it is ignored.
+ 1963:       * @return Array of MrnStation (MrnStation[])
+ 1964:       */
+ 1965:      public MrnStation[] get (String where, String order) {
+ 1966:          return doGet(db.select("*", TABLE, where, order));
+ 1967:      } // method get
+ 1968:  
+*****
+
+***** MrnStation.java
+ 2003:      /**
+ 2004:       * Gets the errorcode for the yearmon instance variable
+ 2005:       * @return errorcode (int)
+ 2006:       */
+ 2007:      public int getYearmonError() {
+ 2008:          return yearmonError;
+ 2009:      } // method getYearmonError
+ 2010:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1969:      /**
+ 1970:       * Select selected fields from the table, and order the result.  Same as
+ 1971:       * <b>get(where, order)</b>, but the fields are specified. e.g.<pre>
+ 1972:       * String columns = MrnStation.STATION_ID,MrnStation.SURVEY_ID;
+ 1973:       * String where = MrnStation.STATION_ID + "=<val1";
+ 1974:       * String order = MrnStation.STATION_ID;
+ 1975:       * MrnStation stationArray[] = 
+ 1976:       *     new MrnStation().get(columns, where, order);</pre>
+ 1977:       * will get the stationId and surveyId colums of all MrnStation records,
+ 1978:       * where stationId = <val1>, and order them by stationId.
+ 1979:       * @param  fields A comma-delimited string of the the list of fields to select. (String)
+ 1980:       *     If fields = "" / null, --> created from non-null instance variables.
+ 1981:       * @param  where  The where clause for the select statement. (String)
+ 1982:       *     If where == "" / null, it is ignored.
+ 1983:       * @param  order  A comma-delimited string of the fields to sort on. (String)
+ 1984:       *     If order == "" / null, it is ignored.
+ 1985:       * @return Array of MrnStation (MrnStation[])
+ 1986:       */
+ 1987:      public MrnStation[] get (String fields, String where, String order) {
+ 1988:          // create the column list from the instance variables if neccessary
+ 1989:          try {
+ 1990:              if (fields.equals("")) { fields = null; }
+ 1991:          } catch (NullPointerException e) {}
+ 1992:          if (fields == null) {
+ 1993:              fields = createColumns();
+ 1994:          } // if (fields != null)
+ 1995:          return doGet(db.select(fields, TABLE, where, order));
+ 1996:      } // method get
+ 1997:  
+*****
+
+***** MrnStation.java
+ 2011:      /**
+ 2012:       * Gets the errorMessage for the yearmon instance variable
+ 2013:       * @return errorMessage (String)
+ 2014:       */
+ 2015:      public String getYearmonErrorMessage() {
+ 2016:          return yearmonErrorMessage;
+ 2017:      } // method getYearmonErrorMessage
+ 2018:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 1998:      /**
+ 1999:       * Receives the result of the select statement from DbAccess,
+ 2000:       * and transforms it into an array of MrnStation.
+ 2001:       * @param  result  (Vector (rows) of Vectors (columns)).
+ 2002:       */
+ 2003:      private MrnStation[] doGet(Vector result) {
+ 2004:          if (dbg) System.out.println ("vector size = " + result.size());
+ 2005:          int stationIdCol  = db.getColNumber(STATION_ID);
+ 2006:          int surveyIdCol   = db.getColNumber(SURVEY_ID);
+ 2007:          int latitudeCol   = db.getColNumber(LATITUDE);
+ 2008:          int longitudeCol  = db.getColNumber(LONGITUDE);
+ 2009:          int dateStartCol  = db.getColNumber(DATE_START);
+ 2010:          int dateEndCol    = db.getColNumber(DATE_END);
+ 2011:          int daynullCol    = db.getColNumber(DAYNULL);
+ 2012:          int stnnamCol     = db.getColNumber(STNNAM);
+ 2013:          int stndepCol     = db.getColNumber(STNDEP);
+ 2014:          int offshdCol     = db.getColNumber(OFFSHD);
+ 2015:          int passkeyCol    = db.getColNumber(PASSKEY);
+ 2016:          int dupflagCol    = db.getColNumber(DUPFLAG);
+ 2017:          int maxSpldepCol  = db.getColNumber(MAX_SPLDEP);
+ 2018:          int latCol        = db.getColNumber(LAT);
+ 2019:          int lonCol        = db.getColNumber(LON);
+ 2020:          int yearmonCol    = db.getColNumber(YEARMON);
+ 2021:          int statusCodeCol = db.getColNumber(STATUS_CODE);
+ 2022:          MrnStation[] cArray = new MrnStation[result.size()];
+ 2023:          for (int i = 0; i < result.size(); i++) {
+ 2024:              Vector row = (Vector) result.elementAt(i);
+ 2025:              cArray[i] = new MrnStation();
+ 2026:              if (stationIdCol != -1)
+ 2027:                  cArray[i].setStationId ((String) row.elementAt(stationIdCol));
+ 2028:              if (surveyIdCol != -1)
+ 2029:                  cArray[i].setSurveyId  ((String) row.elementAt(surveyIdCol));
+ 2030:              if (latitudeCol != -1)
+ 2031:                  cArray[i].setLatitude  ((String) row.elementAt(latitudeCol));
+ 2032:              if (longitudeCol != -1)
+ 2033:                  cArray[i].setLongitude ((String) row.elementAt(longitudeCol));
+ 2034:              if (dateStartCol != -1)
+ 2035:                  cArray[i].setDateStart ((String) row.elementAt(dateStartCol));
+ 2036:              if (dateEndCol != -1)
+ 2037:                  cArray[i].setDateEnd   ((String) row.elementAt(dateEndCol));
+ 2038:              if (daynullCol != -1)
+ 2039:                  cArray[i].setDaynull   ((String) row.elementAt(daynullCol));
+ 2040:              if (stnnamCol != -1)
+ 2041:                  cArray[i].setStnnam    ((String) row.elementAt(stnnamCol));
+ 2042:              if (stndepCol != -1)
+ 2043:                  cArray[i].setStndep    ((String) row.elementAt(stndepCol));
+ 2044:              if (offshdCol != -1)
+ 2045:                  cArray[i].setOffshd    ((String) row.elementAt(offshdCol));
+ 2046:              if (passkeyCol != -1)
+ 2047:                  cArray[i].setPasskey   ((String) row.elementAt(passkeyCol));
+ 2048:              if (dupflagCol != -1)
+ 2049:                  cArray[i].setDupflag   ((String) row.elementAt(dupflagCol));
+ 2050:              if (maxSpldepCol != -1)
+ 2051:                  cArray[i].setMaxSpldep ((String) row.elementAt(maxSpldepCol));
+ 2052:              if (latCol != -1)
+ 2053:                  cArray[i].setLat       ((String) row.elementAt(latCol));
+ 2054:              if (lonCol != -1)
+ 2055:                  cArray[i].setLon       ((String) row.elementAt(lonCol));
+ 2056:              if (yearmonCol != -1)
+ 2057:                  cArray[i].setYearmon   ((String) row.elementAt(yearmonCol));
+ 2058:              if (statusCodeCol != -1)
+ 2059:                  cArray[i].setStatusCode((String) row.elementAt(statusCodeCol));
+ 2060:          } // for i
+ 2061:          return cArray;
+ 2062:      } // method doGet
+ 2063:  
+*****
+
+***** MrnStation.java
+ 2019:  
+ 2020:      /**
+ 2021:       * Gets the errorcode for the statusCode instance variable
+ 2022:       * @return errorcode (int)
+ 2023:       */
+ 2024:      public int getStatusCodeError() {
+ 2025:          return statusCodeError;
+ 2026:      } // method getStatusCodeError
+ 2027:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 2064:  
+ 2065:      //=====================//
+ 2066:      // All the put methods //
+ 2067:      //=====================//
+ 2068:  
+*****
+
+***** MrnStation.java
+ 2028:      /**
+ 2029:       * Gets the errorMessage for the statusCode instance variable
+ 2030:       * @return errorMessage (String)
+ 2031:       */
+ 2032:      public String getStatusCodeErrorMessage() {
+ 2033:          return statusCodeErrorMessage;
+ 2034:      } // method getStatusCodeErrorMessage
+ 2035:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 2069:      /**
+ 2070:       * Insert a record into the table.  The values are taken from the current
+ 2071:       * value of the instance variables. .e.g.<pre>
+ 2072:       * String    CHARNULL  = Tables.CHARNULL;
+ 2073:       * Timestamp DATENULL  = Tables.DATENULL;
+ 2074:       * int       INTNULL   = Tables.INTNULL;
+ 2075:       * float     FLOATNULL = Tables.FLOATNULL;
+ 2076:       * Boolean success =
+ 2077:       *     new MrnStation(
+ 2078:       *         <val1>,
+ 2079:       *         <val2>,
+ 2080:       *         <val3>,
+ 2081:       *         <val4>,
+ 2082:       *         <val5>,
+ 2083:       *         <val6>,
+ 2084:       *         <val7>,
+ 2085:       *         <val8>,
+ 2086:       *         <val9>,
+ 2087:       *         <val10>,
+ 2088:       *         <val11>,
+ 2089:       *         <val12>,
+ 2090:       *         <val13>,
+ 2091:       *         <val14>,
+ 2092:       *         <val15>,
+ 2093:       *         <val16>,
+ 2094:       *         <val17>).put();</pre>
+ 2095:       * will insert a record with:
+ 2096:       *     stationId  = <val1>,
+ 2097:       *     surveyId   = <val2>,
+ 2098:       *     latitude   = <val3>,
+ 2099:       *     longitude  = <val4>,
+ 2100:       *     dateStart  = <val5>,
+ 2101:       *     dateEnd    = <val6>,
+ 2102:       *     daynull    = <val7>,
+ 2103:       *     stnnam     = <val8>,
+ 2104:       *     stndep     = <val9>,
+ 2105:       *     offshd     = <val10>,
+ 2106:       *     passkey    = <val11>,
+ 2107:       *     dupflag    = <val12>,
+ 2108:       *     maxSpldep  = <val13>,
+ 2109:       *     lat        = <val14>,
+ 2110:       *     lon        = <val15>,
+ 2111:       *     yearmon    = <val16>,
+ 2112:       *     statusCode = <val17>.
+ 2113:       * @return success = true/false (boolean)
+ 2114:       */
+ 2115:      public boolean put() {
+ 2116:          return db.insert (TABLE, createColumns(), createValues());
+ 2117:      } // method put
+ 2118:  
+*****
+
+***** MrnStation.java
+ 2036:  
+ 2037:      /**
+ 2038:       * Gets the errorcode for the stnRef instance variable
+ 2039:       * @return errorcode (int)
+ 2040:       */
+ 2041:      public int getStnRefError() {
+ 2042:          return stnRefError;
+ 2043:      } // method getStnRefError
+ 2044:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 2119:  
+ 2120:      //=====================//
+ 2121:      // All the del methods //
+ 2122:      //=====================//
+ 2123:  
+*****
+
+***** MrnStation.java
+ 2045:      /**
+ 2046:       * Gets the errorMessage for the stnRef instance variable
+ 2047:       * @return errorMessage (String)
+ 2048:       */
+ 2049:      public String getStnRefErrorMessage() {
+ 2050:          return stnRefErrorMessage;
+ 2051:      } // method getStnRefErrorMessage
+ 2052:  
+ 2053:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 2124:      /**
+ 2125:       * Delete record(s) from the table, The where clause is created from the
+ 2126:       * current values of the instance variables. .e.g.<pre>
+ 2127:       * Boolean success = new MrnStation(
+ 2128:       *     Tables.CHARNULL,
+ 2129:       *     <val2>,
+ 2130:       *     Tables.FLOATNULL,
+ 2131:       *     Tables.FLOATNULL,
+ 2132:       *     Tables.DATENULL,
+ 2133:       *     Tables.DATENULL,
+ 2134:       *     Tables.CHARNULL,
+ 2135:       *     Tables.CHARNULL,
+ 2136:       *     Tables.FLOATNULL,
+ 2137:       *     Tables.FLOATNULL,
+ 2138:       *     Tables.CHARNULL,
+ 2139:       *     Tables.CHARNULL,
+ 2140:       *     Tables.FLOATNULL,
+ 2141:       *     Tables.INTNULL,
+ 2142:       *     Tables.INTNULL,
+ 2143:       *     Tables.CHARNULL,
+ 2144:       *     Tables.INTNULL).del();</pre>
+ 2145:       * will delete all records where surveyId = <val2>.
+ 2146:       * @return success = true/false (boolean)
+ 2147:       */
+ 2148:      public boolean del() {
+ 2149:          return db.delete (TABLE, createWhere());
+ 2150:      } // method del
+ 2151:  
+*****
+
+***** MrnStation.java
+ 2054:      /**
+ 2055:       * Gets the errorcode for the notes instance variable
+ 2056:       * @return errorcode (int)
+ 2057:       */
+ 2058:      public int getNotesError() {
+ 2059:          return notesError;
+ 2060:      } // method getNotesError
+ 2061:  
+ 2062:      /**
+ 2063:       * Gets the errorMessage for the notes instance variable
+ 2064:       * @return errorMessage (String)
+ 2065:       */
+ 2066:      public String getNotesErrorMessage() {
+ 2067:          return notesErrorMessage;
+ 2068:      } // method getNotesErrorMessage
+ 2069:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 2152:      /**
+ 2153:       * Delete record(s) from the table.  with an explicitly given where clause.
+ 2154:       *  .e.g.<pre>
+ 2155:       * Boolean success
+ 2156:       * MrnStation station = new MrnStation();
+ 2157:       * success = station.del(MrnStation.STATION_ID+"=<val1>");</pre>
+ 2158:       * will delete all records where stationId = <val1>.
+ 2159:       * @param  where  The where clause for the select statement. (String)
+ 2160:       * @return success = true/false (boolean)
+ 2161:       */
+ 2162:      public boolean del(String where) {
+ 2163:          return db.delete (TABLE, where);
+ 2164:      } // method del
+ 2165:  
+*****
+
+***** MrnStation.java
+ 2070:  
+ 2071:      //=============================//
+ 2072:      // All the get & doGet methods //
+ 2073:      //=============================//
+ 2074:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 2166:  
+ 2167:      //=====================//
+ 2168:      // All the upd methods //
+ 2169:      //=====================//
+ 2170:  
+*****
+
+***** MrnStation.java
+ 2075:      /**
+ 2076:       * Select all the fields from the table.  A where clause is created
+ 2077:       * with the current values of the class variables. The results
+ 2078:       * are returned in an array of MrnStation. e.g.<pre>
+ 2079:       * MrnStation station = new MrnStation(<val1>);
+ 2080:       * MrnStation stationArray[] = station.get();</pre>
+ 2081:       * will get the MrnStation record where stationId = <val1>.
+ 2082:       * @return Array of MrnStation (MrnStation[])
+ 2083:       */
+ 2084:      public MrnStation[] get() {
+ 2085:          return doGet(db.select(TABLE, createWhere()));
+ 2086:      } // method get
+ 2087:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 2171:      /**
+ 2172:       * Update record(s) from the table, The fields and values to use for the
+ 2173:       * update are taken from the MrnStation argument, .e.g.<pre>
+ 2174:       * Boolean success
+ 2175:       * MrnStation updMrnStation = new MrnStation();
+ 2176:       * updMrnStation.setSurveyId(<val2>);
+ 2177:       * MrnStation whereMrnStation = new MrnStation(<val1>);
+ 2178:       * success = whereMrnStation.upd(updMrnStation);</pre>
+ 2179:       * will update SurveyId to <val2> for all records where 
+ 2180:       * stationId = <val1>.
+ 2181:       * @param  updMrnStation  A MrnStation variable in which the fields are to be used for 
+ 2182:       *                 the update are set
+ 2183:       * @return success = true/false (boolean)
+ 2184:       */
+ 2185:      public boolean upd(MrnStation station) {
+ 2186:          return db.update (TABLE, createColVals(station), createWhere());
+ 2187:      } // method upd
+ 2188:  
+*****
+
+***** MrnStation.java
+ 2088:      /**
+ 2089:       * Select all the fields from the table, restrict records with a 'where'
+ 2090:       * clause.  Same as <b>get()</b>, but the 'where' is explicitly given.
+ 2091:       * e.g.<pre>
+ 2092:       * MrnStation stationArray[] = 
+ 2093:       *     new MrnStation().get(MrnStation.STATION_ID+"=<val1>");</pre>
+ 2094:       * will get the MrnStation record where stationId = <val1>.
+ 2095:       * @param  where  The where clause for the select statement. (String)
+ 2096:       *     If where == "" / null, it is ignored.
+ 2097:       * @return Array of MrnStation (MrnStation[])
+ 2098:       */
+ 2099:      public MrnStation[] get (String where) {
+ 2100:          return doGet(db.select(TABLE, where));
+ 2101:      } // method get
+ 2102:  
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 2189:      /**
+ 2190:       * Delete record(s) from the table.  with an explicitly given where clause.
+ 2191:       *  .e.g.<pre>
+ 2192:       * Boolean success
+ 2193:       * MrnStation updMrnStation = new MrnStation();
+ 2194:       * updMrnStation.setSurveyId(<val2>);
+ 2195:       * MrnStation whereMrnStation = new MrnStation();
+ 2196:       * success = whereMrnStation.upd(
+ 2197:       *     updMrnStation, MrnStation.STATION_ID+"=<val1>");</pre>
+ 2198:       * will update SurveyId to <val2> for all records where 
+ 2199:       * stationId = <val1>.
+ 2200:       * @param  updMrnStation  A MrnStation variable in which the fields are to be used for 
+ 2201:       *                 the update are set
+ 2202:       * @param  where  The where clause for the select statement. (String)
+ 2203:       * @return success = true/false (boolean)
+ 2204:       */
+ 2205:      public boolean upd(MrnStation station, String where) {
+ 2206:          return db.update (TABLE, createColVals(station), where);
+ 2207:      } // method upd
+ 2208:  
+ 2209:  
+ 2210:      //======================//
+ 2211:      // Other helper methods //
+ 2212:      //======================//
+ 2213:  
+*****
+
+Resync Failed.  Files are too different.
+***** MrnStation.java
+ 2103:      /**
+ 2104:       * Select all the fields from the table, and order the result.  Same as
+ 2105:       * <b>get(where)</b>, but an order is specified. e.g.<pre>
+ 2106:       * MrnStation stationArray[] = 
+ 2107:       *     new MrnStation().get("1=1",station.STATION_ID);</pre>
+ 2108:       * will get the all the MrnStation records, and order them by stationId.
+ 2109:       * @param  where  The where clause for the select statement. (String)
+ 2110:       *     If where == "" / null, it is ignored.
+ 2111:       * @param  order  A comma-delimited string of the fields to sort on. (String)
+ 2112:       *     If order == "" / null, it is ignored.
+ 2113:       * @return Array of MrnStation (MrnStation[])
+ 2114:       */
+ 2115:      public MrnStation[] get (String where, String order) {
+ 2116:          return doGet(db.select("*", TABLE, where, order));
+ 2117:      } // method get
+ 2118:  
+ 2119:      /**
+ 2120:       * Select selected fields from the table, and order the result.  Same as
+ 2121:       * <b>get(where, order)</b>, but the fields are specified. e.g.<pre>
+ 2122:       * String columns = MrnStation.STATION_ID,MrnStation.SURVEY_ID;
+ 2123:       * String where = MrnStation.STATION_ID + "=<val1";
+ 2124:       * String order = MrnStation.STATION_ID;
+ 2125:       * MrnStation stationArray[] = 
+ 2126:       *     new MrnStation().get(columns, where, order);</pre>
+ 2127:       * will get the stationId and surveyId colums of all MrnStation records,
+ 2128:       * where stationId = <val1>, and order them by stationId.
+ 2129:       * @param  fields A comma-delimited string of the the list of fields to select. (String)
+ 2130:       *     If fields = "" / null, --> created from non-null instance variables.
+ 2131:       * @param  where  The where clause for the select statement. (String)
+ 2132:       *     If where == "" / null, it is ignored.
+ 2133:       * @param  order  A comma-delimited string of the fields to sort on. (String)
+ 2134:       *     If order == "" / null, it is ignored.
+ 2135:       * @return Array of MrnStation (MrnStation[])
+ 2136:       */
+ 2137:      public MrnStation[] get (String fields, String where, String order) {
+ 2138:          // create the column list from the instance variables if neccessary
+ 2139:          try {
+ 2140:              if (fields.equals("")) { fields = null; }
+ 2141:          } catch (NullPointerException e) {}
+ 2142:          if (fields == null) {
+ 2143:              fields = createColumns();
+ 2144:          } // if (fields != null)
+ 2145:          return doGet(db.select(fields, TABLE, where, order));
+ 2146:      } // method get
+ 2147:  
+ 2148:      /**
+ 2149:       * Receives the result of the select statement from DbAccess,
+ 2150:       * and transforms it into an array of MrnStation.
+ 2151:       * @param  result  (Vector (rows) of Vectors (columns)).
+ 2152:       */
+ 2153:      private MrnStation[] doGet(Vector result) {
+ 2154:          if (dbg) System.out.println ("vector size = " + result.size());
+ 2155:          int stationIdCol  = db.getColNumber(STATION_ID);
+ 2156:          int surveyIdCol   = db.getColNumber(SURVEY_ID);
+ 2157:          int latitudeCol   = db.getColNumber(LATITUDE);
+ 2158:          int longitudeCol  = db.getColNumber(LONGITUDE);
+ 2159:          int dateStartCol  = db.getColNumber(DATE_START);
+ 2160:          int dateEndCol    = db.getColNumber(DATE_END);
+ 2161:          int daynullCol    = db.getColNumber(DAYNULL);
+ 2162:          int stnnamCol     = db.getColNumber(STNNAM);
+ 2163:          int stndepCol     = db.getColNumber(STNDEP);
+ 2164:          int offshdCol     = db.getColNumber(OFFSHD);
+ 2165:          int passkeyCol    = db.getColNumber(PASSKEY);
+ 2166:          int dupflagCol    = db.getColNumber(DUPFLAG);
+ 2167:          int maxSpldepCol  = db.getColNumber(MAX_SPLDEP);
+ 2168:          int latCol        = db.getColNumber(LAT);
+ 2169:          int lonCol        = db.getColNumber(LON);
+ 2170:          int yearmonCol    = db.getColNumber(YEARMON);
+ 2171:          int statusCodeCol = db.getColNumber(STATUS_CODE);
+ 2172:          int stnRefCol     = db.getColNumber(STN_REF);
+ 2173:          int notesCol      = db.getColNumber(NOTES);
+ 2174:          MrnStation[] cArray = new MrnStation[result.size()];
+ 2175:          for (int i = 0; i < result.size(); i++) {
+ 2176:              Vector row = (Vector) result.elementAt(i);
+ 2177:              cArray[i] = new MrnStation();
+ 2178:              if (stationIdCol != -1)
+ 2179:                  cArray[i].setStationId ((String) row.elementAt(stationIdCol));
+ 2180:              if (surveyIdCol != -1)
+ 2181:                  cArray[i].setSurveyId  ((String) row.elementAt(surveyIdCol));
+ 2182:              if (latitudeCol != -1)
+ 2183:                  cArray[i].setLatitude  ((String) row.elementAt(latitudeCol));
+ 2184:              if (longitudeCol != -1)
+ 2185:                  cArray[i].setLongitude ((String) row.elementAt(longitudeCol));
+ 2186:              if (dateStartCol != -1)
+ 2187:                  cArray[i].setDateStart ((String) row.elementAt(dateStartCol));
+ 2188:              if (dateEndCol != -1)
+ 2189:                  cArray[i].setDateEnd   ((String) row.elementAt(dateEndCol));
+ 2190:              if (daynullCol != -1)
+ 2191:                  cArray[i].setDaynull   ((String) row.elementAt(daynullCol));
+ 2192:              if (stnnamCol != -1)
+ 2193:                  cArray[i].setStnnam    ((String) row.elementAt(stnnamCol));
+ 2194:              if (stndepCol != -1)
+ 2195:                  cArray[i].setStndep    ((String) row.elementAt(stndepCol));
+ 2196:              if (offshdCol != -1)
+ 2197:                  cArray[i].setOffshd    ((String) row.elementAt(offshdCol));
+ 2198:              if (passkeyCol != -1)
+ 2199:                  cArray[i].setPasskey   ((String) row.elementAt(passkeyCol));
+ 2200:              if (dupflagCol != -1)
+ 2201:                  cArray[i].setDupflag   ((String) row.elementAt(dupflagCol));
+ 2202:              if (maxSpldepCol != -1)
+***** TABLECLASSES040324\MRNSTATION.JAVA
+ 2214:      /**
+ 2215:       * Creates the where clause from the current values of the
+ 2216:       * instance variables.
+ 2217:       * @return  where clause (String)
+ 2218:       */
+ 2219:      private String createWhere() {
+ 2220:          String where = "";
+ 2221:          if (getStationId() != CHARNULL) {
+ 2222:              if (!where.equals("")) {
+ 2223:                  where = where + " and ";
+ 2224:              } // if where
+ 2225:              where = where + STATION_ID + "='" + getStationId() + "'";
+ 2226:          } // if getStationId
+ 2227:          if (getSurveyId() != CHARNULL) {
+ 2228:              if (!where.equals("")) {
+ 2229:                  where = where + " and ";
+ 2230:              } // if where
+ 2231:              where = where + SURVEY_ID + "='" + getSurveyId() + "'";
+ 2232:          } // if getSurveyId
+ 2233:          if (getLatitude() != FLOATNULL) {
+ 2234:              if (!where.equals("")) {
+ 2235:                  where = where + " and ";
+ 2236:              } // if where
+ 2237:              where = where + LATITUDE + "=" + getLatitude("");
+ 2238:          } // if getLatitude
+ 2239:          if (getLongitude() != FLOATNULL) {
+ 2240:              if (!where.equals("")) {
+ 2241:                  where = where + " and ";
+ 2242:              } // if where
+ 2243:              where = where + LONGITUDE + "=" + getLongitude("");
+ 2244:          } // if getLongitude
+ 2245:          if (!getDateStart().equals(DATENULL)) {
+ 2246:              if (!where.equals("")) {
+ 2247:                  where = where + " and ";
+ 2248:              } // if where
+ 2249:              where = where + DATE_START +
+ 2250:                  "=" + Tables.getDateFormat(getDateStart());
+ 2251:          } // if getDateStart
+ 2252:          if (!getDateEnd().equals(DATENULL)) {
+ 2253:              if (!where.equals("")) {
+ 2254:                  where = where + " and ";
+ 2255:              } // if where
+ 2256:              where = where + DATE_END +
+ 2257:                  "=" + Tables.getDateFormat(getDateEnd());
+ 2258:          } // if getDateEnd
+ 2259:          if (getDaynull() != CHARNULL) {
+ 2260:              if (!where.equals("")) {
+ 2261:                  where = where + " and ";
+ 2262:              } // if where
+ 2263:              where = where + DAYNULL + "='" + getDaynull() + "'";
+ 2264:          } // if getDaynull
+ 2265:          if (getStnnam() != CHARNULL) {
+ 2266:              if (!where.equals("")) {
+ 2267:                  where = where + " and ";
+ 2268:              } // if where
+ 2269:              where = where + STNNAM + "='" + getStnnam() + "'";
+ 2270:          } // if getStnnam
+ 2271:          if (getStndep() != FLOATNULL) {
+ 2272:              if (!where.equals("")) {
+ 2273:                  where = where + " and ";
+ 2274:              } // if where
+ 2275:              where = where + STNDEP + "=" + getStndep("");
+ 2276:          } // if getStndep
+ 2277:          if (getOffshd() != FLOATNULL) {
+ 2278:              if (!where.equals("")) {
+ 2279:                  where = where + " and ";
+ 2280:              } // if where
+ 2281:              where = where + OFFSHD + "=" + getOffshd("");
+ 2282:          } // if getOffshd
+ 2283:          if (getPasskey() != CHARNULL) {
+ 2284:              if (!where.equals("")) {
+ 2285:                  where = where + " and ";
+ 2286:              } // if where
+ 2287:              where = where + PASSKEY + "='" + getPasskey() + "'";
+ 2288:          } // if getPasskey
+ 2289:          if (getDupflag() != CHARNULL) {
+ 2290:              if (!where.equals("")) {
+ 2291:                  where = where + " and ";
+ 2292:              } // if where
+ 2293:              where = where + DUPFLAG + "='" + getDupflag() + "'";
+ 2294:          } // if getDupflag
+ 2295:          if (getMaxSpldep() != FLOATNULL) {
+ 2296:              if (!where.equals("")) {
+ 2297:                  where = where + " and ";
+ 2298:              } // if where
+ 2299:              where = where + MAX_SPLDEP + "=" + getMaxSpldep("");
+ 2300:          } // if getMaxSpldep
+ 2301:          if (getLat() != INTNULL) {
+ 2302:              if (!where.equals("")) {
+ 2303:                  where = where + " and ";
+ 2304:              } // if where
+ 2305:              where = where + LAT + "=" + getLat("");
+ 2306:          } // if getLat
+ 2307:          if (getLon() != INTNULL) {
+ 2308:              if (!where.equals("")) {
+ 2309:                  where = where + " and ";
+ 2310:              } // if where
+ 2311:              where = where + LON + "=" + getLon("");
+ 2312:          } // if getLon
+ 2313:          if (getYearmon() != CHARNULL) {
+*****
+

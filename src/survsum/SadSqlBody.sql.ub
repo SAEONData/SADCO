@@ -1,0 +1,5705 @@
+create or replace package body SadSql as
+   -- +------------------------------------------------------------+
+   -- | Get the number of positions                                |
+   -- +------------------------------------------------------------+
+   function count_positions (
+      surveyid_in in varchar2
+   )
+   return number as surveycount number;
+   begin
+      select   count(*)
+      into     surveycount
+      from     positions
+      where    survey_id = surveyid_in
+      ;
+      return   surveycount;
+   end count_positions;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of samples                                  |
+   -- +------------------------------------------------------------+
+   function count_samples (
+      surveyid_in in varchar2
+   )
+   return number as surveycount number;
+   begin
+      select   count(*)
+      into     surveycount
+      from     samples
+      where    survey_id = surveyid_in
+      ;
+      return   surveycount;
+   end count_samples;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of marine zones                             |
+   -- +------------------------------------------------------------+
+   function count_zones
+      (
+      surveyid_in in varchar2
+      )
+      return number as zonecount number;
+   begin
+      select   count(*)
+      into     zonecount
+      from     zones_covered
+      where    survey_id = surveyid_in
+      ;
+      return   zonecount;
+   end count_zones;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of platforms                                |
+   -- +------------------------------------------------------------+
+   function count_planam
+      return number as planamcount number;
+   begin
+      select   count(*)
+      into     planamcount
+      from     planam
+      ;
+      return   planamcount;
+   end count_planam;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of Institutes                               |
+   -- +------------------------------------------------------------+
+   function count_instit
+      return number as institcount number;
+   begin
+      select   count(*)
+      into     institcount
+      from     institutes
+      ;
+      return   institcount;
+   end count_instit;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of Scientists                               |
+   -- +------------------------------------------------------------+
+   function count_scientists
+      return number as scicount number;
+   begin
+      select   count(*)
+      into     scicount
+      from     scientists
+      ;
+      return   scicount;
+   end count_scientists;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of Countries                                |
+   -- +------------------------------------------------------------+
+   function count_country
+      return number as countrycount number;
+   begin
+      select   count(*)
+      into     countrycount
+      from     country
+      ;
+      return   countrycount;
+   end count_country;
+
+   -- +------------------------------------------------------------+
+   -- | List Platforms                                             |
+   -- +------------------------------------------------------------+
+   procedure list_planam
+   (
+      planam_name_in in varchar2       ,
+      planam_code    out t_planam_code ,
+      planam_name    out t_planam_name ,
+      callsign       out t_callsign    ,
+      platform_name  out t_platform_name
+   )
+   as
+      i number;
+      cursor planam_rcd(planam_name_in varchar2) is
+         select
+            planam.code planam_code,
+            planam.name planam_name,
+            callsign,
+            platform.name platform_name
+         from
+            planam,
+            platform
+         where
+            upper(planam.name) >= upper(planam_name_in)
+            and platform.code = planam.platform_code
+         order by
+            upper(planam.name)
+         ;
+   begin
+      i := 1;
+      for planam_rec in planam_rcd(planam_name_in) loop
+         planam_code(i)       := planam_rec.planam_code  ;
+         planam_name(i)       := planam_rec.planam_name  ;
+         callsign   (i)       := planam_rec.callsign     ;
+         platform_name(i)     := planam_rec.platform_name  ;
+         i := i + 1;
+         exit when i > 30;
+      end loop;  --  for planam_rec in planam_rcd(planam_name_in) loop
+   end list_planam;
+
+   -- +------------------------------------------------------------+
+   -- | List marine zones                                          |
+   -- +------------------------------------------------------------+
+   procedure list_zones
+   (
+      survey_id_in   in varchar2       ,
+      marine_zone    out t_marine_zone
+   )
+   as
+      i number;
+      cursor zone_rcd(survey_id_in varchar2) is
+         select
+            marine_zone
+         from
+            zones_covered,
+            marine_zones
+         where
+            survey_id = survey_id_in
+            and zones_covered.zone_code = marine_zones.code
+         ;
+   begin
+      i := 1;
+      for zone_rec in zone_rcd(survey_id_in) loop
+         marine_zone(i)       := zone_rec.marine_zone  ;
+         i := i + 1;
+      end loop;  --  for zone_rec in zonercd(survey_id_in) loop
+   end list_zones;
+
+   -- +------------------------------------------------------------+
+   -- | List Scientists by surname                                 |
+   -- +------------------------------------------------------------+
+   procedure list_surname
+   (
+      surname_in     in varchar2       ,
+      sci_code       out t_sci_code    ,
+      surname        out t_surname     ,
+      f_name         out t_f_name      ,
+      title          out t_title       ,
+      instit_name    out t_instit_name
+   )
+   as
+      i number;
+      cursor surname_rcd(surname_in varchar2) is
+         select
+            scientists.code   ,
+            surname    ,
+            f_name     ,
+            title      ,
+            institutes.name
+         from
+            scientists,
+            institutes
+         where
+                  upper(surname)  >= upper(surname_in)
+            and   institutes.code  =  scientists.instit_code
+         order by
+            upper(surname)
+         ;
+   begin
+      i := 1;
+      for surname_rec in surname_rcd(surname_in) loop
+         sci_code(i)      := surname_rec.code ;
+         surname(i)       := surname_rec.surname  ;
+         f_name(i)        := surname_rec.f_name   ;
+         title(i)         := surname_rec.title    ;
+         instit_name(i)   := surname_rec.name;
+         i := i + 1;
+         exit when i > 30;
+      end loop;  --  for surname_rec in surname_rcd(surname_in) loop
+   end list_surname;
+
+   -- +------------------------------------------------------------+
+   -- | List Principal Investigators                               |
+   -- +------------------------------------------------------------+
+   procedure list_investigators
+   (
+      surveyid_in    in varchar2       ,
+      sci_code       out t_sci_code    ,
+      surname        out t_surname     ,
+      f_name         out t_f_name      ,
+      title          out t_title       ,
+      pi_code        out t_pi_code     ,
+      instit_name    out t_instit_name ,
+      address        out t_address
+   )
+   as
+      i number;
+      cursor investi_rcd(surveyid_in varchar2) is
+         select
+            scientists.code,
+            surname    ,
+            f_name     ,
+            title      ,
+            pi_code    ,
+            institutes.name,
+            address
+         from
+            investigators,
+            scientists,
+            institutes
+         where
+                  survey_id        =  surveyid_in
+            and   scientists.code  =  investigators.sci_code
+            and   institutes.code  =  scientists.instit_code
+         order by
+            upper(pi_code)
+         ;
+   begin
+      i := 1;
+      for investi_rec in investi_rcd(surveyid_in) loop
+         sci_code(i)      := investi_rec.code     ;
+         surname(i)       := investi_rec.surname      ;
+         f_name(i)        := investi_rec.f_name       ;
+         title(i)         := investi_rec.title        ;
+         pi_code(i)       := investi_rec.pi_code      ;
+         instit_name(i)   := investi_rec.name  ;
+         address(i)       := investi_rec.address     ;
+         i := i + 1;
+      end loop;  --  for investi_rec in investi_rcd(surveyid_in) loop
+   end list_investigators;
+
+   -- +------------------------------------------------------------+
+   -- | List Positions                                             |
+   -- +------------------------------------------------------------+
+   procedure list_positions
+   (
+      surveyid_in    in varchar2       ,
+      positions_code out t_positions_code,
+      pi_code        out t_pi_code     ,
+      type_code      out t_type_code   ,
+      type_name      out t_type_name   ,
+      latitude       out t_latitude    ,
+      longitude      out t_longitude   ,
+      remarks        out t_remarks
+   )
+   as
+      i number;
+      cursor position_rcd(surveyid_in varchar2) is
+         select
+            positions.code positions_code,
+            pi_code    ,
+            positions.type_code  ,
+            name  ,
+            latitude   ,
+            longitude  ,
+            remarks
+         from
+            positions  ,
+            data_types
+         where
+                  survey_id          =  surveyid_in
+            and   data_types.code    =  positions.type_code
+         order by
+            upper(pi_code)
+         ;
+   begin
+      i := 1;
+      for position_rec in position_rcd(surveyid_in) loop
+         positions_code(i):= position_rec.positions_code;
+         pi_code(i)       := position_rec.pi_code      ;
+         type_code(i)     := position_rec.type_code    ;
+         type_name(i)     := position_rec.name    ;
+         latitude(i)      := position_rec.latitude     ;
+         longitude(i)     := position_rec.longitude    ;
+         remarks(i)       := position_rec.remarks      ;
+         i := i + 1;
+      end loop;  --  for position_rec in position_rcd(surveyid_in) loop
+   end list_positions;
+
+   -- +------------------------------------------------------------+
+   -- | List Samples                                               |
+   -- +------------------------------------------------------------+
+   procedure list_samples
+   (
+      surveyid_in    in varchar2        ,
+      samples_code   out t_samples_code ,
+      pi_code        out t_pi_code      ,
+      sample_number  out t_sample_number,
+      sample_units   out t_sample_units ,
+      type_code      out t_type_code    ,
+      type_name      out t_type_name    ,
+      remarks        out t_remarks
+   )
+   as i number;
+      cursor sample_rcd(surveyid_in varchar2) is
+         select
+            samples.code samples_code  ,
+            pi_code       ,
+            sample_number ,
+            sample_units  ,
+            samples.type_code     ,
+            name     ,
+            remarks
+         from
+            samples  ,
+            data_types
+         where
+                  survey_id          =  surveyid_in
+            and   data_types.code    = samples.type_code
+         order by
+            upper(pi_code)
+         ;
+   begin
+      i := 1;
+      for sample_rec in sample_rcd(surveyid_in) loop
+         samples_code (i) := sample_rec.samples_code ;
+         pi_code      (i) := sample_rec.pi_code      ;
+         sample_number(i) := sample_rec.sample_number;
+         sample_units (i) := sample_rec.sample_units ;
+         type_code    (i) := sample_rec.type_code    ;
+         type_name    (i) := sample_rec.name    ;
+         remarks      (i) := sample_rec.remarks      ;
+         i := i + 1;
+      end loop;  --  for sample_rec in sample_rcd(surveyid_in) loop
+   end list_samples;
+
+   -- +------------------------------------------------------------+
+   -- | List Institutes                                            |
+   -- +------------------------------------------------------------+
+   procedure list_institute
+   (
+      instit_name_in in varchar2       ,
+      instit_code    out t_sci_code    ,
+      instit_name    out t_instit_name ,
+      address        out t_address
+   )
+   as
+      i number;
+      cursor institute_rcd(instit_name_in varchar2) is
+         select
+            code,
+            name,
+            address
+         from
+            institutes
+         where
+            upper(name)      >= upper(instit_name_in)
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for institute_rec in institute_rcd(instit_name_in) loop
+         instit_code(i)   := institute_rec.code;
+         instit_name(i)   := institute_rec.name;
+         address    (i)   := institute_rec.address    ;
+         i := i + 1;
+         exit when i > 30;
+      end loop;  --  for institute_rec intitute_rcd(instit_name_in) loop
+   end list_institute;
+
+   -- +------------------------------------------------------------+
+   -- | Display survey notes                                       |
+   -- +------------------------------------------------------------+
+   procedure display_survey_notes (
+      survey_id_in         in varchar2          ,
+      v_line1              out varchar2         ,
+      v_line2              out varchar2         ,
+      v_line3              out varchar2         ,
+      v_line4              out varchar2         ,
+      v_line5              out varchar2         ,
+      v_line6              out varchar2         ,
+      v_line7              out varchar2         ,
+      v_line8              out varchar2         ,
+      v_line9              out varchar2         ,
+      v_line10             out varchar2
+   )
+   as i number;
+   begin
+      select
+         line1      ,
+         line2      ,
+         line3      ,
+         line4      ,
+         line5      ,
+         line6      ,
+         line7      ,
+         line8      ,
+         line9      ,
+         line10
+      into
+         v_line1      ,
+         v_line2      ,
+         v_line3      ,
+         v_line4      ,
+         v_line5      ,
+         v_line6      ,
+         v_line7      ,
+         v_line8      ,
+         v_line9      ,
+         v_line10
+      from
+         survey_notes
+      where
+         survey_id = survey_id_in
+      ;
+   end display_survey_notes;
+
+   -- +-----------------------------------------------------------+
+   -- | Update survey notes                                       |
+   -- +-----------------------------------------------------------+
+   procedure update_survey_notes (
+      survey_id_in         in varchar2          ,
+      v_line1              in varchar2         ,
+      v_line2              in varchar2         ,
+      v_line3              in varchar2         ,
+      v_line4              in varchar2         ,
+      v_line5              in varchar2         ,
+      v_line6              in varchar2         ,
+      v_line7              in varchar2         ,
+      v_line8              in varchar2         ,
+      v_line9              in varchar2         ,
+      v_line10             in varchar2
+   )
+   as i number;
+   begin
+      insert into survey_notes values (
+         survey_id_in,
+         v_line1     ,
+         v_line2     ,
+         v_line3     ,
+         v_line4     ,
+         v_line5     ,
+         v_line6     ,
+         v_line7     ,
+         v_line8     ,
+         v_line9     ,
+         v_line10
+      );
+   end update_survey_notes;
+
+   -- +------------------------------------------------------------+
+   -- | List surveys in according to survey                        |
+   -- +------------------------------------------------------------+
+   procedure list_survey_survey
+   (
+      survey_id_in   in varchar2          ,
+      survey_id      out t_survey_id      ,
+      project_name   out t_project_name   ,
+      cruise_name    out t_cruise_name    ,
+      planam_name    out t_planam_name    ,
+      surname        out t_surname        ,
+      f_name         out t_f_name         ,
+      title          out t_title          ,
+      instit_name    out t_instit_name    ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+      data_recorded  out t_data_recorded
+   )
+   as
+      i number;
+      cursor survey_rcd(survey_id_in varchar2) is
+         select
+            survey_id          ,
+            project_name       ,
+            cruise_name        ,
+            planam.name planam_name,
+            surname            ,
+            f_name             ,
+            title              ,
+            institutes.name instit_name,
+            to_char(date_start,'YYYY-MM-DD') date_start_f,
+            to_char(date_end  ,'YYYY-MM-DD') date_end_f,
+            data_recorded
+         from
+            inventory,
+            planam,
+            institutes,
+            scientists
+         where
+                  inventory.survey_id >= survey_id_in
+            and   planam.code         = inventory.planam_code
+            and   institutes.code     = inventory.instit_code
+            and   scientists.code     = inventory.sci_code_1
+         order by
+            inventory.survey_id
+         ;
+   begin
+      i := 1;
+      for survey_rec in survey_rcd(survey_id_in) loop
+         survey_id(i)        := survey_rec.survey_id      ;
+         project_name(i)     := survey_rec.project_name   ;
+         cruise_name(i)      := survey_rec.cruise_name    ;
+         planam_name(i)      := survey_rec.planam_name    ;
+         surname(i)          := survey_rec.surname        ;
+         f_name(i)           := survey_rec.f_name         ;
+         title(i)            := survey_rec.title          ;
+         instit_name(i)      := survey_rec.instit_name    ;
+         date_start_f(i)     := survey_rec.date_start_f   ;
+         date_end_f(i)       := survey_rec.date_end_f     ;
+         data_recorded(i)    := survey_rec.data_recorded  ;
+         i := i + 1;
+         exit when i > 30;
+      end loop;  --  for survey_rec in survey_rcd(survey_id_in) loop
+   end list_survey_survey;
+
+   -- +------------------------------------------------------------+
+   -- | List surveys in according to start date                    |
+   -- +------------------------------------------------------------+
+   procedure list_survey_datestart
+   (
+      datestart_in   in varchar2          ,
+      survey_id      out t_survey_id      ,
+      project_name   out t_project_name   ,
+      cruise_name    out t_cruise_name    ,
+      planam_name    out t_planam_name    ,
+      surname        out t_surname        ,
+      f_name         out t_f_name         ,
+      title          out t_title          ,
+      instit_name    out t_instit_name    ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+      data_recorded  out t_data_recorded
+   )
+   as
+      i number;
+      cursor survey_rcd(datestart_in varchar2) is
+         select
+            survey_id          ,
+            project_name       ,
+            cruise_name        ,
+            planam.name planam_name,
+            surname            ,
+            f_name             ,
+            title              ,
+            institutes.name instit_name,
+            to_char(date_start,'YYYY-MM-DD') date_start_f,
+            to_char(date_end  ,'YYYY-MM-DD') date_end_f,
+            data_recorded
+         from
+            inventory,
+            planam,
+            institutes,
+            scientists
+         where
+                  inventory.date_start >= to_date(datestart_in,'YYYY-MM-DD')
+            and   planam.code          = inventory.planam_code
+            and   institutes.code      = inventory.instit_code
+            and   scientists.code      = inventory.sci_code_1
+         order by
+            inventory.date_start,
+            inventory.date_end
+         ;
+   begin
+      i := 1;
+      for survey_rec in survey_rcd(datestart_in) loop
+         survey_id(i)        := survey_rec.survey_id      ;
+         project_name(i)     := survey_rec.project_name   ;
+         cruise_name(i)      := survey_rec.cruise_name    ;
+         planam_name(i)      := survey_rec.planam_name    ;
+         surname(i)          := survey_rec.surname        ;
+         f_name(i)           := survey_rec.f_name         ;
+         title(i)            := survey_rec.title          ;
+         instit_name(i)      := survey_rec.instit_name    ;
+         date_start_f(i)     := survey_rec.date_start_f   ;
+         date_end_f(i)       := survey_rec.date_end_f     ;
+         data_recorded(i)    := survey_rec.data_recorded  ;
+         i := i + 1;
+         exit when i > 30;
+      end loop;  --  for survey_rec in survey_rcd(datestart_in) loop
+   end list_survey_datestart;
+
+   -- +------------------------------------------------------------+
+   -- | List surveys in according to platform name                 |
+   -- +------------------------------------------------------------+
+   procedure list_survey_platform
+   (
+      planam_code_in   in number          ,
+      startyear        in varchar2        ,
+      survey_id      out t_survey_id      ,
+      project_name   out t_project_name   ,
+      cruise_name    out t_cruise_name    ,
+      surname        out t_surname        ,
+      f_name         out t_f_name         ,
+      title          out t_title          ,
+      instit_name    out t_instit_name    ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+      data_recorded  out t_data_recorded
+   )
+   as
+      i number;
+      cursor survey_rcd(planam_code_in number, startyear varchar2) is
+         select
+            survey_id          ,
+            project_name       ,
+            cruise_name        ,
+            surname            ,
+            f_name             ,
+            title              ,
+            institutes.name instit_name,
+            to_char(date_start,'YYYY-MM-DD') date_start_f,
+            to_char(date_end  ,'YYYY-MM-DD') date_end_f,
+            data_recorded
+         from
+            inventory,
+            planam,
+            institutes,
+            scientists
+         where
+                  inventory.planam_code   = planam_code_in
+            and   inventory.date_start    >= to_date(startyear,'YYYY-MM-DD')
+            and   planam.code             = inventory.planam_code
+            and   institutes.code         = inventory.instit_code
+            and   scientists.code         = inventory.sci_code_1
+         order by
+            inventory.date_start
+         ;
+   begin
+      i := 1;
+      for survey_rec in survey_rcd(planam_code_in, startyear) loop
+         survey_id(i)        := survey_rec.survey_id      ;
+         project_name(i)     := survey_rec.project_name   ;
+         cruise_name(i)      := survey_rec.cruise_name    ;
+         surname(i)          := survey_rec.surname        ;
+         f_name(i)           := survey_rec.f_name         ;
+         title(i)            := survey_rec.title          ;
+         instit_name(i)      := survey_rec.instit_name    ;
+         date_start_f(i)     := survey_rec.date_start_f   ;
+         date_end_f(i)       := survey_rec.date_end_f     ;
+         data_recorded(i)    := survey_rec.data_recorded  ;
+         i := i + 1;
+         exit when i > 20;
+      end loop;  --  for survey_rec in survey_rcd(survey_id_in) loop
+   end list_survey_platform;
+
+   -- +------------------------------------------------------------+
+   -- | List surveys in according to institute                     |
+   -- +------------------------------------------------------------+
+   procedure list_survey_institute
+   (
+      instit_code_in in number            ,
+      startyear       in varchar2         ,
+      survey_id      out t_survey_id      ,
+      project_name   out t_project_name   ,
+      planam_name    out t_planam_name    ,
+      cruise_name    out t_cruise_name    ,
+      surname        out t_surname        ,
+      f_name         out t_f_name         ,
+      title          out t_title          ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+      data_recorded  out t_data_recorded
+   )
+   as
+      i number;
+      cursor survey_rcd(instit_code_in number, startyear varchar2) is
+         select
+            survey_id          ,
+            project_name       ,
+            planam.name planam_name,
+            cruise_name        ,
+            surname            ,
+            f_name             ,
+            title              ,
+            to_char(date_start,'YYYY-MM-DD') date_start_f,
+            to_char(date_end  ,'YYYY-MM-DD') date_end_f,
+            data_recorded
+         from
+            inventory,
+            planam,
+            scientists
+         where
+                  inventory.instit_code   = instit_code_in
+            and   inventory.date_start    >= to_date(startyear,'YYYY-MM-DD')
+            and   planam.code             = inventory.planam_code
+            and   scientists.code         = inventory.sci_code_1
+         order by
+            inventory.date_start
+         ;
+   begin
+      i := 1;
+      for survey_rec in survey_rcd(instit_code_in, startyear) loop
+         survey_id(i)        := survey_rec.survey_id      ;
+         project_name(i)     := survey_rec.project_name   ;
+         planam_name(i)      := survey_rec.planam_name    ;
+         cruise_name(i)      := survey_rec.cruise_name    ;
+         surname(i)          := survey_rec.surname        ;
+         f_name(i)           := survey_rec.f_name         ;
+         title(i)            := survey_rec.title          ;
+         date_start_f(i)     := survey_rec.date_start_f   ;
+         date_end_f(i)       := survey_rec.date_end_f     ;
+         data_recorded(i)    := survey_rec.data_recorded  ;
+         i := i + 1;
+         exit when i > 20;
+      end loop;  --  for survey_rec in survey_rcd(instit_code_in) loop
+   end list_survey_institute;
+
+   -- +------------------------------------------------------------+
+   -- | List surveys in according to scientist                     |
+   -- +------------------------------------------------------------+
+   procedure list_survey_scientist
+   (
+      sci_code_in    in number            ,
+      startyear      in varchar2          ,
+      survey_id      out t_survey_id      ,
+      project_name   out t_project_name   ,
+      cruise_name    out t_cruise_name    ,
+      planam_name    out t_planam_name    ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+      data_recorded  out t_data_recorded
+   )
+   as
+      i number;
+      cursor survey_rcd(planam_code_in number, startyear varchar2) is
+         select
+            survey_id          ,
+            project_name       ,
+            cruise_name        ,
+            planam.name planam_name,
+            to_char(date_start,'YYYY-MM-DD') date_start_f,
+            to_char(date_end  ,'YYYY-MM-DD') date_end_f,
+            data_recorded
+         from
+            inventory,
+            planam
+         where
+                  inventory.sci_code_1 = sci_code_in
+            and   inventory.date_start >= to_date(startyear,'YYYY-MM-DD')
+            and   planam.code          = inventory.planam_code
+         order by
+            inventory.date_start
+         ;
+   begin
+      i := 1;
+      for survey_rec in survey_rcd(sci_code_in, startyear) loop
+         survey_id(i)        := survey_rec.survey_id      ;
+         project_name(i)     := survey_rec.project_name   ;
+         cruise_name(i)      := survey_rec.cruise_name    ;
+         planam_name(i)      := survey_rec.planam_name    ;
+         date_start_f(i)     := survey_rec.date_start_f   ;
+         date_end_f(i)       := survey_rec.date_end_f     ;
+         data_recorded(i)    := survey_rec.data_recorded  ;
+         i := i + 1;
+         exit when i > 20;
+      end loop;  --  for survey_rec in survey_rcd(sci_code_in) loop
+   end list_survey_scientist;
+
+   -- +------------------------------------------------------------+
+   -- | Display Platform Information                               |
+   -- +------------------------------------------------------------+
+   procedure display_planam
+   (
+      planam_code_in    in number,
+      min_start_out     out varchar2,
+      max_start_out     out varchar2,
+      records           out number,
+      planam_name_out   out varchar2
+   )
+   as i number;
+   begin
+      select
+         count(*),
+         to_char(min(date_start),'YYYY-MM-DD'),
+         to_char(max(date_start),'YYYY-MM-DD')
+      into
+         records,
+         min_start_out,
+         max_start_out
+      from
+         inventory
+      where
+         planam_code = planam_code_in
+      ;
+      select   name
+      into     planam_name_out
+      from     planam
+      where    code = planam_code_in
+      ;
+   end display_planam;
+
+   -- +------------------------------------------------------------+
+   -- | Display Scientist Information                              |
+
+   -- +------------------------------------------------------------+
+   procedure display_scientist_data
+   (
+      sci_code_in      in number,
+      v_surname       out varchar2,
+      v_f_name        out varchar2,
+      v_title         out varchar2,
+      v_instit_name   out varchar2,
+      v_address       out varchar2
+   )
+   as i number;
+   begin
+      select
+         surname,
+         f_name,
+         title,
+         institutes.name,
+         address
+      into
+         v_surname,
+         v_f_name,
+         v_title,
+         v_instit_name,
+         v_address
+      from
+         scientists,
+         institutes
+      where
+               scientists.code  = sci_code_in
+         and   institutes.code  = scientists.instit_code
+      ;
+   end display_scientist_data;
+
+   -- +------------------------------------------------------------+
+   -- | Display Data Type  Information                             |
+   -- +------------------------------------------------------------+
+   procedure display_data_type
+   (
+      grp_code_in      in varchar2,
+      v_type_name     out varchar2,
+      v_group_name    out varchar2
+   )
+   as
+      i number;
+   begin
+      select
+         data_types.name  type_name,
+         data_groups.name group_name
+      into
+         v_type_name,
+         v_group_name
+      from
+         data_types,
+         data_groups
+      where
+               data_types.code   = grp_code_in
+         and   data_groups.code  = data_types.group_code
+      ;
+   end display_data_type;
+
+   -- +------------------------------------------------------------+
+   -- | Display Scientist Information                              |
+   -- +------------------------------------------------------------+
+   procedure display_scientist
+   (
+      sci_code_in       in number,
+      min_start_out     out varchar2,
+      max_start_out     out varchar2,
+      records           out number,
+      surname_out       out varchar2,
+      f_name_out        out varchar2,
+      title_out         out varchar2,
+      instit_name_out   out varchar2
+   )
+   as
+      i number;
+   begin
+      select
+         count(*),
+         to_char(min(date_start),'YYYY-MM-DD'),
+         to_char(max(date_start),'YYYY-MM-DD')
+      into
+         records,
+         min_start_out,
+         max_start_out
+      from
+         inventory
+      where
+         sci_code_1 = sci_code_in
+      ;
+      select
+         surname,
+         f_name,
+         title,
+         institutes.name
+      into
+         surname_out,
+         f_name_out,
+         title_out,
+         instit_name_out
+      from
+         scientists,
+         institutes
+      where
+               scientists.code  = sci_code_in
+         and   institutes.code  = scientists.instit_code
+      ;
+   end display_scientist;
+
+   -- +------------------------------------------------------------+
+   -- | Display Institute Information                              |
+   -- +------------------------------------------------------------+
+   procedure display_institute
+   (
+      instit_code_in     in number,
+      min_start_out     out varchar2,
+      max_start_out     out varchar2,
+      records           out number,
+      instit_name_out   out varchar2,
+      address_out       out varchar2
+   )
+   as
+      i number;
+   begin
+      select
+         count(*),
+         to_char(min(date_start),'YYYY-MM-DD'),
+         to_char(max(date_start),'YYYY-MM-DD')
+      into
+         records,
+         min_start_out,
+         max_start_out
+      from
+         inventory
+      where
+         instit_code = instit_code_in
+      ;
+      select
+         name,
+         address
+      into
+         instit_name_out,
+         address_out
+      from
+         institutes
+      where
+         code = instit_code_in
+      ;
+   end display_institute;
+
+   -- +------------------------------------------------------------+
+   -- | Display full survey information                            |
+   -- +------------------------------------------------------------+
+   procedure display_survey_full
+   (
+      survey_id_in         in varchar2          ,
+      v_data_centre        out varchar2         ,
+      v_project_name       out varchar2         ,
+      v_cruise_name        out varchar2         ,
+      v_planam_name        out varchar2         ,
+      v_platform_name      out varchar2         ,
+      v_callsign           out varchar2         ,
+      v_country_name       out varchar2         ,
+      v_surname_1          out varchar2         ,
+      v_f_name_1           out varchar2         ,
+      v_title_1            out varchar2         ,
+      v_surname_2          out varchar2         ,
+      v_f_name_2           out varchar2         ,
+      v_title_2            out varchar2         ,
+      v_instit_name        out varchar2         ,
+      v_address            out varchar2         ,
+      v_instit_name_1      out varchar2         ,
+      v_address_1          out varchar2         ,
+      v_instit_name_2      out varchar2         ,
+      v_address_2          out varchar2         ,
+      v_instit_name_c      out varchar2         ,
+      v_address_c          out varchar2         ,
+      v_date_start_f       out varchar2         ,
+      v_date_end_f         out varchar2         ,
+      v_GMT_diff           out number           ,
+      v_lat_north          out number           ,
+      v_lat_south          out number           ,
+      v_long_west          out number           ,
+      v_long_east          out number           ,
+      v_track_chart        out varchar2         ,
+      v_target_country_name out varchar2        ,
+      v_data_recorded      out varchar2         ,
+      v_national_pgm       out varchar2         ,
+      v_exchange_restrict  out varchar2         ,
+      v_coop_pgm           out varchar2         ,
+      v_coordinated_int    out varchar2         ,
+      v_port_start         out varchar2         ,
+      v_port_end           out varchar2
+   )
+   as
+      v_country_code    number;
+      v_target_country_code    number;
+      v_coord_code      number;
+      v_sci_code_1      number;
+      v_sci_code_2      number;
+      v_instit_code     number;
+      v_planam_code     number;
+   begin
+      select
+         data_centre        ,
+         project_name       ,
+         cruise_name        ,
+         national_pgm       ,
+         exchange_restrict  ,
+         coop_pgm           ,
+         coordinated_int    ,
+         port_start         ,
+         port_end           ,
+         to_char(date_start,'YYYY-MM-DD') date_start_f,
+         to_char(date_end  ,'YYYY-MM-DD') date_end_f,
+         GMT_diff           ,
+         lat_north          ,
+         lat_south          ,
+         long_west          ,
+         long_east          ,
+         track_chart        ,
+         data_recorded      ,
+         planam_code        ,
+         instit_code        ,
+         coord_code         ,
+         sci_code_1         ,
+         sci_code_2         ,
+         country_code       ,
+         target_country_code
+      into
+         v_data_centre        ,
+         v_project_name       ,
+         v_cruise_name        ,
+         v_national_pgm       ,
+         v_exchange_restrict  ,
+         v_coop_pgm           ,
+         v_coordinated_int    ,
+         v_port_start         ,
+         v_port_end           ,
+         v_date_start_f       ,
+         v_date_end_f         ,
+         v_GMT_diff           ,
+         v_lat_north          ,
+         v_lat_south          ,
+         v_long_west          ,
+         v_long_east          ,
+         v_track_chart        ,
+         v_data_recorded      ,
+         v_planam_code        ,
+         v_instit_code        ,
+         v_coord_code         ,
+         v_sci_code_1         ,
+         v_sci_code_2         ,
+         v_country_code       ,
+         v_target_country_code
+      from
+         inventory
+      where
+         inventory.survey_id     = survey_id_in
+      ;
+      select
+         planam.name    planam_name,
+         platform.name  platform_name,
+         callsign
+      into
+         v_planam_name,
+         v_platform_name,
+         v_callsign
+      from
+         planam,
+         platform
+      where
+             planam.code = v_planam_code
+         and platform.code = planam.platform_code
+      ;
+      select
+         name,
+         address
+      into
+         v_instit_name,
+         v_address
+      from     institutes
+      where    code = v_instit_code
+      ;
+      select
+         name,
+         address
+      into
+         v_instit_name_c,
+         v_address_c
+      from     institutes
+      where    code = v_coord_code
+      ;
+      select   name
+      into     v_country_name
+      from     country
+      where    code = v_country_code
+      ;
+      select   name
+      into     v_target_country_name
+      from     country
+      where    code = v_target_country_code
+      ;
+      select
+         surname,
+         f_name,
+         title,
+         institutes.name,
+         address
+      into
+         v_surname_1,
+         v_f_name_1,
+         v_title_1,
+         v_instit_name_1,
+         v_address_1
+      from
+         scientists,
+         institutes
+      where
+             scientists.code = v_sci_code_1
+         and institutes.code = scientists.instit_code
+      ;
+      select
+         surname,
+         f_name,
+         title,
+         institutes.name,
+         address
+      into
+         v_surname_2,
+         v_f_name_2,
+         v_title_2,
+         v_instit_name_2,
+         v_address_2
+      from
+         scientists,
+         institutes
+      where
+             scientists.code = v_sci_code_2
+         and institutes.code = scientists.instit_code
+      ;
+   end display_survey_full;
+
+   -- +------------------------------------------------------------+
+   -- | Display survey information                                 |
+   -- +------------------------------------------------------------+
+
+   procedure display_survey
+   (
+      survey_id_in   in varchar2          ,
+      data_centre    out t_data_centre    ,
+      project_name   out t_project_name   ,
+      cruise_name    out t_cruise_name    ,
+      planam_name    out t_planam_name    ,
+      platform_name  out t_platform_name  ,
+      country_name   out t_country_name   ,
+      surname        out t_surname        ,
+      f_name         out t_f_name         ,
+      title          out t_title          ,
+      instit_name    out t_instit_name    ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+      lat_north      out t_lat_north      ,
+      lat_south      out t_lat_south      ,
+      long_west      out t_long_west      ,
+      long_east      out t_long_east      ,
+      data_recorded  out t_data_recorded
+   )
+   as
+      i number;
+      cursor survey_rcd(survey_id_in varchar2) is
+         select
+            data_centre        ,
+            project_name       ,
+            cruise_name        ,
+            planam.name       planam_name,
+            platform.name     platform_name,
+            country.name      country_name,
+            surname            ,
+            f_name             ,
+            title              ,
+            institutes.name   instit_name,
+            to_char(date_start,'YYYY-MM-DD') date_start_f,
+            to_char(date_end  ,'YYYY-MM-DD') date_end_f,
+            lat_north          ,
+            lat_south          ,
+            long_west          ,
+            long_east          ,
+            data_recorded
+         from
+            inventory,
+            platform,
+            planam,
+            institutes,
+            country,
+            scientists
+         where
+                  inventory.survey_id = survey_id_in
+            and   planam.code         = inventory.planam_code
+            and   platform.code       = planam.platform_code
+            and   institutes.code     = inventory.instit_code
+            and   scientists.code     = inventory.sci_code_1
+            and   country.code        = inventory.country_code
+         order by
+            inventory.survey_id
+         ;
+   begin
+      i := 1;
+      for survey_rec in survey_rcd(survey_id_in) loop
+         data_centre(i)      := survey_rec.data_centre    ;
+         project_name(i)     := survey_rec.project_name   ;
+         cruise_name(i)      := survey_rec.cruise_name    ;
+         planam_name(i)      := survey_rec.planam_name    ;
+         platform_name(i)    := survey_rec.platform_name  ;
+         country_name(i)     := survey_rec.country_name   ;
+         surname(i)          := survey_rec.surname        ;
+         f_name(i)           := survey_rec.f_name         ;
+         title(i)            := survey_rec.title          ;
+         instit_name(i)      := survey_rec.instit_name    ;
+         date_start_f(i)     := survey_rec.date_start_f   ;
+         date_end_f(i)       := survey_rec.date_end_f     ;
+         lat_north(i)        := survey_rec.lat_north      ;
+         lat_south(i)        := survey_rec.lat_south      ;
+         long_west(i)        := survey_rec.long_west      ;
+         long_east(i)        := survey_rec.long_east      ;
+         data_recorded(i)    := survey_rec.data_recorded  ;
+         i := i + 1;
+      end loop;  --  for survey_rec in survey_rcd(survey_id_in) loop
+   end display_survey;
+
+   -- +------------------------------------------------------------+
+   -- | Display survey information (brief)                         |
+   -- +------------------------------------------------------------+
+   procedure display_survey_brief
+   (
+      survey_id_in      in varchar2         ,
+      v_project_name   out varchar2         ,
+      v_cruise_name    out varchar2         ,
+      v_planam_name    out varchar2         ,
+      v_surname        out varchar2         ,
+      v_f_name         out varchar2         ,
+      v_title          out varchar2         ,
+      v_instit_name    out varchar2         ,
+      v_date_start_f   out varchar2         ,
+      v_date_end_f     out varchar2         ,
+      v_GMT_diff       out number           ,
+      v_lat_north      out number           ,
+      v_lat_south      out number           ,
+      v_long_west      out number           ,
+      v_long_east      out number           ,
+      v_data_recorded  out varchar2
+   )
+   as
+      i number;
+   begin
+      select
+         project_name       ,
+         cruise_name        ,
+         planam.name       planam_name,
+         surname            ,
+         f_name             ,
+         title              ,
+         institutes.name   instit_name,
+         to_char(date_start,'YYYY-MM-DD') date_start_f,
+         to_char(date_end  ,'YYYY-MM-DD') date_end_f,
+         GMT_diff           ,
+         lat_north          ,
+         lat_south          ,
+         long_west          ,
+         long_east          ,
+         data_recorded
+      into
+         v_project_name   ,
+         v_cruise_name    ,
+         v_planam_name    ,
+         v_surname        ,
+         v_f_name         ,
+         v_title          ,
+         v_instit_name    ,
+         v_date_start_f   ,
+         v_date_end_f     ,
+         v_GMT_diff       ,
+         v_lat_north      ,
+         v_lat_south      ,
+         v_long_west      ,
+         v_long_east      ,
+         v_data_recorded
+      from
+         inventory,
+         planam,
+         institutes,
+         scientists
+      where
+               inventory.survey_id     = survey_id_in
+         and   planam.code             = inventory.planam_code
+         and   institutes.code         = inventory.instit_code
+         and   scientists.code         = inventory.sci_code_1
+      ;
+   end display_survey_brief;
+
+   -- +------------------------------------------------------------+
+   -- | Display survey statistics information                      |
+   -- +------------------------------------------------------------+
+   procedure display_survey_stats
+   (
+      survey_id_in   in varchar2          ,
+      station_cnt    out t_station_cnt    ,
+      watphy_cnt     out t_watphy_cnt     ,
+      watnut_cnt     out t_watnut_cnt     ,
+      watpol1_cnt    out t_watpol1_cnt    ,
+      watpol2_cnt    out t_watpol2_cnt    ,
+      watchem1_cnt   out t_watchem1_cnt   ,
+      watchem2_cnt   out t_watchem2_cnt   ,
+      watchl_cnt     out t_watchl_cnt     ,
+      sedphy_cnt     out t_sedphy_cnt     ,
+      sedpes_cnt     out t_sedpes_cnt     ,
+      sedpol1_cnt    out t_sedpol1_cnt    ,
+      sedpol2_cnt    out t_sedpol2_cnt    ,
+      sedchem1_cnt   out t_sedchem1_cnt   ,
+      sedchem2_cnt   out t_sedchem2_cnt   ,
+      sedtax_cnt     out t_sedtax_cnt     ,
+      plaphy_cnt     out t_plaphy_cnt     ,
+      plapes_cnt     out t_plapes_cnt     ,
+      plapol1_cnt    out t_plapol1_cnt    ,
+      plapol2_cnt    out t_plapol2_cnt    ,
+      platax_cnt     out t_platax_cnt     ,
+      plachl_cnt     out t_plachl_cnt     ,
+      tisphy_cnt     out t_tisphy_cnt     ,
+      tispes_cnt     out t_tispes_cnt     ,
+      tispol1_cnt    out t_tispol1_cnt    ,
+      tispol2_cnt    out t_tispol2_cnt    ,
+      tisanimal_cnt  out t_tisanimal_cnt  ,
+      weather_cnt    out t_weather_cnt
+   )
+   as i number;
+      cursor survey_stats_rcd(survey_id_in varchar2) is
+         select
+            station_cnt     ,
+            watphy_cnt      ,
+            watnut_cnt      ,
+            watpol1_cnt     ,
+            watpol2_cnt     ,
+            watchem1_cnt    ,
+            watchem2_cnt    ,
+            watchl_cnt      ,
+            sedphy_cnt      ,
+            sedpes_cnt      ,
+            sedpol1_cnt     ,
+            sedpol2_cnt     ,
+            sedchem1_cnt    ,
+            sedchem2_cnt    ,
+            sedtax_cnt      ,
+            plaphy_cnt      ,
+            plapes_cnt      ,
+            plapol1_cnt     ,
+            plapol2_cnt     ,
+            platax_cnt      ,
+            plachl_cnt      ,
+            tisphy_cnt      ,
+            tispes_cnt      ,
+            tispol1_cnt     ,
+            tispol2_cnt     ,
+            tisanimal_cnt   ,
+            weather_cnt
+         from
+            inv_stats
+         where
+            inv_stats.survey_id     = survey_id_in
+         order by
+            inv_stats.survey_id
+         ;
+   begin
+      i := 1;
+      for survey_stats_rec in survey_stats_rcd(survey_id_in) loop
+         station_cnt(i)      := survey_stats_rec.station_cnt    ;
+         watphy_cnt(i)       := survey_stats_rec.watphy_cnt     ;
+         watnut_cnt(i)       := survey_stats_rec.watnut_cnt     ;
+         watpol1_cnt(i)      := survey_stats_rec.watpol1_cnt    ;
+         watpol2_cnt(i)      := survey_stats_rec.watpol2_cnt    ;
+         watchem1_cnt(i)     := survey_stats_rec.watchem1_cnt   ;
+         watchem2_cnt(i)     := survey_stats_rec.watchem2_cnt   ;
+         watchl_cnt(i)       := survey_stats_rec.watchl_cnt     ;
+         sedphy_cnt(i)       := survey_stats_rec.sedphy_cnt     ;
+         sedpes_cnt(i)       := survey_stats_rec.sedpes_cnt     ;
+         sedpol1_cnt(i)      := survey_stats_rec.sedpol1_cnt    ;
+         sedpol2_cnt(i)      := survey_stats_rec.sedpol2_cnt    ;
+         sedchem1_cnt(i)     := survey_stats_rec.sedchem1_cnt   ;
+         sedchem2_cnt(i)     := survey_stats_rec.sedchem2_cnt   ;
+         sedtax_cnt(i)       := survey_stats_rec.sedtax_cnt     ;
+         plaphy_cnt(i)       := survey_stats_rec.plaphy_cnt     ;
+         plapes_cnt(i)       := survey_stats_rec.plapes_cnt     ;
+         plapol1_cnt(i)      := survey_stats_rec.plapol1_cnt    ;
+         plapol2_cnt(i)      := survey_stats_rec.plapol2_cnt    ;
+         platax_cnt(i)       := survey_stats_rec.platax_cnt     ;
+         plachl_cnt(i)       := survey_stats_rec.plachl_cnt     ;
+         tisphy_cnt(i)       := survey_stats_rec.tisphy_cnt     ;
+         tispes_cnt(i)       := survey_stats_rec.tispes_cnt     ;
+         tispol1_cnt(i)      := survey_stats_rec.tispol1_cnt    ;
+         tispol2_cnt(i)      := survey_stats_rec.tispol2_cnt    ;
+         tisanimal_cnt(i)    := survey_stats_rec.tisanimal_cnt  ;
+         weather_cnt(i)      := survey_stats_rec.weather_cnt    ;
+         i := i + 1;
+      end loop;  --  for survey_stats_rec in survey_stats_rcd(survey_id_in) loop
+   end display_survey_stats;
+
+   -- +------------------------------------------------------------+
+   -- | Get Data block                                             |
+   -- +------------------------------------------------------------+
+   procedure get_data_block
+   (
+      v_survey_id           in varchar2,
+      v_data_centre        out varchar2,
+      v_exchange_restrict  out varchar2
+   )
+   as
+      i number;
+   begin
+      select
+         data_centre       ,
+         exchange_restrict
+      into
+         v_data_centre      ,
+         v_exchange_restrict
+      from
+         inventory
+      where
+         survey_id = v_survey_id
+      ;
+   end get_data_block;
+
+   -- +------------------------------------------------------------+
+   -- | Update Data block                                          |
+   -- +------------------------------------------------------------+
+   procedure update_data_block
+   (
+      v_survey_id          in varchar2,
+      v_data_centre        in varchar2,
+      v_exchange_restrict  in varchar2
+   )
+   as
+      i number;
+   begin
+      update inventory
+      set
+         data_centre        = v_data_centre        ,
+         exchange_restrict  = v_exchange_restrict
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_data_block;
+
+   -- +------------------------------------------------------------+
+   -- | Get Platform block                                         |
+   -- +------------------------------------------------------------+
+   procedure get_platform_block
+   (
+      v_survey_id           in varchar2,
+      v_planam_name         out varchar2,
+      v_platform_name       out varchar2,
+      v_callsign            out varchar2
+   )
+   as
+      i number;
+   begin
+      select
+         planam.name   planam_name,
+         platform.name platform_name,
+         callsign
+      into
+         v_planam_name,
+         v_platform_name,
+         v_callsign
+      from
+         inventory,
+         planam,
+         platform
+      where
+             survey_id        = v_survey_id
+         and planam.code      = inventory.planam_code
+         and platform.code    = planam.platform_code
+      ;
+   end get_platform_block;
+
+   -- +------------------------------------------------------------+
+   -- | List all Platforms                                         |
+   -- +------------------------------------------------------------+
+   procedure list_all_planam
+   (
+      planam_code    out t_planam_code,
+      planam_name    out t_planam_name
+   )
+   as
+      i number;
+      cursor planam_rcd is
+         select
+            code,
+            name
+         from
+            planam
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for planam_rec in planam_rcd loop
+         planam_code(i)       := planam_rec.code  ;
+         planam_name(i)       := planam_rec.name  ;
+         i := i + 1;
+      end loop;  --  for planam_rec in planam_rcd(planam_name_in) loop
+   end list_all_planam;
+   -- +------------------------------------------------------------+
+   -- | Update Platform block                                      |
+   -- +------------------------------------------------------------+
+   procedure update_platform_block
+   (
+      v_survey_id          in varchar2,
+      v_planam_code        in varchar2
+   )
+   as
+      i number;
+   begin
+      update inventory
+      set
+         planam_code        = v_planam_code
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_platform_block;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of platform types                           |
+   -- +------------------------------------------------------------+
+   function count_platform
+      return number as platformcount number;
+   begin
+      select   count(*)
+      into     platformcount
+      from     platform
+      ;
+      return   platformcount;
+   end count_platform;
+
+   -- +------------------------------------------------------------+
+   -- | List all Platform Types                                    |
+   -- +------------------------------------------------------------+
+   procedure list_all_platform
+   (
+      platform_code    out t_platform_code,
+      platform_name    out t_platform_name
+   )
+   as
+      i number;
+      cursor platform_rcd is
+         select
+            code,
+            name
+         from
+            platform
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for platform_rec in platform_rcd loop
+         platform_code(i)       := platform_rec.code  ;
+         platform_name(i)       := platform_rec.name  ;
+         i := i + 1;
+      end loop;  --  for platform_rec in platform_rcd(platform_name_in) loop
+   end list_all_platform;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Platform block                                     |
+   -- +------------------------------------------------------------+
+   procedure add_platform_block (
+      v_survey_id          in varchar2,
+      v_planam_name        in varchar2,
+      v_callsign           in varchar2,
+      v_platform_name      in varchar2,
+      v_planam_count       out number,
+      v_callsign_count     out number
+   )
+   as
+      v_planam_code     number;
+      v_platform_code   number;
+   begin
+      select   count(*)
+      into     v_planam_count
+      from     planam
+      where    upper(name) = upper(v_planam_name)
+      ;
+
+      select   count(*)
+      into     v_callsign_count
+      from     planam
+      where    upper(callsign) = upper(v_callsign)
+      ;
+      if (v_planam_count = 0 ) then
+         if (v_callsign_count = 0 ) then
+            select   code
+            into     v_platform_code
+            from     platform
+            where    name = v_platform_name
+            ;
+
+            select   max(code)
+            into     v_planam_code
+            from     planam
+            ;
+
+            insert into planam
+            values (
+               v_planam_code + 1,
+               v_planam_name,
+               v_platform_code,
+               v_callsign,
+               ' ', ' '
+            );
+
+            update inventory
+            set
+               planam_code        = v_planam_code + 1
+            where
+               survey_id = v_survey_id
+            ;
+            commit;
+         end if;  --  (v_callsign_count = 0 ) then
+      end if;  --  (v_planam_name == 0)   then
+   end add_platform_block;
+
+   -- +------------------------------------------------------------+
+   -- | Update Survey Name block                                   |
+   -- +------------------------------------------------------------+
+   procedure update_survnam_block
+   (
+      v_survey_id          in varchar2,
+      v_cruise_name        in varchar2
+   )
+   as
+      i number;
+   begin
+      update inventory
+      set
+         cruise_name        = v_cruise_name
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_survnam_block;
+
+   -- +------------------------------------------------------------+
+   -- | Get Survey Name block                                      |
+   -- +------------------------------------------------------------+
+   procedure get_survnam_block
+   (
+      v_survey_id           in varchar2,
+      v_cruise_name        out varchar2
+   )
+   as i number;
+   begin
+      select
+         cruise_name
+      into
+         v_cruise_name
+      from
+         inventory
+      where
+         survey_id = v_survey_id
+      ;
+   end get_survnam_block;
+
+   -- +------------------------------------------------------------+
+   -- | Update Periods block                                       |
+   -- +------------------------------------------------------------+
+   procedure update_periods_block
+   (
+      v_survey_id          in varchar2,
+      v_date_start         in varchar2,
+      v_date_end           in varchar2,
+      v_GMT_diff           in varchar2,
+      v_port_start         in varchar2,
+      v_port_end           in varchar2
+   )
+   as i number;
+   begin
+      update inventory
+      set
+         date_start         = to_date(v_date_start,'YYYY-MM-DD'),
+         date_end           = to_date(v_date_end  ,'YYYY-MM-DD'),
+         GMT_diff           = v_GMT_diff  ,
+         port_start         = v_port_start,
+         port_end           = v_port_end
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_periods_block;
+
+   -- +------------------------------------------------------------+
+   -- | Get Periods block                                          |
+   -- +------------------------------------------------------------+
+   procedure get_periods_block
+   (
+      v_survey_id           in varchar2,
+      v_date_start         out varchar2,
+      v_date_end           out varchar2,
+      v_GMT_diff           out number  ,
+      v_GMT_freeze         out varchar2,
+      v_port_start         out varchar2,
+      v_port_end           out varchar2
+   )
+   as i number;
+   begin
+      select
+         to_char(date_start,'YYYY-MM-DD'),
+         to_char(date_end,'YYYY-MM-DD'),
+         GMT_diff    ,
+         GMT_freeze  ,
+         port_start  ,
+         port_end
+      into
+         v_date_start ,
+         v_date_end   ,
+         v_GMT_diff    ,
+         v_GMT_freeze  ,
+         v_port_start ,
+         v_port_end
+      from
+         inventory
+      where
+         survey_id = v_survey_id
+      ;
+   end get_periods_block;
+
+   -- +------------------------------------------------------------+
+   -- | Update Responsible Lab Block                               |
+   -- +------------------------------------------------------------+
+   procedure update_reslab_block
+   (
+      v_survey_id          in varchar2,
+      v_instit_code        in varchar2,
+      v_country_code       in varchar2
+   )
+   as
+      i number;
+   begin
+      update inventory
+      set
+         instit_code        = v_instit_code,
+         country_code       = v_country_code
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_reslab_block;
+
+   -- +------------------------------------------------------------+
+   -- | Get responsible Lab block                                  |
+   -- +------------------------------------------------------------+
+   procedure get_reslab_block
+   (
+      v_survey_id           in varchar2,
+      v_instit_code         out number,
+      v_instit_name         out varchar2,
+      v_address             out varchar2,
+      v_country_code        out number,
+      v_country_name        out varchar2
+   )
+   as i number;
+   begin
+      select
+         country_code,
+         instit_code,
+         institutes.name,
+         address
+      into
+         v_country_code,
+         v_instit_code,
+         v_instit_name,
+         v_address
+      from
+         inventory,
+         institutes
+      where
+             survey_id        = v_survey_id
+         and institutes.code  = inventory.instit_code
+      ;
+      select
+         name
+      into
+         v_country_name
+      from
+         inventory,
+         country
+      where
+             survey_id = v_survey_id
+         and country.code = inventory.country_code
+      ;
+   end get_reslab_block;
+
+   -- +------------------------------------------------------------+
+   -- | Update Target Country  Block                               |
+   -- +------------------------------------------------------------+
+   procedure update_target_country_block
+   (
+      v_survey_id             in varchar2,
+      v_target_country_code   in varchar2
+   )
+   as i number;
+   begin
+      update inventory
+      set
+         target_country_code       = v_target_country_code
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_target_country_block;
+
+   -- +------------------------------------------------------------+
+   -- | Get target counntry block                                  |
+   -- +------------------------------------------------------------+
+   procedure get_target_country_block
+   (
+      v_survey_id           in varchar2,
+      v_target_country_code        out number,
+      v_target_country_name        out varchar2
+   )
+      as i number;
+   begin
+      select
+         target_country_code
+      into
+         v_target_country_code
+      from
+         inventory
+      where
+         survey_id = v_survey_id
+      ;
+
+      select
+         name
+      into
+         v_target_country_name
+      from
+         country
+      where
+         code = v_target_country_code
+      ;
+   end get_target_country_block;
+
+   -- +------------------------------------------------------------+
+   -- | List all Institutes                                        |
+   -- +------------------------------------------------------------+
+   procedure list_all_instit
+   (
+      instit_code    out t_instit_code ,
+      instit_name    out t_instit_name
+   )
+   as
+      i number;
+      cursor instit_rcd is
+         select
+            code,
+            name
+         from
+            institutes
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for instit_rec in instit_rcd loop
+         instit_code(i)       := instit_rec.code  ;
+         instit_name(i)       := instit_rec.name  ;
+         i := i + 1;
+      end loop;  --  for instit_rec in instit_rcd(instit_name_in) loop
+   end list_all_instit;
+
+   -- +------------------------------------------------------------+
+   -- | List all Institutes full data                              |
+   -- +------------------------------------------------------------+
+   procedure list_all_instit_full
+   (
+      instit_code    out t_instit_code,
+      instit_name    out t_instit_name
+   )
+   as
+      i number;
+      cursor instit_rcd is
+         select
+            code,
+            name
+         from
+            institutes
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for instit_rec in instit_rcd loop
+         instit_code(i)       := instit_rec.code  ;
+         instit_name(i)       := instit_rec.name  ;
+         i := i + 1;
+      end loop;  --  for instit_rec in instit_rcd(instit_name_in) loop
+   end list_all_instit_full;
+
+   -- +------------------------------------------------------------+
+   -- | List all Countries                                         |
+   -- +------------------------------------------------------------+
+   procedure list_all_country
+   (
+      country_code    out t_country_code,
+      country_name    out t_country_name
+   )
+   as
+      i number;
+      cursor country_rcd is
+         select
+            code,
+            name
+         from
+            country
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for country_rec in country_rcd loop
+         country_code(i)       := country_rec.code  ;
+         country_name(i)       := country_rec.name  ;
+         i := i + 1;
+      end loop;  --  for country_rec in country_rcd(country_name_in) loop
+   end list_all_country;
+
+   -- +------------------------------------------------------------+
+   -- | Get Chief Scientist block                                  |
+   -- +------------------------------------------------------------+
+   procedure get_chiefsc_block
+   (
+      v_survey_id           in varchar2,
+      v_sci_code_1         out number           ,
+      v_surname_1          out varchar2         ,
+      v_f_name_1           out varchar2         ,
+      v_title_1            out varchar2         ,
+      v_sci_code_2         out number           ,
+      v_surname_2          out varchar2         ,
+      v_f_name_2           out varchar2         ,
+      v_title_2            out varchar2         ,
+      v_instit_name_1      out varchar2         ,
+      v_address_1          out varchar2         ,
+      v_instit_name_2      out varchar2         ,
+      v_address_2          out varchar2
+   )
+   as
+      i number;
+   begin
+      select
+         sci_code_1         ,
+         sci_code_2
+      into
+         v_sci_code_1         ,
+         v_sci_code_2
+      from
+         inventory
+      where
+         survey_id = v_survey_id
+      ;
+
+      select
+         surname,
+         f_name,
+         title,
+         institutes.name,
+         address
+      into
+         v_surname_1,
+         v_f_name_1,
+         v_title_1,
+         v_instit_name_1,
+         v_address_1
+      from
+         scientists,
+         institutes
+      where
+             scientists.code = v_sci_code_1
+         and institutes.code = scientists.instit_code
+      ;
+
+      select
+         surname,
+         f_name,
+         title,
+         institutes.name,
+         address
+      into
+         v_surname_2,
+         v_f_name_2,
+         v_title_2,
+         v_instit_name_2,
+         v_address_2
+      from
+         scientists,
+         institutes
+      where
+             scientists.code = v_sci_code_2
+         and institutes.code = scientists.instit_code
+      ;
+   end get_chiefsc_block;
+
+   -- +------------------------------------------------------------+
+   -- | Get track chart     block                                  |
+   -- +------------------------------------------------------------+
+   procedure get_trackch_block
+      (
+      v_survey_id           in varchar2,
+      v_track_chart        out varchar2
+      )
+      as
+      i                 number;
+
+      begin
+         select
+            track_chart
+
+         into
+            v_track_chart
+         from
+            inventory
+         where
+            survey_id = v_survey_id
+         ;
+      end get_trackch_block;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Institute block                                    |
+   -- +------------------------------------------------------------+
+   procedure add_institute_block
+   (
+      v_survey_id          in varchar2,
+      v_instit_name        in varchar2,
+      v_instit_address     in varchar2,
+      v_instit_count       out number
+   )
+   as
+      v_instit_code     number;
+   begin
+      select   count(*)
+      into     v_instit_count
+      from     institutes
+      where    upper(name) = upper(v_instit_name)
+      ;
+
+      if (v_instit_count = 0 ) then
+         select   max(code)
+         into     v_instit_code
+         from     institutes
+         ;
+         insert into institutes
+         values
+         (
+            v_instit_code + 1,
+            v_instit_name,
+            v_instit_address
+         )
+         ;
+
+         update inventory
+         set
+            instit_code        = v_instit_code + 1
+         where
+            survey_id = v_survey_id
+         ;
+
+         commit;
+      end if;  --  (v_instit_name == 0)   then
+   end add_institute_block;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Country   block                                    |
+   -- +------------------------------------------------------------+
+   procedure add_country_block
+   (
+      v_survey_id          in varchar2,
+      v_country_name       in varchar2,
+      v_country_count      out number
+   )
+   as
+      v_country_code     number;
+   begin
+      select   count(*)
+      into     v_country_count
+      from     country
+      where    upper(name) = upper(v_country_name)
+      ;
+
+      if (v_country_count = 0 ) then
+         select   max(code)
+         into     v_country_code
+         from     country
+         ;
+         insert into country
+         values
+         (
+            v_country_code + 1,
+            v_country_name
+         );
+         update inventory
+         set
+            country_code        = v_country_code + 1
+         where
+            survey_id = v_survey_id
+         ;
+         commit;
+      end if;  --  (v_country_name == 0)   then
+   end add_country_block;
+
+   -- +------------------------------------------------------------+
+   -- | Insert new sampling device                                 |
+   -- +------------------------------------------------------------+
+   procedure add_new_device
+   (
+      v_device_name       in varchar2,
+      v_device_count      out number
+   )
+   as
+      v_device_code     number;
+   begin
+      select   count(*)
+      into     v_device_count
+      from     sampling_device
+      where    upper(name) = upper(v_device_name)
+      ;
+
+      if (v_device_count = 0 ) then
+         select   max(code)
+         into     v_device_code
+         from     sampling_device
+         ;
+
+         insert into sampling_device
+         values
+         (
+            v_device_code + 1,
+            v_device_name
+         )
+         ;
+         commit;
+      end if;  --  (v_device_count = 0)   then
+   end add_new_device;
+
+   -- +------------------------------------------------------------+
+   -- | List all Scientists                                        |
+   -- +------------------------------------------------------------+
+   procedure list_all_scientists
+   (
+      sci_code       out t_sci_code   ,
+      surname        out t_surname    ,
+      f_name         out t_f_name     ,
+      title          out t_title
+   )
+   as i number;
+      cursor sci_rcd is
+         select
+            code ,
+            surname  ,
+            f_name   ,
+            title
+         from
+            scientists
+         order by
+            upper(surname)
+         ;
+   begin
+      i := 1;
+      for sci_rec in sci_rcd loop
+         sci_code(i)       := sci_rec.code  ;
+         surname (i)       := sci_rec.surname   ;
+         f_name  (i)       := sci_rec.f_name    ;
+         title   (i)       := sci_rec.title     ;
+         i := i + 1;
+      end loop;  --  for sci_rec in sci_rcd(sci_name_in) loop
+   end list_all_scientists;
+
+   -- +------------------------------------------------------------+
+   -- | Update Chief Scientists Block                              |
+   -- +------------------------------------------------------------+
+   procedure update_chiefsc_block
+   (
+      v_survey_id          in varchar2,
+      v_sci_code_1         in varchar2,
+      v_sci_code_2         in varchar2
+   )
+   as i number;
+   begin
+      update inventory
+      set
+         sci_code_1 = v_sci_code_1 ,
+         sci_code_2 = v_sci_code_2
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_chiefsc_block;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Scientist                                          |
+   -- +------------------------------------------------------------+
+   procedure add_scientist
+   (
+      v_title              in varchar2,
+      v_f_name             in varchar2,
+      v_surname            in varchar2,
+      v_instit_code        in varchar2,
+      v_instit_name        out varchar2,
+      v_scientist_count    out number
+   )
+   as
+      v_sci_code       number;
+   begin
+      select   name
+      into     v_instit_name
+      from     institutes
+      where    code = v_instit_code
+      ;
+
+      select   count(*)
+      into     v_scientist_count
+      from     scientists
+      where    upper(surname) = upper(v_surname)
+         and   upper(f_name)  = upper(v_f_name)
+      ;
+
+      if (v_scientist_count = 0 ) then
+         select   max(code)
+         into     v_sci_code
+         from     scientists
+         ;
+         insert into scientists
+         values
+         (
+            v_sci_code + 1,
+            v_surname,
+            v_f_name,
+            v_title,
+            v_instit_code
+         )
+         ;
+         commit;
+      end if;  --  (v_scientist_count = 0 ) then
+   end add_scientist;
+
+   -- +------------------------------------------------------------+
+   -- | Get project block                                          |
+   -- +------------------------------------------------------------+
+   procedure get_project_block
+   (
+      v_survey_id           in varchar2,
+      v_project_name       out varchar2,
+      v_coord_code         out number,
+      v_instit_name_c      out varchar2,
+      v_address_c          out varchar2
+   )
+   as
+      i number;
+   begin
+      select
+         project_name       ,
+         coord_code
+      into
+         v_project_name     ,
+         v_coord_code
+      from
+         inventory
+      where
+         survey_id = v_survey_id
+      ;
+
+      select
+         name,
+         address
+      into
+         v_instit_name_c,
+         v_address_c
+      from     institutes
+      where    code = v_coord_code
+      ;
+   end get_project_block;
+
+   -- +------------------------------------------------------------+
+   -- | Get ocean area block                                       |
+   -- +------------------------------------------------------------+
+   procedure get_ocarea_block
+   (
+      v_survey_id           in varchar2,
+      v_lat_north          out number,
+      v_lat_south          out number,
+      v_long_west          out number,
+      v_long_east          out number
+   )
+   as i number;
+   begin
+      select
+         lat_north    ,
+         lat_south    ,
+         long_west     ,
+         long_east
+      into
+         v_lat_north  ,
+         v_lat_south  ,
+         v_long_west   ,
+         v_long_east
+
+      from
+
+         inventory
+      where
+         survey_id = v_survey_id
+      ;
+   end get_ocarea_block;
+
+   -- +------------------------------------------------------------+
+   -- | Update Project Name                                        |
+   -- +------------------------------------------------------------+
+   procedure update_project_name
+   (
+      v_survey_id          in varchar2,
+      v_project_name       in varchar2
+   )
+   as i number;
+   begin
+      update inventory
+         set
+            project_name       = v_project_name
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_project_name;
+
+   -- +------------------------------------------------------------+
+   -- | Update co-ordinating body                                  |
+   -- +------------------------------------------------------------+
+   procedure update_coord_code
+   (
+      v_survey_id          in varchar2,
+      v_coord_code         in varchar2
+   )
+   as i number;
+   begin
+      update inventory
+      set
+         coord_code         = v_coord_code
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_coord_code;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Coord Institute                                    |
+   -- +------------------------------------------------------------+
+   procedure add_institute_coord
+   (
+      v_survey_id          in varchar2,
+      v_instit_name        in varchar2,
+      v_instit_address     in varchar2,
+      v_instit_count       out number
+   )
+   as
+      v_instit_code     number;
+   begin
+      select   count(*)
+      into     v_instit_count
+      from     institutes
+      where    upper(name) = upper(v_instit_name)
+      ;
+
+      if (v_instit_count = 0 ) then
+         select   max(code)
+         into     v_instit_code
+         from     institutes
+         ;
+
+         insert into institutes
+         values
+         (
+            v_instit_code + 1,
+            v_instit_name,
+            v_instit_address
+         )
+         ;
+
+         update inventory
+         set
+            coord_code        = v_instit_code + 1
+         where
+            survey_id = v_survey_id
+         ;
+         commit;
+      end if;  --  (v_instit_name == 0)   then
+   end add_institute_coord;
+
+   -- +------------------------------------------------------------+
+   -- | Update investigors table                                   |
+
+   -- +------------------------------------------------------------+
+   procedure update_investigators
+   (
+      v_survey_id          in varchar2,
+      v_sci_code           in varchar2,
+      v_pi_code            in varchar2
+   )
+   as
+      v_count          number;
+   begin
+      select   count(*)
+      into     v_count
+      from     investigators
+      where    survey_id      = v_survey_id
+         and   pi_code        = v_pi_code
+      ;
+      if (v_count = 0 ) then
+         insert into investigators
+         values
+         (
+            v_survey_id,
+            v_sci_code,
+            v_pi_code
+         )
+         ;
+         commit;
+      else
+         update investigators
+         set
+            sci_code = v_sci_code
+         where
+            survey_id      = v_survey_id and
+            pi_code        = v_pi_code
+         ;
+         commit;
+      end if;  --  (v_scientist_count = 0 ) then
+   end update_investigators;
+
+   -- +------------------------------------------------------------+
+   -- | List investigators for selected survey                     |
+   -- +------------------------------------------------------------+
+   procedure list_survey_investigators
+   (
+      v_survey_id in  varchar2      ,
+      pi_code     out t_pi_code     ,
+      sci_code    out t_sci_code    ,
+      surname     out t_surname     ,
+      f_name      out t_f_name      ,
+      title       out t_title
+   )
+   as
+      i number;
+      cursor rcd  is
+         select
+            pi_code                 ,
+            investigators.sci_code  ,
+            surname                 ,
+            f_name                  ,
+            title
+         from
+            investigators  ,
+            scientists
+         where
+                  survey_id      = v_survey_id
+            and   investigators.sci_code  = scientists.code
+         order by
+            pi_code
+         ;
+   begin
+      i  := 1;
+      for rec in rcd loop
+         pi_code       (i)    := rec.pi_code    ;
+         sci_code      (i)    := rec.sci_code   ;
+         surname       (i)    := rec.surname    ;
+         f_name        (i)    := rec.f_name     ;
+         title         (i)    := rec.title      ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_survey_investigators;
+
+   -- +------------------------------------------------------------+
+   -- | List all data types                                        |
+   -- +------------------------------------------------------------+
+   procedure list_all_data_types
+   (
+      type_code   out t_type_code   ,
+      group_name  out t_group_name  ,
+      type_name   out t_type_name
+   )
+   as
+      i number;
+      cursor rcd  is
+         select
+            data_types.code  type_code,
+            data_groups.name group_name,
+            data_types.name  type_name
+         from
+            data_types     ,
+            data_groups
+         where
+            data_types.group_code = data_groups.code
+         order by
+            type_code
+         ;
+   begin
+      i  := 1;
+      for rec in rcd loop
+         type_code     (i)    := rec.type_code  ;
+         group_name    (i)    := rec.group_name ;
+         type_name     (i)    := rec.type_name  ;
+         i := i + 1;
+     end loop;  --  for rec in rcd loop
+   end list_all_data_types;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of data types                               |
+   -- +------------------------------------------------------------+
+   function count_data_types
+      return number as data_type_count number;
+   begin
+      select   count(*)
+      into     data_type_count
+      from     data_types
+      ;
+      return   data_type_count;
+   end count_data_types;
+
+   -- +------------------------------------------------------------+
+   -- | Update Positions record                                    |
+   -- +------------------------------------------------------------+
+   procedure update_positions_block
+   (
+      v_positions_code     in varchar2,
+      v_survey_id          in varchar2,
+      v_pi_code            in varchar2,
+      v_type_code          in varchar2,
+      v_latitude           in varchar2,
+      v_longitude          in varchar2,
+      v_remarks            in varchar2
+   )
+   as i number;
+   begin
+      update positions
+      set
+         survey_id   = v_survey_id          ,
+         pi_code     = v_pi_code            ,
+         type_code   = v_type_code          ,
+         latitude    = v_latitude           ,
+         longitude   = v_longitude          ,
+         remarks     = v_remarks
+      where
+         code        = v_positions_code
+      ;
+      commit;
+   end update_positions_block;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Positions record                                   |
+   -- +------------------------------------------------------------+
+   procedure add_positions_block
+   (
+      v_survey_id          in varchar2,
+      v_pi_code            in varchar2,
+      v_type_code          in varchar2,
+      v_latitude           in varchar2,
+      v_longitude          in varchar2,
+      v_remarks            in varchar2,
+      v_count              out number
+   )
+   as v_positions_code  number;
+   begin
+      select   count(*)
+      into     v_count
+      from     positions
+      where    survey_id      =  v_survey_id
+         and   pi_code        =  v_pi_code
+         and   type_code      =  v_type_code
+         and   latitude       =  v_latitude
+         and   longitude      =  v_longitude
+      ;
+
+      if (v_count = 0 ) then
+         select   max(code)
+         into     v_positions_code
+         from     positions
+         ;
+
+         insert into positions
+         values
+         (
+            v_positions_code + 1 ,
+            v_survey_id          ,
+            v_pi_code            ,
+            v_type_code          ,
+            ' ', ' ',
+            v_latitude           ,
+            v_longitude          ,
+            v_remarks
+         )
+         ;
+      end if;   --  (v_count = 0 ) then
+      commit;
+   end add_positions_block;
+
+   -- +------------------------------------------------------------+
+   -- | Update Samples   record                                    |
+   -- +------------------------------------------------------------+
+   procedure update_samples_block
+   (
+      v_samples_code       in varchar2,
+      v_survey_id          in varchar2,
+      v_pi_code            in varchar2,
+      v_type_code          in varchar2,
+      v_sample_number      in varchar2,
+      v_sample_units       in varchar2,
+      v_remarks            in varchar2
+   )
+   as
+      i number;
+   begin
+      update samples
+      set
+         --code              = v_samples_code       ,
+         survey_id         = v_survey_id          ,
+         pi_code           = v_pi_code            ,
+         type_code         = v_type_code          ,
+         sample_number     = v_sample_number      ,
+         sample_units      = v_sample_units       ,
+         remarks           = v_remarks
+      where
+         code              = v_samples_code
+      ;
+      commit;
+   end update_samples_block;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Samples   record                                   |
+   -- +------------------------------------------------------------+
+   procedure add_samples_block
+   (
+      v_survey_id          in varchar2,
+      v_pi_code            in varchar2,
+      v_type_code          in varchar2,
+      v_sample_number      in varchar2,
+      v_sample_units       in varchar2,
+      v_remarks            in varchar2,
+      v_count              out number
+   )
+   as v_samples_code  number;
+   begin
+      select   count(*)
+      into     v_count
+      from     samples
+      where    survey_id      =  v_survey_id
+         and   pi_code        =  v_pi_code
+         and   type_code      =  v_type_code
+         and   sample_number  =  v_sample_number
+         and   sample_units   =  v_sample_units
+      ;
+
+      if (v_count = 0 ) then
+         select   max(code)
+         into     v_samples_code
+         from     samples
+         ;
+
+         insert into samples
+         values
+         (
+            v_samples_code + 1   ,
+            v_survey_id          ,
+            v_pi_code            ,
+            v_sample_number      ,
+            v_sample_units       ,
+            v_type_code          ,
+            ' ',
+            v_remarks
+         )
+         ;
+         end if;   --  (v_count = 0 ) then
+      commit;
+   end add_samples_block;
+
+   -- +------------------------------------------------------------+
+   -- | Update Track Chart block                                   |
+   -- +------------------------------------------------------------+
+   procedure update_trackchart_block
+   (
+      v_survey_id          in varchar2,
+      v_track_chart        in varchar2
+   )
+   as i number;
+   begin
+      update inventory
+      set
+         track_chart        = v_track_chart
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_trackchart_block;
+
+   -- +------------------------------------------------------------+
+   -- | Update Ocean Area  block                                   |
+   -- +------------------------------------------------------------+
+   procedure update_ocarea_block
+   (
+      v_survey_id          in varchar2,
+      v_lat_north          in varchar2,
+      v_lat_south          in varchar2,
+      v_long_west          in varchar2,
+      v_long_east          in varchar2
+   )
+   as i number;
+   begin
+      update inventory
+      set
+         lat_north          = v_lat_north,
+         lat_south          = v_lat_south,
+         long_west          = v_long_west,
+         long_east          = v_long_east
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_ocarea_block;
+
+   -- +------------------------------------------------------------+
+   -- | Add new inventory record                                   |
+   -- +------------------------------------------------------------+
+   procedure new_inventory
+   (
+      v_survey_id          in varchar2,
+      v_survey_count       out number
+   )
+   as i number;
+   begin
+      select   count(*)
+      into     v_survey_count
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      if (v_survey_count = 0)   then
+         insert into inventory values
+         (
+            v_survey_id,
+            'SADCO'  ,
+            ''      ,
+            ''      ,
+            ''      ,
+            ''      ,
+            ''      ,
+            ''      ,
+            1        ,
+            ''      ,
+            ''      ,
+            1        ,
+            1        ,
+            1        ,
+            1        ,
+            1        ,
+            '1900-01-01'      ,
+            '1900-01-01'      ,
+            0        ,
+            0        ,
+            0        ,
+            0        ,
+            ''       ,
+            ''       ,
+            'N'      ,
+            1        ,
+            ''       ,
+            0        ,
+            'N'      ,
+            1        ,
+            1        ,
+            1        ,
+            'N'      ,
+            0
+            );
+            commit;
+
+         end if;   --  (v_survey_count = 0)   then
+      end new_inventory;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of marine zones                             |
+   -- +------------------------------------------------------------+
+   function count_marine_zones
+      return number as marine_zone_count number;
+   begin
+      select   count(*)
+      into     marine_zone_count
+      from     marine_zones
+      ;
+      return   marine_zone_count;
+   end count_marine_zones;
+
+   -- +------------------------------------------------------------+
+   -- | List all marine zones                                      |
+   -- +------------------------------------------------------------+
+   procedure list_all_marine_zones
+   (
+      zone_code   out t_zone_code   ,
+      marine_zone out t_marine_zone
+   )
+   as
+      i number;
+      cursor rcd  is
+         select
+            code               ,
+            marine_zone
+         from
+            marine_zones
+         order by
+            marine_zone
+         ;
+   begin
+      i  := 1;
+      for rec in rcd loop
+         zone_code     (i)    := rec.code  ;
+         marine_zone   (i)    := rec.marine_zone;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_all_marine_zones;
+
+   -- +------------------------------------------------------------+
+   -- | Add new marine zone record                                 |
+   -- +------------------------------------------------------------+
+   procedure add_marine_zone
+   (
+      v_survey_id          in varchar2,
+      v_zone_code          in varchar2,
+      v_count              out number
+   )
+   as v_samples_code  number;
+   begin
+      select   count(*)
+      into     v_count
+      from     zones_covered
+      where    survey_id      =  v_survey_id
+         and   zone_code      =  v_zone_code
+      ;
+
+      if (v_count = 0 ) then
+         insert into zones_covered
+         values
+         (
+            v_survey_id          ,
+            v_zone_code
+         )
+         ;
+      end if;   --  (v_count = 0 ) then
+      commit;
+   end add_marine_zone;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Sampling batch record                              |
+   -- +------------------------------------------------------------+
+   procedure add_sampling_batch_record
+   (
+      v_survey_id          in varchar2,
+      v_batch_id           in varchar2,
+      v_start_date_time    in varchar2,
+      v_end_date_time      in varchar2,
+      v_count              out number
+   )
+   as
+      v_batch_code  number;
+      i           number      ;
+      v_GMT_diff  number      ;
+   begin
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      select   count(*)
+      into     v_count
+      from     sampling_batch
+      where    survey_id      =  v_survey_id
+         and   batch_id       =  v_batch_id
+      ;
+      if (v_count = 0 ) then
+         select   max(code)
+         into     v_batch_code
+         from     sampling_batch
+         ;
+         insert into sampling_batch
+         values (
+            v_batch_code + 1 ,
+            v_batch_id           ,
+            v_survey_id          ,
+            to_date(v_start_date_time,'YYYY-MM-DD HH24 MI') - v_GMT_diff / 24   ,
+            to_date(v_end_date_time,'YYYY-MM-DD HH24 MI') - v_GMT_diff / 24
+         );
+      else
+         update sampling_batch
+         set
+            start_date_time = to_date(v_start_date_time,'YYYY-MM-DD HH24 MI')  - v_GMT_diff / 24    ,
+            end_date_time = to_date(v_end_date_time,'YYYY-MM-DD HH24 MI') - v_GMT_diff / 24
+         where    survey_id      =  v_survey_id
+            and   batch_id       =  v_batch_id
+            ;
+      end if;   --  (v_count = 0 ) then
+
+      -- +------------------------------------------------------------+
+      -- | Freeze GMT field to prevent any further GMT changes        |
+      -- +------------------------------------------------------------+
+      update inventory
+      set GMT_freeze = 'Y'
+      where survey_id = v_survey_id
+      ;
+      commit;
+   end add_sampling_batch_record;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of sampling batches                         |
+   -- +------------------------------------------------------------+
+   function count_sampling_batches
+   (
+      surveyid_in in varchar2
+   )
+   return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     sampling_batch
+      where    survey_id = surveyid_in
+      ;
+
+      return   rec_count;
+   end count_sampling_batches;
+
+   -- +------------------------------------------------------------+
+   -- | List sampling batches                                      |
+   -- +------------------------------------------------------------+
+   procedure list_sampling_batches
+   (
+      surveyid_in       in varchar2       ,
+      batch_code        out t_batch_code  ,
+      batch_id          out t_batch_id    ,
+      v_start_date_time out t_start_date_time   ,
+      v_end_date_time   out t_end_date_time     ,
+      v_period          out t_period
+   )
+   as
+      i           number      ;
+      v_GMT_diff  number      ;
+      cursor rcd(surveyid_in varchar2) is
+         select
+            code,
+            batch_id   ,
+            to_char(start_date_time + v_GMT_diff / 24, 'YYYY-MM-DD HH24:MI') v_start_date_time   ,
+            to_char(end_date_time + v_GMT_diff / 24, 'YYYY-MM-DD HH24:MI') v_end_date_time       ,
+            (end_date_time - start_date_time) * 24 v_period
+         from
+            sampling_batch
+         where
+            survey_id =  surveyid_in
+         order by
+            batch_id
+         ;
+   begin
+      i := 1;
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = surveyid_in
+      ;
+      for rec in rcd(surveyid_in) loop
+         batch_code(i)        := rec.code          ;
+         batch_id(i)          := rec.batch_id            ;
+         v_start_date_time(i)   := rec.v_start_date_time   ;
+         v_end_date_time(i)     := rec.v_end_date_time     ;
+         v_period(i)            := rec.v_period             ;
+         i := i + 1;
+      end loop;  --  for rec in rcd(surveyid_in) loop
+   end list_sampling_batches;
+
+   -- +------------------------------------------------------------+
+   -- | Get start and end dates                                    |
+   -- +------------------------------------------------------------+
+   procedure get_start_end_dates
+   (
+      surveyid_in       in varchar2       ,
+      v_date_start      out varchar2      ,
+      v_date_end        out varchar2      ,
+      v_GMT_diff        out number
+   )
+   as i number;
+   begin
+      select
+         to_char(date_start,  'YYYY-MM-DD')   ,
+         to_char(date_end,    'YYYY-MM-DD')   ,
+         GMT_diff
+      into
+         v_date_start,
+         v_date_end  ,
+         v_GMT_diff
+      from
+         inventory
+      where
+         survey_id               =  surveyid_in
+      ;
+   end get_start_end_dates;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of dates covered by the survey              |
+   -- +------------------------------------------------------------+
+   function count_survey_dates
+   (
+      surveyid_in in varchar2
+   )
+   return number as rec_count number;
+   begin
+      select   date_end - date_start + 1
+      into     rec_count
+      from     inventory
+      where    survey_id = surveyid_in
+      ;
+      return   rec_count;
+   end count_survey_dates;
+
+   -- +------------------------------------------------------------+
+   -- | List survey dates between start and end dates of survey    |
+   -- +------------------------------------------------------------+
+   procedure list_survey_dates
+   (
+      surveyid_in       in varchar2       ,
+      v_date            out t_date        ,
+      v_GMT_diff        out number
+   )
+   as
+      v_date_start      date;
+      v_date_end        date;
+      i number;
+   begin
+      select
+         date_start,
+         date_end   ,
+         GMT_diff
+      into
+         v_date_start,
+         v_date_end  ,
+         v_GMT_diff
+      from
+         inventory
+      where
+         survey_id = surveyid_in
+      ;
+      i := 1;
+      v_date(1) := to_char(v_date_start,'YYYY-MM-DD');
+      while (v_date_start != v_date_end) loop
+         i := i + 1;
+         v_date(i) := to_char(v_date_start,'YYYY-MM-DD');
+         v_date_start := v_date_start + 1;
+      end loop;  --  while (v_date_start != v_date_end) loop
+   end list_survey_dates;
+
+   -- +------------------------------------------------------------+
+   -- | Get survey dates and GMT                                   |
+   -- +------------------------------------------------------------+
+   procedure get_survey_dates
+   (
+      surveyid_in       in varchar2       ,
+      v_date_start      out varchar2      ,
+      v_date_end        out varchar2      ,
+      v_GMT_diff        out number
+   )
+   as i number;
+   begin
+      select
+         to_char(date_start,'YYYY-MM-DD'),
+         to_char(date_end  ,'YYYY-MM-DD'),
+         GMT_diff
+      into
+         v_date_start,
+         v_date_end  ,
+         v_GMT_diff
+      from
+         inventory
+      where
+         survey_id = surveyid_in
+      ;
+   end get_survey_dates;
+
+   -- +------------------------------------------------------------+
+   -- | Get station id prefix                                      |
+   -- +------------------------------------------------------------+
+   procedure get_stnid_prefix
+   (
+      surveyid_in       in varchar2       ,
+      v_stnid_prefix    out varchar2
+   )
+   as i number;
+   begin
+      select
+         stnid_prefix
+      into
+         v_stnid_prefix
+      from
+         inventory
+      where
+         survey_id = surveyid_in
+      ;
+   end get_stnid_prefix;
+
+   -- +------------------------------------------------------------+
+   -- | Update GIS Data block                                      |
+   -- +------------------------------------------------------------+
+   procedure update_psd_data_block
+   (
+      v_survey_id          in varchar2,
+      v_projection_code    in varchar2,
+      v_spheroid_code      in varchar2,
+      v_datum_code         in varchar2
+   )
+   as i number;
+   begin
+      update inventory
+      set
+         projection_code    = v_projection_code    ,
+         spheroid_code      = v_spheroid_code      ,
+         datum_code         = v_datum_code
+      where
+         survey_id = v_survey_id
+      ;
+      commit;
+   end update_psd_data_block;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of projection records                       |
+   -- +------------------------------------------------------------+
+   function count_projection
+      return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     projection
+      ;
+      return   rec_count;
+   end count_projection;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of spheroid   records                       |
+   -- +------------------------------------------------------------+
+   function count_spheroid
+      return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     spheroid;
+      return   rec_count;
+   end count_spheroid;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of datum      records                       |
+   -- +------------------------------------------------------------+
+   function count_datum
+      return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     datum;
+      return   rec_count;
+   end count_datum;
+
+   -- +------------------------------------------------------------+
+   -- | List Projections                                           |
+   -- +------------------------------------------------------------+
+   procedure list_projections
+   (
+      projection_code   out t_projection_code,
+      projection_name   out t_projection_name
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            code   ,
+            name
+         from
+            projection
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         projection_code(i)   := rec.code  ;
+         projection_name(i)   := rec.name  ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_projections;
+
+   -- +------------------------------------------------------------+
+   -- | List Spheroids                                             |
+   -- +------------------------------------------------------------+
+   procedure list_spheroids
+   (
+      spheroid_code     out t_spheroid_code  ,
+      spheroid_name     out t_spheroid_name
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            code     ,
+            name
+         from
+            spheroid
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         spheroid_code  (i)   := rec.code    ;
+         spheroid_name  (i)   := rec.name    ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_spheroids;
+
+   -- +------------------------------------------------------------+
+   -- | List Datums                                                |
+   -- +------------------------------------------------------------+
+   procedure list_datums
+   (
+      datum_code        out t_datum_code     ,
+      datum_name        out t_datum_name
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            code,
+            name
+         from
+            datum
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         datum_code     (i)   := rec.code       ;
+         datum_name     (i)   := rec.name       ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_datums;
+
+   -- +------------------------------------------------------------+
+   -- | Get GIS data                                               |
+
+   -- +------------------------------------------------------------+
+   procedure get_psd_data
+   (
+      v_survey_id           in varchar2,
+      v_projection_code    out number  ,
+      v_projection_name    out varchar2,
+      v_spheroid_code      out number  ,
+      v_spheroid_name      out varchar2,
+      v_datum_code         out number  ,
+      v_datum_name         out varchar2
+   )
+   as
+      i number;
+   begin
+      select
+         projection_code   ,
+         spheroid_code     ,
+         datum_code
+      into
+         v_projection_code   ,
+         v_spheroid_code     ,
+         v_datum_code
+      from
+         inventory
+      where
+         survey_id = v_survey_id
+      ;
+      select   name
+      into     v_projection_name
+      from     projection
+      where    code = v_projection_code
+      ;
+
+      select   name
+      into     v_spheroid_name
+      from     spheroid
+      where    code = v_spheroid_code
+      ;
+
+      select   name
+      into     v_datum_name
+      from     datum
+      where    code = v_datum_code
+      ;
+   end get_psd_data;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of stations for the survey                  |
+   -- +------------------------------------------------------------+
+   function count_stations
+   (
+      surveyid_in in varchar2
+   )
+   return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     station
+      where    survey_id = surveyid_in
+      ;
+      return   rec_count;
+   end count_stations;
+
+   -- +------------------------------------------------------------+
+   -- | Get a listing of the stations for the survey               |
+   -- +------------------------------------------------------------+
+   procedure list_stations
+   (
+      surveyid_in           in varchar2,
+      station_id           out t_station_id    ,
+      stnnam               out t_stnnam        ,
+      latitude             out t_latitude      ,
+      longitude            out t_longitude     ,
+      stndep               out t_stndep        ,
+      max_spldep           out t_max_spldep    ,
+      landtest             out t_landtest      ,
+      flagging             out t_flagging      ,
+      quality              out t_quality       ,
+      v_watphy_count       out t_watphy_count  ,
+      v_sedphy_count       out t_sedphy_count  ,
+      v_tisphy_count       out t_tisphy_count
+   )
+   as
+      i number;
+      v_rec_count number;
+      cursor rcd(surveyid_in varchar2) is
+         select
+            station_id    ,
+            stnnam        ,
+            latitude      ,
+            longitude     ,
+            stndep        ,
+            max_spldep    ,
+            flagging      ,
+            quality
+         from
+            station      ,
+            status_mode
+         where
+                  survey_id = surveyid_in
+            and   status_mode.code = station.status_code
+         order by
+            upper(stnnam)
+         ;
+   begin
+      i := 1;
+      for rec in rcd(surveyid_in) loop
+         station_id     (i)      := rec.station_id          ;
+         stnnam         (i)      := rec.stnnam              ;
+         latitude       (i)      := rec.latitude            ;
+         longitude      (i)      := rec.longitude           ;
+         stndep         (i)      := rec.stndep              ;
+         max_spldep     (i)      := rec.max_spldep          ;
+         landtest       (i)      := 0                       ;
+         flagging       (i)      := rec.flagging            ;
+         quality        (i)      := rec.quality             ;
+
+         select count(*)
+         into   v_rec_count
+         from   land_test
+         where
+            rec.latitude >= latN and rec.latitude < latS and
+            rec.longitude >= lonW and rec.longitude < lonE
+         ;
+         if (v_rec_count > 0) then
+            landtest(i) := 1;
+         end if;
+
+         select   count(*)
+         into     v_watphy_count(i)
+         from     watphy
+         where    station_id = rec.station_id;
+
+         select   count(*)
+         into     v_sedphy_count(i)
+         from     sedphy
+         where    station_id = rec.station_id;
+
+         select   count(*)
+         into     v_tisphy_count(i)
+         from     tisphy
+         where    station_id = rec.station_id;
+
+         i := i + 1;
+      end loop;  --  for rec in rcd(surveyidin) loop
+   end list_stations;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Station Record                                     |
+   -- +------------------------------------------------------------+
+   procedure add_station_record
+   (
+      v_station_id         in varchar2,
+      v_survey_id          in varchar2,
+      v_stnnam             in varchar2,
+      v_date_start         in varchar2,
+      v_date_end           in varchar2,
+      v_latitude           in varchar2,
+      v_longitude          in varchar2,
+      v_stndep             in varchar2,
+      v_stnnam_count       out number ,
+      v_position_count     out number
+   )
+   as
+   begin
+      -- +------------------------------------------------------------+
+      -- | Check for station name duplication                         |
+      -- +------------------------------------------------------------+
+      select   count(*)
+      into     v_stnnam_count
+      from     station
+      where    survey_id   = v_survey_id
+         and   stnnam      = v_stnnam
+      ;
+
+      -- +------------------------------------------------------------+
+      -- | Check for position duplication                             |
+      -- +------------------------------------------------------------+
+      select   count(*)
+      into     v_position_count
+      from     station
+      where    survey_id   = v_survey_id
+         and   latitude    = v_latitude
+         and   longitude   = v_longitude
+      ;
+
+      -- +------------------------------------------------------------+
+      -- | If not there, store the new record                         |
+      -- +------------------------------------------------------------+
+      if (     v_stnnam_count    = 0  and
+               v_position_count  = 0) then
+         insert into station
+         values
+         (
+            v_station_id      ,
+            v_survey_id       ,
+            v_latitude        ,
+            v_longitude       ,
+            to_date(v_date_start,'YYYY-MM-DD'),
+            to_date(v_date_end,  'YYYY-MM-DD'),
+            ' '               ,
+            v_stnnam          ,
+            v_stndep          ,
+            0.0               ,
+            ' '               ,
+            ' '               ,
+            0.0               ,
+            0                 ,
+            0                 ,
+            '199001'          ,
+            11                ,
+            null              ,
+            null
+         );
+         commit;
+         -- +------------------------------------------------------------+
+         -- | Store the start and end survey dates into the              |
+         -- | sample date time table to be used for selecting sample     |
+         -- | dates and times                                            |
+         -- +------------------------------------------------------------+
+         insert into sample_dattim
+         values
+         (
+            v_station_id,
+            to_date(v_date_start,'YYYY-MM-DD')
+         );
+         if (v_date_end != v_date_start)   then
+            insert into sample_dattim
+            values
+            (
+               v_station_id,
+               to_date(v_date_end,'YYYY-MM-DD')
+            );
+         end if;   --  (v_date_end != v_date_start)   then
+         commit;
+      end if;  --  (v_stnnam_count > 0)   then
+   end add_station_record;
+
+   -- +------------------------------------------------------------+
+   -- | Get latest station_id in grouping                          |
+   -- +------------------------------------------------------------+
+   procedure get_latest_group_station_id
+   (
+      v_prefix             in varchar2,
+      v_station_id         out varchar2
+   )
+   as i number;
+   begin
+      select max(station_id)
+      into   v_station_id
+      from   station
+      where  station_id between (v_prefix||'SQ0') and (v_prefix||'SQ9')
+      ;
+   end get_latest_group_station_id;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of stnid_prefix records                     |
+   -- +------------------------------------------------------------+
+   function count_stnid_prefix
+      return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     stnid_prefix
+      ;
+      return   rec_count;
+   end count_stnid_prefix;
+
+   -- +------------------------------------------------------------+
+   -- | List station_id prefixes                                   |
+   -- +------------------------------------------------------------+
+   procedure list_stnid_prefix
+   (
+      prefix_id         out t_prefix_id      ,
+      prefix_name       out t_prefix_name
+   )
+   as i number;
+      cursor rcd is
+         select
+            prefix_id         ,
+            prefix_name
+         from
+            stnid_prefix
+         order by
+            prefix_id
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         prefix_id      (i)   := rec.prefix_id        ;
+         prefix_name    (i)   := rec.prefix_name      ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_stnid_prefix;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Station Record                                     |
+   -- +------------------------------------------------------------+
+   procedure test
+   (
+      v_station_id         in varchar2
+   )
+   as
+      v_rec_count number;
+      cursor rcd(v_station_id varchar2) is
+         select
+            station_id    ,
+            latitude      ,
+            longitude
+         from
+            station
+         ;
+      begin
+         update station
+         set lat = 0
+         ;
+         commit;
+
+         for rec in rcd(v_station_id) loop
+            v_rec_count := 5;
+            select count(*)
+            into   v_rec_count
+            from   land_test
+            where
+               rec.latitude >= latN and rec.latitude < latS and
+               rec.longitude >= lonW and rec.longitude < lonE
+            ;
+
+            if (v_rec_count > 0) then
+               update station
+               set lat = v_rec_count
+               where station_id = rec.station_id
+               ;
+               commit;
+            end if;
+         end loop;  --  for rec in rcd(surveyidin) loop
+      end test;
+
+   -- +------------------------------------------------------------+
+   -- | Edit Station Record                                        |
+   -- +------------------------------------------------------------+
+   procedure edit_station_record
+   (
+      v_station_id         in varchar2,
+      v_survey_id          in varchar2,
+      v_stnnam             in varchar2,
+      v_date_start         in varchar2,
+      v_date_end           in varchar2,
+      v_latitude           in varchar2,
+      v_longitude          in varchar2,
+      v_stndep             in varchar2,
+      v_stnnam_count       out number ,
+      v_position_count     out number
+   )
+   as
+   begin
+      -- +------------------------------------------------------------+
+      -- | Check for station name duplication                         |
+      -- +------------------------------------------------------------+
+      select   count(*)
+      into     v_stnnam_count
+      from     station
+      where    survey_id   = v_survey_id
+         and   station_id  <> v_station_id
+         and   stnnam      = v_stnnam
+      ;
+
+      -- +------------------------------------------------------------+
+      -- | Check for position duplication                             |
+      -- +------------------------------------------------------------+
+      select   count(*)
+      into     v_position_count
+      from     station
+      where    survey_id   = v_survey_id
+         and   station_id  <> v_station_id
+         and   latitude    = v_latitude
+         and   longitude   = v_longitude
+      ;
+
+      if (v_stnnam_count    = 0  and
+          v_position_count  = 0) then
+         update station
+         set
+            stnnam      = v_stnnam,
+            latitude    = v_latitude,
+            longitude   = v_longitude,
+--            date_start  = to_date(v_date_start,'YYYY-MM-DD'),
+--            date_end    = to_date(v_date_end ,'YYYY-MM-DD'),
+            stndep      = v_stndep
+         where station_id = v_station_id
+         ;
+         commit;
+      end if;  --  (v_stnnam_count > 0)   then
+   end edit_station_record;
+
+   -- +------------------------------------------------------------+
+   -- | Delete Station Record                                      |
+   -- +------------------------------------------------------------+
+   procedure delete_station_record
+   (
+      v_station_id         in varchar2
+   )
+   as
+   begin
+      delete from station
+      where station_id = v_station_id
+      ;
+      commit;
+   end delete_station_record;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Station ID prefix                                  |
+   -- +------------------------------------------------------------+
+   procedure add_new_prefix
+   (
+      v_prefix_id          in varchar2,
+      v_prefix_name        in varchar2,
+      v_count              out number
+   )
+   as i number;
+   begin
+      select   count(*)
+      into     v_count
+      from     stnid_prefix
+      where    prefix_id      =  upper(v_prefix_id)
+      ;
+      if (v_count = 0 ) then
+         insert into stnid_prefix
+         values
+         (
+            upper(v_prefix_id)          ,
+            v_prefix_name
+         )
+         ;
+      end if;   --  (v_count = 0 ) then
+      commit;
+   end add_new_prefix;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of watphy records for a station             |
+   -- +------------------------------------------------------------+
+   function count_watphy_station
+   (
+      v_station_id in varchar2
+   )
+   return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     watphy
+      where    station_id = v_station_id
+      ;
+      return   rec_count;
+   end count_watphy_station;
+
+   -- +------------------------------------------------------------+
+   -- | List Water Physical records for a station                  |
+   -- +------------------------------------------------------------+
+   procedure list_watphy_station
+   (
+      v_station_id      in varchar2          ,
+      watphy_code       out t_watphy_code    ,
+      spldattim         out t_date_time      ,
+      spldep            out t_spldep         ,
+      v_device_name     out t_device_name    ,
+      v_method_name     out t_method_name    ,
+      v_standard_name   out t_standard_name
+   )
+   as
+      i number;
+      cursor rcd(v_station_id varchar2) is
+         select  *
+         from
+            watphy
+         where
+            station_id = v_station_id
+         order by
+            device_code    ,
+            method_code    ,
+            standard_code    ,
+            spldep
+         ;
+   begin
+      i := 1;
+      for rec in rcd(v_station_id) loop
+         watphy_code     (i)  := rec.code  ;
+         spldattim       (i)  := rec.spldattim    ;
+         spldep          (i)  := rec.spldep       ;
+
+         select   name
+         into     v_device_name(i)
+         from     sampling_device
+         where    code = rec.device_code
+         ;
+
+         select   name
+         into     v_method_name(i)
+         from     analytic_method
+         where    code = rec.method_code
+         ;
+
+         select   name
+         into     v_standard_name(i)
+         from     ref_standard
+         where    code = rec.standard_code
+         ;
+         i := i + 1;
+      end loop;  --  for rec in rcd(v_station_id) loop
+   end list_watphy_station;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of watphy sample depths for a station       |
+   -- +------------------------------------------------------------+
+--   function count_watphy_spldep_station
+--      (
+--      v_station_id in varchar2
+--      )
+
+--      return number as rec_count number;
+--   begin
+--      select   count(*)
+
+--      into     rec_count
+--      from     watphy_spldep
+--      where    station_id = v_station_id
+--      ;
+--      return   rec_count;
+--      end count_watphy_spldep_station;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of watphy sample depths for a station       |
+   -- +------------------------------------------------------------+
+   function count_watphy_spldep_station
+   (
+      v_survey_id       in varchar2          ,
+      v_station_num     in varchar2
+   )
+   return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     watphy_spldep
+      where    survey_id = v_survey_id
+           and station_num = v_station_num
+      ;
+      return   rec_count;
+   end count_watphy_spldep_station;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of water physical stations and sample depths|
+   -- +------------------------------------------------------------+
+   function count_watphy_stations_spldeps
+   (
+      v_survey_id       in varchar2
+   )
+   return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from
+         watphy_station ,
+         watphy_spldep
+      where
+             watphy_station.survey_id = v_survey_id
+         and watphy_station.survey_id = watphy_spldep.survey_id
+         and watphy_station.station_num = watphy_spldep.station_num
+         and watphy_spldep.spldep is not null
+      ;
+      return   rec_count;
+   end count_watphy_stations_spldeps;
+
+   -- +------------------------------------------------------------+
+   -- | List Water Physical sample depths for a station            |
+   -- +------------------------------------------------------------+
+--   procedure list_watphy_spldep_station
+--   (
+--      v_station_id      in varchar2          ,
+--      spldep            out t_spldep
+--   )
+--   as
+--      i number;
+--      cursor rcd(v_station_id varchar2) is
+--         select  *
+--         from
+--            watphy_spldep
+--         where
+--            station_id = v_station_id
+--         order by
+--            spldep
+--         ;
+--   begin
+--      i := 1;
+--      for rec in rcd(v_station_id) loop
+--         spldep          (i)  := rec.spldep       ;
+--         i := i + 1;
+--      end loop;  --  for rec in rcd(v_station_id) loop
+--   end list_watphy_spldep_station;
+
+   -- +------------------------------------------------------------+
+   -- | List Water Physical sample depths for a station            |
+   -- +------------------------------------------------------------+
+   procedure list_watphy_spldep_station
+   (
+      v_survey_id       in varchar2          ,
+      v_station_num     in varchar2          ,
+      sample_id         out t_sample_id      ,
+      v_time            out t_time           ,
+      spldep            out t_spldep
+   )
+   as
+      i number;
+      v_GMT_diff number;
+      cursor rcd(v_survey_id varchar2) is
+         select
+            sample_id,
+            spldep   ,
+            to_char(spldattim + v_GMT_diff / 24, 'HH24:MI:SS') v_time
+         from
+            watphy_spldep
+         where
+                survey_id = v_survey_id
+            and station_num = v_station_num
+         order by
+            spldep
+         ;
+   begin
+      i := 1;
+      -- +------------------------------------------------------------+
+      -- | Get the GMT factor                                         |
+      -- +------------------------------------------------------------+
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      for rec in rcd(v_survey_id) loop
+         sample_id       (i)  := rec.sample_id    ;
+         spldep          (i)  := rec.spldep       ;
+         v_time          (i)  := rec.v_time       ;
+         i := i + 1;
+      end loop;  --  for rec in rcd(v_station_id) loop
+   end list_watphy_spldep_station;
+
+   -- +------------------------------------------------------------+
+   -- | List Water Physical stations and sample depths             |
+   -- +------------------------------------------------------------+
+   procedure list_watphy_stations_spldeps
+   (
+      v_survey_id       in varchar2          ,
+      sample_id         out t_sample_id      ,
+      station_num       out t_station_num    ,
+      station_id        out t_station_id     ,
+      stnnam            out t_stnnam         ,
+      v_date_time       out t_date_time      ,
+      spldep            out t_spldep
+   )
+   as
+      i number;
+      v_GMT_diff number;
+      cursor rcd(v_survey_id varchar2) is
+         select
+            watphy_station.station_num    ,
+            station_id                    ,
+            sample_id                     ,
+            spldep                        ,
+            to_char(spldattim + 2 / 24, 'YYYY-MM-DD HH24:MI:SS') v_date_time
+         from
+            watphy_station ,
+            watphy_spldep
+         where
+                watphy_station.survey_id = v_survey_id
+            and watphy_station.survey_id = watphy_spldep.survey_id
+            and watphy_station.station_num = watphy_spldep.station_num
+            and watphy_spldep.spldep is not null
+         order by
+            sample_id
+         ;
+   begin
+      i := 1;
+      -- +------------------------------------------------------------+
+
+      -- | Get the GMT factor                                         |
+      -- +------------------------------------------------------------+
+      select   GMT_diff
+      into     v_GMT_diff
+
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      for rec in rcd(v_survey_id) loop
+         select   stnnam
+         into     stnnam(i)
+         from     station
+         where    station_id = rec.station_id
+         ;
+         sample_id       (i)  := rec.sample_id    ;
+         station_num     (i)  := rec.station_num  ;
+         station_id      (i)  := rec.station_id   ;
+         spldep          (i)  := rec.spldep       ;
+         v_date_time     (i)  := rec.v_date_time  ;
+         i := i + 1;
+      end loop;  --  for rec in rcd(v_station_id) loop
+   end list_watphy_stations_spldeps;
+
+   -- +------------------------------------------------------------+
+   -- | Add new Station Record                                     |
+   -- +------------------------------------------------------------+
+   procedure add_watphy_station
+   (
+      v_survey_id          in varchar2,
+      v_station_id         in varchar2,
+      v_start_date_time    in varchar2,
+      v_count              out number
+   )
+   as
+      v_station_num number;
+      v_GMT_diff    number;
+   begin
+      -- +------------------------------------------------------------+
+      -- | Get the GMT difference                                     |
+      -- +------------------------------------------------------------+
+      select   GMT_diff
+
+      into     v_GMT_diff
+
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      -- +------------------------------------------------------------+
+      -- | Check for duplication                                      |
+      -- +------------------------------------------------------------+
+      select   count(*)
+      into     v_count
+      from     watphy_station
+      where    survey_id   = v_survey_id
+         and   station_id  = v_station_id
+         and   start_date_time
+            =  to_date(v_start_date_time,'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24
+      ;
+      if (v_count = 0)   then
+         -- +------------------------------------------------------------+
+         -- | Get the next station number                                |
+         -- +------------------------------------------------------------+
+         select   max(station_num)
+         into     v_station_num
+         from     watphy_station
+         where    survey_id = v_survey_id
+         ;
+
+         if (v_station_num is null)  then
+            v_station_num := 0;
+         end if;   --  if (v_station_num is null)
+
+         -- +------------------------------------------------------------+
+         -- | Insert new record                                          |
+         -- +------------------------------------------------------------+
+         insert into watphy_station
+         values
+         (
+            v_survey_id       ,
+            v_station_id      ,
+            v_station_num + 1 ,
+            to_date(v_start_date_time,'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24
+         )
+         ;
+         commit;
+      end if;
+   end add_watphy_station;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of watphy sequential stations               |
+   -- +------------------------------------------------------------+
+   function count_watphy_seq_stations
+   (
+      v_survey_id in varchar2
+   )
+   return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     watphy_station
+      where    survey_id = v_survey_id
+      ;
+      return   rec_count;
+   end count_watphy_seq_stations;
+
+   -- +------------------------------------------------------------+
+   -- | List Water Sequential stations                             |
+   -- +------------------------------------------------------------+
+   procedure list_watphy_seq_stations
+   (
+      v_survey_id        in varchar2          ,
+      station_id        out t_station_id     ,
+      stnnam            out t_stnnam         ,
+      station_num       out t_station_num    ,
+      v_start_date_time out t_date_time      ,
+      v_depth_count     out t_depth_count
+   )
+   as i number;
+      v_GMT_diff  number      ;
+      cursor rcd(v_survey_id varchar2) is
+         select
+            watphy_station.station_id  ,
+            stnnam                     ,
+            station_num                ,
+            to_char(start_date_time + v_GMT_diff / 24,'YYYY-MM-DD HH24:MI:SS') v_start_date_time
+         from
+            watphy_station ,
+            station
+         where
+                  watphy_station.survey_id = v_survey_id
+            and   watphy_station.station_id = station.station_id
+         order by
+            station_num
+         ;
+   begin
+      i := 1;
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      for rec in rcd(v_survey_id) loop
+         station_id       (i)  := rec.station_id      ;
+         stnnam           (i)  := rec.stnnam          ;
+         station_num      (i)  := rec.station_num     ;
+         v_start_date_time(i)  := rec.v_start_date_time ;
+         -- +------------------------------------------------------------+
+         -- | get number of sample depths for the current station        |
+         -- +------------------------------------------------------------+
+         select   count(*)
+         into     v_depth_count(i)
+         from     watphy_spldep
+         where    watphy_spldep.survey_id   = v_survey_id
+            and    watphy_spldep.station_num = rec.station_num
+         ;
+         i := i + 1;
+      end loop;  --  for rec in rcd(v_survey_id) loop
+   end list_watphy_seq_stations;
+
+   -- +------------------------------------------------------------+
+   -- | Store water physical sample depths                         |
+   -- +------------------------------------------------------------+
+--   procedure add_watphy_spldep_station
+
+--      (
+--      v_rec_count    in number      ,
+--      v_survey_id    in varchar2    ,
+--      v_station_id   in varchar2    ,
+--      v_spldep       in t_spldep
+--      )
+--      as
+--      i              number  ;
+
+--      v_max_spldep   number  ;
+--      begin
+--         for i in 1..v_rec_count loop
+--            insert into watphy_spldep values
+
+--               (
+--               v_station_id   ,
+--               v_spldep(i)
+--               )
+--               ;
+--            end loop    --  for i in 1..v_reco_count loop
+--         commit;
+--      select  max(spldep)
+--      into    v_max_spldep
+
+--      from    watphy_spldep
+--      where   station_id = v_station_id
+--      ;
+
+--      update  station
+--         set max_spldep = v_max_spldep
+--         where station_id = v_station_id
+--      ;
+--      commit;
+--      end add_watphy_spldep_station;
+--   -- +------------------------------------------------------------+
+--   -- | Store water physical sample depths                         |
+--   -- +------------------------------------------------------------+
+--   procedure add_watphy_spldep_station
+
+--      (
+--      v_rec_count    in number         ,
+
+--      v_survey_id    in varchar2       ,
+--      v_sample_id    in t_sample_id    ,
+--      v_station_num  in varchar2       ,
+--      v_spldep       in t_spldep       ,
+--      v_spldattim    in t_date_time
+--      )
+--      as
+--      i              number  ;
+--      v_GMT_diff     number  ;
+--      begin
+--         select   GMT_diff
+
+--         into     v_GMT_diff
+
+--         from     inventory
+--         where    survey_id = v_survey_id
+--         ;
+--         for i in 1..v_rec_count loop
+--            insert into watphy_spldep values
+--               (
+--               v_survey_id    ,
+--               v_sample_id(i)    ,
+--               v_station_num     ,
+--               to_date(v_spldattim(i),'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24    ,
+--               v_spldep(i)
+--               )
+--               ;
+--            end loop    --  for i in 1..v_reco_count loop
+--         commit;
+--      end add_watphy_spldep_station;
+
+   -- +------------------------------------------------------------+
+   -- | Store water physical sample depths                         |
+   -- +------------------------------------------------------------+
+--   procedure add_watphy_spldep_station_s
+--      (
+--      v_survey_id    in varchar2       ,
+--      v_sample_id    in varchar2       ,
+--      v_station_num  in varchar2       ,
+--      v_spldep       in varchar2       ,
+--      v_spldattim    in varchar2
+--      )
+--      as
+--      i              number  ;
+--      v_GMT_diff     number  ;
+--      begin
+--         select   GMT_diff
+--         into     v_GMT_diff
+--         from     inventory
+--         where    survey_id = v_survey_id
+
+--         ;
+
+--         insert into watphy_spldep values
+--            (
+--            v_survey_id    ,
+--            v_sample_id    ,
+--            v_station_num     ,
+--            to_date(v_spldattim,'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24,
+
+--            v_spldep
+--            )
+--            ;
+
+--         commit;
+--      end add_watphy_spldep_station_s;
+
+   -- +------------------------------------------------------------+
+   -- | Display a selected station                                 |
+   -- +------------------------------------------------------------+
+   procedure display_station
+   (
+      v_station_id         in  varchar2        ,
+      v_stnnam             out varchar2        ,
+      v_latitude           out number          ,
+      v_longitude          out number          ,
+      v_stndep             out number          ,
+      v_max_spldep         out number          ,
+      v_status_code        out number
+   )
+   as i number;
+   begin
+      select
+         stnnam        ,
+         latitude      ,
+         longitude     ,
+         stndep        ,
+         max_spldep    ,
+         status_code
+      into
+         v_stnnam      ,
+         v_latitude    ,
+         v_longitude   ,
+         v_stndep      ,
+         v_max_spldep  ,
+         v_status_code
+      from
+         station
+      where
+         station_id = v_station_id
+      ;
+   end display_station;
+
+   -- +------------------------------------------------------------+
+   -- | Display GMT - difference                                   |
+   -- +------------------------------------------------------------+
+   procedure display_GMTdiff
+   (
+      v_survey_id          in  varchar2        ,
+      v_GMT_diff           out varchar2
+   )
+   as i number;
+   begin
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where
+         survey_id = v_survey_id
+      ;
+   end display_GMTdiff;
+   -- +------------------------------------------------------------+
+   -- | Display a selected sequential station                      |
+   -- +------------------------------------------------------------+
+   procedure display_seq_station
+   (
+      v_survey_id          in  varchar2        ,
+      v_station_num        in  varchar2        ,
+      v_station_id         out varchar2        ,
+      v_stnnam             out varchar2        ,
+      v_latitude           out number          ,
+      v_longitude          out number          ,
+      v_stndep             out number          ,
+      v_max_spldep         out number          ,
+      v_status_code        out number          ,
+      v_start_date_time    out varchar2
+   )
+   as
+      i number;
+      v_GMT_diff number;
+   begin
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+
+      select
+         station_id  ,
+         to_char(start_date_time + v_GMT_diff / 24,'YYYY-MM-DD HH24:MI:SS')
+      into
+         v_station_id   ,
+         v_start_date_time
+      from
+         watphy_station
+      where
+         survey_id = v_survey_id
+         and station_num = v_station_num
+      ;
+
+      select
+         stnnam        ,
+         latitude      ,
+         longitude     ,
+         stndep        ,
+         max_spldep    ,
+         status_code
+      into
+         v_stnnam      ,
+         v_latitude    ,
+         v_longitude   ,
+         v_stndep      ,
+         v_max_spldep  ,
+         v_status_code
+      from
+         station
+      where
+         station_id = v_station_id
+      ;
+   end display_seq_station;
+   -- +------------------------------------------------------------+
+   -- | Get the number of disciplines                              |
+   -- +------------------------------------------------------------+
+   function count_discipline
+      return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     discipline
+      ;
+      return   rec_count;
+   end count_discipline;
+
+   -- +------------------------------------------------------------+
+   -- | List Disciplines                                           |
+   -- +------------------------------------------------------------+
+   procedure list_discipline
+   (
+      discipline_code    out t_discipline_code,
+      discipline_name    out t_discipline_name
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            code,
+            name
+         from
+            discipline
+         order by
+            name
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         discipline_code (i)  := rec.code ;
+         discipline_name (i)  := rec.name ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_discipline;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of constitents per selected discipline      |
+   -- +------------------------------------------------------------+
+   function count_constituent
+   (
+      v_discipline_code  in varchar2
+   )
+   return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     constituent
+      where    discipline_code = v_discipline_code
+      ;
+      return   rec_count;
+   end count_constituent;
+
+   -- +------------------------------------------------------------+
+   -- | List Constituents per selected discipline                  |
+   -- +------------------------------------------------------------+
+   procedure list_constituent
+   (
+      v_discipline_code in  varchar2            ,
+      constituent_code  out t_constituent_code  ,
+      constituent_name  out t_constituent_name  ,
+      unit              out t_unit              ,
+      html_unit         out t_html_unit
+   )
+   as
+      i number;
+      cursor rcd is
+         select  *
+         from
+            constituent
+         where
+            discipline_code = v_discipline_code
+         order by
+            name
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         constituent_code (i) := rec.code  ;
+         constituent_name (i) := rec.name  ;
+         unit             (i) := rec.unit              ;
+         html_unit        (i) := rec.html_unit         ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_constituent;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of fractions                                |
+   -- +------------------------------------------------------------+
+   function count_fraction
+      return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     constituent_fraction
+      where    code >= 0
+      ;
+      return   rec_count;
+   end count_fraction;
+
+   -- +------------------------------------------------------------+
+   -- | List Sampling fractions                                      |
+   -- +------------------------------------------------------------+
+   procedure list_fraction
+   (
+      fraction_code    out t_fraction_code,
+      fraction_name    out t_fraction_name
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            code,
+            name
+         from
+            constituent_fraction
+         where
+            code >= 0
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         fraction_code (i)  := rec.code ;
+         fraction_name (i)  := rec.name ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_fraction;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of sampling_devices                         |
+   -- +------------------------------------------------------------+
+   function count_sampling_device
+      return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     sampling_device
+      where    code >= 0
+      ;
+      return   rec_count;
+   end count_sampling_device;
+
+   -- +------------------------------------------------------------+
+   -- | List Sampling devices                                      |
+   -- +------------------------------------------------------------+
+   procedure list_sampling_device
+   (
+      device_code    out t_device_code,
+      device_name    out t_device_name
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            code,
+            name
+         from
+            sampling_device
+         where
+            code >= 0
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         device_code (i)  := rec.code ;
+         device_name (i)  := rec.name ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_sampling_device;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of sampling date times                      |
+   -- +------------------------------------------------------------+
+   function count_sample_dattim
+   (
+      v_station_id      in varchar2
+   )
+   return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     sample_dattim
+      where    station_id = v_station_id
+      ;
+      return   rec_count;
+   end count_sample_dattim;
+
+   -- +------------------------------------------------------------+
+   -- | List Sampling date times                                   |
+   -- +------------------------------------------------------------+
+   procedure list_sample_dattim
+   (
+      v_survey_id    in  varchar2      ,
+      v_station_id   in  varchar2      ,
+      v_spldattim    out t_date_time   ,
+      v_GMT_diff     out number
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            to_char(spldattim + v_GMT_diff / 24, 'YYYY-MM-DD 24HH:MI:SS') v_spldattim
+         from
+            sample_dattim
+         where
+            station_id = v_station_id
+         order by
+            spldattim
+         ;
+   begin
+      i := 1;
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      for rec in rcd loop
+         v_spldattim (i)  := rec.v_spldattim ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_sample_dattim;
+
+   -- +------------------------------------------------------------+
+   -- | List Sampling date                                         |
+   -- +------------------------------------------------------------+
+   procedure list_sample_date
+   (
+      v_survey_id    in  varchar2      ,
+      v_station_id   in  varchar2      ,
+      v_spldattim    out t_date        ,
+      v_GMT_diff     out number
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            to_char(spldattim, 'YYYY-MM-DD') v_spldattim
+         from
+            sample_dattim
+         where
+            station_id = v_station_id
+         order by
+            spldattim
+         ;
+   begin
+      i := 1;
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      for rec in rcd loop
+         v_spldattim (i)  := rec.v_spldattim ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_sample_date;
+   -- +------------------------------------------------------------+
+   -- | Get the number of analytic methods                         |
+   -- +------------------------------------------------------------+
+   function count_analytic_method
+      return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     analytic_method
+      ;
+      return   rec_count;
+   end count_analytic_method;
+
+   -- +------------------------------------------------------------+
+   -- | List Sampling analytic methods                             |
+   -- +------------------------------------------------------------+
+   procedure list_analytic_method
+   (
+      method_code    out t_method_code,
+      method_name    out t_method_name
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            code,
+            name
+         from
+            analytic_method
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         method_code (i)  := rec.code ;
+         method_name (i)  := rec.name ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_analytic_method;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of reference standards                      |
+   -- +------------------------------------------------------------+
+   function count_ref_standard
+      return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     ref_standard
+      ;
+      return   rec_count;
+   end count_ref_standard;
+
+   -- +------------------------------------------------------------+
+   -- | List reference standards                                   |
+   -- +------------------------------------------------------------+
+   procedure list_ref_standard
+   (
+      standard_code    out t_standard_code,
+      standard_name    out t_standard_name
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            code,
+            name
+         from
+            ref_standard
+         order by
+            upper(name)
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         standard_code (i)  := rec.code ;
+         standard_name (i)  := rec.name ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_ref_standard;
+
+   -- +------------------------------------------------------------+
+   -- | Display Discipline Record                                  |
+   -- +------------------------------------------------------------+
+   procedure display_discipline
+   (
+      v_discipline_code    in  varchar2        ,
+      v_discipline_name    out varchar2
+   )
+   as
+      i number;
+   begin
+      select   name
+      into     v_discipline_name
+      from     discipline
+      where    code = v_discipline_code
+      ;
+   end display_discipline;
+
+   -- +------------------------------------------------------------+
+   -- | Display Constituent Record                                 |
+   -- +------------------------------------------------------------+
+   procedure display_constituent
+   (
+      v_constituent_code    in  varchar2        ,
+      v_constituent_name    out varchar2        ,
+      v_abbreviation        out varchar2        ,
+      v_unit                out varchar2        ,
+      v_formatt             out varchar2        ,
+      v_res_table           out varchar2
+   )
+   as
+      i number;
+   begin
+      select
+         name         ,
+         abbreviation ,
+         unit         ,
+         formatt      ,
+         res_table
+      into
+         v_constituent_name  ,
+         v_abbreviation      ,
+         v_unit              ,
+         v_formatt           ,
+         v_res_table
+      from
+         constituent
+      where
+         code = v_constituent_code
+      ;
+   end display_constituent;
+
+   -- +------------------------------------------------------------+
+   -- | Display Sampling Device                                    |
+   -- +------------------------------------------------------------+
+   procedure display_sampling_device
+   (
+      v_device_code    in  varchar2        ,
+      v_device_name    out varchar2
+   )
+   as
+      i number;
+   begin
+      select   name
+      into     v_device_name
+      from     sampling_device
+      where    code = v_device_code
+      ;
+   end display_sampling_device;
+
+   -- +------------------------------------------------------------+
+   -- | Display Analytic Method                                    |
+   -- +------------------------------------------------------------+
+   procedure display_analytic_method
+   (
+      v_method_code    in  varchar2        ,
+      v_method_name    out varchar2
+   )
+   as
+      i number;
+   begin
+      select   name
+      into     v_method_name
+      from     analytic_method
+      where    code = v_method_code
+      ;
+   end display_analytic_method;
+
+   -- +------------------------------------------------------------+
+   -- | Display Reference standard                                 |
+   -- +------------------------------------------------------------+
+   procedure display_ref_standard
+   (
+      v_standard_code    in  varchar2        ,
+      v_standard_name    out varchar2
+   )
+   as
+      i number;
+   begin
+      select   name
+      into     v_standard_name
+      from     ref_standard
+      where    code = v_standard_code
+      ;
+   end display_ref_standard;
+
+   -- +------------------------------------------------------------+
+   -- | Update water data                                          |
+   -- +------------------------------------------------------------+
+   procedure update_water_data
+   (
+      v_station_id         in  varchar2            ,
+      v_constituent_code   in  varchar2            ,
+      v_spldattim          in  t_date_time         ,
+      v_device_code        in  varchar2            ,
+      v_method_code        in  varchar2            ,
+      v_standard_code      in  varchar2            ,
+      v_constituent_value  in  t_constituent_value ,
+      v_constituent_status in  t_status_code       ,
+      v_spldep             in  t_spldep            ,
+      v_rec_count          in  number              ,
+      v_name_out           out varchar2
+   )
+   as
+      no_record      integer;
+      no_record1      integer;
+      cursor_name    integer;
+      rows_processed integer;
+      v_watphy_code  integer;
+      vv_watphy_code  integer;
+      watphy_code  integer;
+      v_res_table    varchar2(10);
+      v_phy_table    varchar2(10);
+      v_field_name   varchar2(15);
+      v_GMT_diff  number      ;
+      v_survey_id varchar2(9) ;
+   begin
+      -- +------------------------------------------------------------+
+      -- | Get the GMT hours for the time zone calculation            |
+      -- +------------------------------------------------------------+
+      select   survey_id
+      into     v_survey_id
+      from     station
+      where    station_id = v_station_id
+      ;
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      -- +------------------------------------------------------------+
+      -- | Get the constituent table and field name                   |
+      -- +------------------------------------------------------------+
+      select
+         res_table   ,
+         field_name
+      into
+         v_res_table   ,
+         v_field_name
+      from
+         constituent
+      where
+         code = v_constituent_code
+      ;
+      for i in 1..v_rec_count loop
+         if (v_constituent_value(i) is not null)   then
+            -- +------------------------------------------------------------+
+            -- | IS the record already there                                |
+            -- +------------------------------------------------------------+
+            select   count(*)
+            into     no_record
+            from     watphy
+            where    station_id     = v_station_id
+               and   spldep         = v_spldep(i)
+               and   spldattim      = to_date(v_spldattim(i),'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24
+               and   device_code    = v_device_code
+               and   method_code    = v_method_code
+               and   standard_code  = v_standard_code
+            ;
+            -- +------------------------------------------------------------+
+            -- | If this is a new record, add it                            |
+            -- +------------------------------------------------------------+
+            if (no_record = 0)   then
+               select   max(code)
+               into     v_watphy_code
+               from     watphy
+               ;
+               -- +------------------------------------------------------------+
+               -- | data record                                                |
+               -- +------------------------------------------------------------+
+               insert into watphy
+                  values
+                  (
+                     v_watphy_code + 1,
+                     v_station_id,
+                     v_device_code,
+                     v_method_code,
+                     v_standard_code,null,
+                     to_date(v_spldattim(i),'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24 ,
+                     v_spldep(i),null,null,null,null,null,null,null
+                  )
+               ;
+               -- +------------------------------------------------------------+
+               -- | status record                                              |
+               -- +------------------------------------------------------------+
+               insert into watphy_status
+                  values
+                  (
+                     v_watphy_code + 1,
+                     null,null,null,null,null
+                  )
+               ;
+            end if;    --  (no_record = 0)   then
+            -- +------------------------------------------------------------+
+            -- | Get the record number for editing                          |
+            -- +------------------------------------------------------------+
+            select   code
+            into     v_watphy_code
+            from     watphy
+            where    station_id     = v_station_id
+               and   spldep         = v_spldep(i)
+               and   spldattim      = to_date(v_spldattim(i),'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24
+               and   device_code    = v_device_code
+               and   method_code    = v_method_code
+               and   standard_code  = v_standard_code
+            ;
+
+            -- +------------------------------------------------------------+
+            -- | Is there a subtable record                                 |
+            -- +------------------------------------------------------------+
+            begin
+               cursor_name := dbms_sql.open_cursor;
+               dbms_sql.parse(cursor_name, 'select count(*) from ' || v_res_table
+               || ' where watphy_code = :y',dbms_sql.v7);
+               dbms_sql.define_column(cursor_name, 1, no_record);
+               dbms_sql.bind_variable(cursor_name, ':y', v_watphy_code);
+               rows_processed := dbms_sql.execute(cursor_name);
+               rows_processed := dbms_sql.fetch_rows(cursor_name);
+               dbms_sql.column_value(cursor_name, 1,no_record);
+               dbms_sql.close_cursor(cursor_name);
+            exception
+               when others then
+                  dbms_sql.close_cursor(cursor_name);
+               end;
+
+            -- +------------------------------------------------------------+
+            -- | If there is no subtable record, create one                 |
+            -- +------------------------------------------------------------+
+
+            if (no_record = 0)   then
+               -- +------------------------------------------------------------+
+               -- | data record                                                |
+               -- +------------------------------------------------------------+
+               begin
+                  cursor_name := dbms_sql.open_cursor;
+                  dbms_sql.parse(cursor_name, 'insert into ' || v_res_table
+                  || ' (watphy_code) values (:y)',dbms_sql.v7);
+                  dbms_sql.bind_variable(cursor_name, ':y', v_watphy_code);
+                  rows_processed := dbms_sql.execute(cursor_name);
+                  dbms_sql.close_cursor(cursor_name);
+               exception
+                  when others then
+                     dbms_sql.close_cursor(cursor_name);
+                  end;
+               -- +------------------------------------------------------------+
+               -- | status record                                              |
+               -- +------------------------------------------------------------+
+
+               begin
+                  cursor_name := dbms_sql.open_cursor;
+                  dbms_sql.parse(cursor_name, 'insert into ' || v_res_table
+                  || '_status (watphy_code) values (:y)',dbms_sql.v7);
+                  dbms_sql.bind_variable(cursor_name, ':y', v_watphy_code);
+                  rows_processed := dbms_sql.execute(cursor_name);
+                  dbms_sql.close_cursor(cursor_name);
+               exception
+                  when others then
+                     dbms_sql.close_cursor(cursor_name);
+                  end;
+            end if;   --  if (no_record = 0)   then ?? if (vv_watphy_code is null)   then
+            -- +------------------------------------------------------------+
+            -- | Update the selected field with the updated value           |
+            -- +------------------------------------------------------------+
+
+            begin
+               cursor_name := dbms_sql.open_cursor;
+               dbms_sql.parse(cursor_name, 'update ' || v_res_table || ' set '
+                  || v_field_name || ' = :x where watphy_code = :y',dbms_sql.v7);
+               dbms_sql.bind_variable(cursor_name, ':x', v_constituent_value(i));
+               dbms_sql.bind_variable(cursor_name, ':y', v_watphy_code);
+               rows_processed := dbms_sql.execute(cursor_name);
+               dbms_sql.close_cursor(cursor_name);
+            exception
+               when others then
+                  dbms_sql.close_cursor(cursor_name);
+               end;
+
+            begin
+               cursor_name := dbms_sql.open_cursor;
+               dbms_sql.parse(cursor_name, 'update ' || v_res_table
+               || '_status set ' || v_field_name
+               || ' = :x where watphy_code = :y',dbms_sql.v7);
+               dbms_sql.bind_variable(cursor_name, ':x', v_constituent_status(i));
+               dbms_sql.bind_variable(cursor_name, ':y', v_watphy_code);
+               rows_processed := dbms_sql.execute(cursor_name);
+               dbms_sql.close_cursor(cursor_name);
+            exception
+               when others then
+                  dbms_sql.close_cursor(cursor_name);
+               end;
+         end if;   --  (v_spldep(i) is not null)   then ?? if (v_constituent_value(i) is not null)   then
+      end loop;    --  for i in 1..v_reco_count loop
+      -- +------------------------------------------------------------+
+      -- | Freeze GMT field to prevent any further GMT changes        |
+      -- +------------------------------------------------------------+
+      update inventory
+         set GMT_freeze = 'Y'
+         where survey_id = v_survey_id
+         ;
+      commit;
+      v_name_out := v_spldattim(1);
+   end update_water_data;
+
+   -- +------------------------------------------------------------+
+   -- | Update water sample data                                   |
+   -- +------------------------------------------------------------+
+   procedure update_water_sample_data
+   (
+      v_survey_id          in  varchar2            ,
+      v_station_id         in  t_station_id        ,
+      v_constituent_code   in  varchar2            ,
+      v_spldattim          in  t_date_time         ,
+      v_device_code        in  varchar2            ,
+      v_method_code        in  varchar2            ,
+      v_standard_code      in  varchar2            ,
+      v_constituent_value  in  t_constituent_value ,
+      v_constituent_status in  varchar2            ,
+      v_spldep             in  t_spldep            ,
+      v_rec_count          in  number              ,
+      v_name_out           out varchar2
+   )
+   as
+      no_record      integer;
+      no_record1      integer;
+      cursor_name    integer;
+      rows_processed integer;
+      v_watphy_code  integer;
+      vv_watphy_code  integer;
+      watphy_code  integer;
+      v_res_table    varchar2(10);
+      v_phy_table    varchar2(10);
+      v_field_name   varchar2(15);
+      v_GMT_diff  number      ;
+   begin
+      -- +------------------------------------------------------------+
+      -- | Get the GMT hours for the time zone calculation            |
+      -- +------------------------------------------------------------+
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      -- +------------------------------------------------------------+
+      -- | Get the constituent table and field name                   |
+      -- +------------------------------------------------------------+
+      select
+         res_table   ,
+         field_name
+      into
+         v_res_table   ,
+         v_field_name
+      from
+         constituent
+      where
+         code = v_constituent_code
+      ;
+
+      for i in 1..v_rec_count loop
+         if (v_constituent_value(i) is not null)   then
+            -- +------------------------------------------------------------+
+            -- | IS the record already there                                |
+            -- +------------------------------------------------------------+
+            select   count(*)
+            into     no_record
+            from     watphy
+            where    station_id     = v_station_id(i)
+               and   spldep         = v_spldep(i)
+               and   spldattim      = to_date(v_spldattim(i),'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24
+               and   device_code    = v_device_code
+               and   method_code    = v_method_code
+               and   standard_code  = v_standard_code
+            ;
+            -- +------------------------------------------------------------+
+            -- | If this is a new record, add it                            |
+            -- +------------------------------------------------------------+
+            if (no_record = 0)   then
+               select   max(code)
+               into     v_watphy_code
+               from     watphy
+               ;
+               -- +------------------------------------------------------------+
+               -- | data record                                                |
+               -- +------------------------------------------------------------+
+
+               insert into watphy
+                  values
+                  (
+                     v_watphy_code + 1,
+                     v_station_id(i),
+                     v_device_code,
+                     v_method_code,
+                     v_standard_code,null,
+                     to_date(v_spldattim(i),'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24 ,
+                     v_spldep(i),null,null,null,null,null,null,null
+                  )
+               ;
+               -- +------------------------------------------------------------+
+               -- | status record                                              |
+               -- +------------------------------------------------------------+
+               insert into watphy_status
+                  values
+                  (
+                     v_watphy_code + 1,
+                     null,null,null,null,null
+                  )
+               ;
+            end if;    --  (no_record = 0)   then
+
+            -- +------------------------------------------------------------+
+            -- | Get the record number for editing                          |
+            -- +------------------------------------------------------------+
+            select   code
+            into     v_watphy_code
+            from     watphy
+            where    station_id     = v_station_id(i)
+               and   spldep         = v_spldep(i)
+               and   spldattim      = to_date(v_spldattim(i),'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24
+               and   device_code    = v_device_code
+               and   method_code    = v_method_code
+               and   standard_code  = v_standard_code
+            ;
+            -- +------------------------------------------------------------+
+            -- | Is there a subtable record                                 |
+            -- +------------------------------------------------------------+
+            begin
+               cursor_name := dbms_sql.open_cursor;
+               dbms_sql.parse(cursor_name, 'select count(*) from '
+               || v_res_table || ' where watphy_code = :y',dbms_sql.v7);
+               dbms_sql.define_column(cursor_name, 1, no_record);
+               dbms_sql.bind_variable(cursor_name, ':y', v_watphy_code);
+               rows_processed := dbms_sql.execute(cursor_name);
+               rows_processed := dbms_sql.fetch_rows(cursor_name);
+               dbms_sql.column_value(cursor_name, 1,no_record);
+               dbms_sql.close_cursor(cursor_name);
+            exception
+               when others then
+                  dbms_sql.close_cursor(cursor_name);
+               end;
+
+            -- +------------------------------------------------------------+
+            -- | If there is no subtable record, create one                 |
+            -- +------------------------------------------------------------+
+            if (no_record = 0)   then
+               -- +------------------------------------------------------------+
+               -- | data record                                                |
+               -- +------------------------------------------------------------+
+               begin
+                  cursor_name := dbms_sql.open_cursor;
+                  dbms_sql.parse(cursor_name, 'insert into ' || v_res_table
+                  || ' (watphy_code) values (:y)',dbms_sql.v7);
+                  dbms_sql.bind_variable(cursor_name, ':y', v_watphy_code);
+                  rows_processed := dbms_sql.execute(cursor_name);
+                  dbms_sql.close_cursor(cursor_name);
+               exception
+                  when others then
+                     dbms_sql.close_cursor(cursor_name);
+                  end;
+               -- +------------------------------------------------------------+
+               -- | status record                                              |
+               -- +------------------------------------------------------------+
+               begin
+                  cursor_name := dbms_sql.open_cursor;
+                  dbms_sql.parse(cursor_name, 'insert into ' || v_res_table
+                  || '_status (watphy_code) values (:y)',dbms_sql.v7);
+                  dbms_sql.bind_variable(cursor_name, ':y', v_watphy_code);
+                  rows_processed := dbms_sql.execute(cursor_name);
+                  dbms_sql.close_cursor(cursor_name);
+               exception
+                  when others then
+                     dbms_sql.close_cursor(cursor_name);
+                  end;
+            end if;   --  if (no_record = 0)   then --
+
+            -- +------------------------------------------------------------+
+            -- | Update the selected field with the updated value           |
+            -- +------------------------------------------------------------+
+            begin
+               cursor_name := dbms_sql.open_cursor;
+               dbms_sql.parse(cursor_name, 'update ' || v_res_table
+               || ' set ' || v_field_name
+               || ' = :x where watphy_code = :y',dbms_sql.v7);
+               dbms_sql.bind_variable(cursor_name, ':x', v_constituent_value(i));
+               dbms_sql.bind_variable(cursor_name, ':y', v_watphy_code);
+               rows_processed := dbms_sql.execute(cursor_name);
+               dbms_sql.close_cursor(cursor_name);
+            exception
+               when others then
+                  dbms_sql.close_cursor(cursor_name);
+               end;
+            begin
+               cursor_name := dbms_sql.open_cursor;
+               dbms_sql.parse(cursor_name, 'update ' || v_res_table
+               || '_status set ' || v_field_name
+               || ' = :x where watphy_code = :y',dbms_sql.v7);
+               dbms_sql.bind_variable(cursor_name, ':x', v_constituent_status);
+               dbms_sql.bind_variable(cursor_name, ':y', v_watphy_code);
+               rows_processed := dbms_sql.execute(cursor_name);
+               dbms_sql.close_cursor(cursor_name);
+            exception
+               when others then
+                  dbms_sql.close_cursor(cursor_name);
+               end;
+         end if;   --  if (v_constituent_value(i) is not null)   then
+      end loop;    --  for i in 1..v_reco_count loop
+      -- +------------------------------------------------------------+
+      -- | Freeze GMT field to prevent any further GMT changes        |
+      -- +------------------------------------------------------------+
+      update inventory
+         set GMT_freeze = 'Y'
+         where survey_id = v_survey_id
+         ;
+      commit;
+      v_name_out := v_spldattim(1);
+   end update_water_sample_data;
+
+   -- +------------------------------------------------------------+
+   -- | List water constituent data                                |
+   -- +------------------------------------------------------------+
+
+   procedure list_water_data
+   (
+      v_station_id         in  varchar2            ,
+      v_spldate            in  varchar2            ,
+      v_constituent_code   in  varchar2            ,
+      v_device_code        in  varchar2            ,
+      v_method_code        in  varchar2            ,
+      v_standard_code      in  varchar2            ,
+      v_spldep             in  t_spldep            ,
+      v_rec_count          in  number              ,
+      v_constituent_value  out t_constituent_value ,
+      v_constituent_status out t_status_code       ,
+      v_spldattim          out t_date_time         ,
+      v_output             out varchar2
+   )
+   as
+      no_record      integer;
+      rows_processed integer;
+      cursor_name    integer;
+      v_res_table    varchar2(10);
+      v_phy_table    varchar2(10);
+      v_field_name   varchar2(15);
+      v_value        number;
+      t_spldattim    varchar2(19);
+      v_status_code  number      ;
+      v_GMT_diff     varchar2(2) ;
+      v_survey_id varchar2(9) ;
+      i     number;
+   begin
+      -- +------------------------------------------------------------+
+      -- | Get the GMT hours for the time zone calculation            |
+      -- +------------------------------------------------------------+
+      select   survey_id
+      into     v_survey_id
+      from     station
+      where    station_id = v_station_id
+      ;
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      -- +------------------------------------------------------------+
+      -- | Get the constituent table and field name                   |
+      -- +------------------------------------------------------------+
+      select
+         res_table   ,
+         field_name
+      into
+         v_res_table   ,
+         v_field_name
+      from
+         constituent
+      where
+         code = v_constituent_code
+      ;
+      for i in 1..v_rec_count loop
+      begin
+         cursor_name := dbms_sql.open_cursor;
+         if (v_res_table = 'WATPHY') then
+            -- +------------------------------------------------------------+
+            -- | Cursor for watphy table only                               |
+            -- +------------------------------------------------------------+
+
+            dbms_sql.parse
+               (cursor_name,
+               'select watphy.' || v_field_name
+               || ', to_char(spldattim+ ' || v_GMT_diff
+               || ' / 24, ''YYYY-MM-DD HH24:MI:SS''), watphy_status.'
+               || v_field_name || ' from '
+               || ' watphy, watphy_status '
+               || ' where station_id   = :s_station_id'
+               || ' and spldep         = :s_spldep'
+               || ' and to_char(spldattim, ''YYYY-MM-DD'') = :s_spldate'
+               || ' and device_code    = :s_device_code'
+               || ' and method_code    = :s_method_code'
+               || ' and standard_code  = :s_standard_code'
+               || ' and watphy.' || v_field_name || ' is not null'
+               || ' and watphy.code = watphy_status.watphy_code'
+               ,dbms_sql.v7
+               );
+         else
+            -- +------------------------------------------------------------+
+            -- | Cursor for watphy table and a second water data table      |
+            -- +------------------------------------------------------------+
+            dbms_sql.parse
+               (cursor_name,
+               'select ' || v_res_table || '.' || v_field_name
+               || ', to_char(spldattim + ' || v_GMT_diff
+               || ' / 24, ''YYYY-MM-DD HH24:MI:SS''), '
+               || v_res_table || '_status.' || v_field_name || ' from '
+               || 'watphy, ' || v_res_table || ', ' || v_res_table
+               || '_status '
+               || ' where station_id   = :s_station_id'
+               || ' and spldep         = :s_spldep'
+               || ' and to_char(spldattim, ''YYYY-MM-DD'') = :s_spldate'
+               || ' and device_code    = :s_device_code'
+               || ' and method_code    = :s_method_code'
+               || ' and standard_code  = :s_standard_code'
+               || ' and watphy.code(+) = ' || v_res_table || '.watphy_code'
+               || ' and ' || v_res_table || '.watphy_code = '
+               || v_res_table || '_status.watphy_code'
+               || ' and ' || v_res_table || '.' || v_field_name
+               || ' is not null'
+               ,dbms_sql.v7
+               );
+            end if;   --   if (v_res_table = 'WATPHY') then
+
+            dbms_sql.define_column(cursor_name, 1, v_value);
+            dbms_sql.define_column(cursor_name, 2, t_spldattim, 19);
+            dbms_sql.define_column(cursor_name, 3, v_status_code  );
+            dbms_sql.bind_variable(cursor_name, ':s_station_id'   , v_station_id);
+            dbms_sql.bind_variable(cursor_name, ':s_spldep'       , v_spldep(i))  ;
+            dbms_sql.bind_variable(cursor_name, ':s_spldate'      , v_spldate)  ;
+            dbms_sql.bind_variable(cursor_name, ':s_device_code'  , v_device_code)  ;
+            dbms_sql.bind_variable(cursor_name, ':s_method_code'  , v_method_code)  ;
+            dbms_sql.bind_variable(cursor_name, ':s_standard_code', v_standard_code)  ;
+
+            rows_processed := dbms_sql.execute(cursor_name);
+            rows_processed := dbms_sql.fetch_rows(cursor_name);
+            dbms_sql.column_value(cursor_name, 1,v_value);
+            dbms_sql.column_value(cursor_name, 2,t_spldattim);
+            dbms_sql.column_value(cursor_name, 3,v_status_code);
+            dbms_sql.close_cursor(cursor_name);
+         exception
+         when others then
+            dbms_sql.close_cursor(cursor_name);
+         end;
+         v_constituent_value (i) := v_value;
+         v_spldattim         (i) := t_spldattim;
+         v_constituent_status(i) := v_status_code;
+      end loop;  --  for i in 1..v_rec_count loop
+      v_output := v_constituent_status(2);
+   end list_water_data;
+
+   -- +------------------------------------------------------------+
+   -- | Insert new analytic method                                 |
+   -- +------------------------------------------------------------+
+   procedure add_new_method
+   (
+      v_method_name       in varchar2,
+      v_method_count      out number
+   )
+   as
+      v_method_code     number;
+   begin
+      select   count(*)
+      into     v_method_count
+      from     analytic_method
+      where    upper(name) = upper(v_method_name)
+      ;
+
+      if (v_method_count = 0 ) then
+         select   max(code)
+         into     v_method_code
+         from     analytic_method
+         ;
+         insert into analytic_method
+            values
+            (
+               v_method_code + 1,
+               v_method_name
+            )
+            ;
+         commit;
+      end if;  --  (v_method_count = 0)   then
+   end add_new_method;
+
+   -- +------------------------------------------------------------+
+   -- | Insert new reference standard                              |
+   -- +------------------------------------------------------------+
+   procedure add_new_standard
+   (
+      v_standard_name       in varchar2,
+      v_standard_count      out number
+   )
+   as
+      v_standard_code     number;
+   begin
+      select   count(*)
+      into     v_standard_count
+      from     ref_standard
+      where    upper(name) = upper(v_standard_name)
+      ;
+      if (v_standard_count = 0 ) then
+         select   max(code)
+         into     v_standard_code
+         from     ref_standard
+         ;
+         insert into ref_standard
+         values
+         (
+            v_standard_code + 1,
+            v_standard_name
+         )
+         ;
+      commit;
+      end if;  --  (v_standard_count = 0)   then
+   end add_new_standard;
+   -- +------------------------------------------------------------+
+   -- | Insert new sample date time                                |
+   -- +------------------------------------------------------------+
+   procedure add_new_dattim
+   (
+      v_station_id          in varchar2,
+      v_spldattim           in varchar2,
+      v_spldattim_count     out number
+   )
+   as
+      i  number;
+      v_GMT_diff  number      ;
+      v_survey_id varchar2(9) ;
+   begin
+      select   survey_id
+      into     v_survey_id
+      from     station
+      where    station_id = v_station_id
+      ;
+      select   GMT_diff
+      into     v_GMT_diff
+      from     inventory
+      where    survey_id = v_survey_id
+      ;
+      select   count(*)
+      into     v_spldattim_count
+      from     sample_dattim
+      where    station_id = v_station_id
+         and   spldattim = to_date(v_spldattim,'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24
+      ;
+      if (v_spldattim_count = 0 ) then
+         insert into sample_dattim
+         values
+         (
+            v_station_id       ,
+            to_date(v_spldattim,'YYYY-MM-DD HH24:MI:SS') - v_GMT_diff / 24
+         )
+         ;
+         -- +------------------------------------------------------------+
+         -- | Freeze GMT field to prevent any further GMT changes        |
+
+         -- +------------------------------------------------------------+
+         update inventory
+         set GMT_freeze = 'Y'
+         where survey_id = v_survey_id
+         ;
+         commit;
+      end if;  --  (v_spldattim_count = 0)   then
+   end add_new_dattim;
+
+   -- +------------------------------------------------------------+
+   -- | Insert new sample date                                     |
+   -- +------------------------------------------------------------+
+   procedure add_new_date
+   (
+      v_station_id          in varchar2,
+      v_spldattim           in varchar2,
+      v_spldattim_count     out number
+   )
+   as
+      i  number;
+      v_survey_id varchar2(9) ;
+   begin
+      select   survey_id
+      into     v_survey_id
+      from     station
+      where    station_id = v_station_id
+      ;
+      select   count(*)
+      into     v_spldattim_count
+      from     sample_dattim
+      where    station_id = v_station_id
+         and   spldattim = to_date(v_spldattim,'YYYY-MM-DD')
+      ;
+      if (v_spldattim_count = 0 ) then
+         insert into sample_dattim
+         values
+         (
+            v_station_id       ,
+            to_date(v_spldattim,'YYYY-MM-DD')
+         )
+         ;
+         -- +------------------------------------------------------------+
+         -- | Freeze GMT field to prevent any further GMT changes        |
+         -- +------------------------------------------------------------+
+         update inventory
+            set GMT_freeze = 'Y'
+            where survey_id = v_survey_id
+         ;
+         commit;
+      end if;  --  (v_spldattim_count = 0)   then
+   end add_new_date;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of survey constituent records               |
+   -- +------------------------------------------------------------+
+   function count_survey_constituent
+   (
+      v_survey_id          in varchar2  ,
+      v_discipline_code    in varchar2
+   )
+   return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     survey_constituent
+      where    survey_id = v_survey_id
+         and   discipline_code = v_discipline_code
+      ;
+      return   rec_count;
+   end count_survey_constituent;
+
+   -- +------------------------------------------------------------+
+   -- | Insert new survey constituent record                       |
+   -- +------------------------------------------------------------+
+   procedure add_survey_constituent
+   (
+      v_survey_id           in varchar2,
+      v_discipline_code     in varchar2,
+      v_constituent_code    in varchar2,
+      v_fraction_code       in varchar2,
+      v_device_code         in varchar2,
+      v_method_code         in varchar2,
+      v_standard_code       in varchar2,
+      v_rec_count           out number
+   )
+   as
+      i    number;
+   begin
+      select   count(*)
+      into     v_rec_count
+      from     survey_constituent
+      where    survey_id          = v_survey_id
+         and   discipline_code    = v_discipline_code
+         and   constituent_code   = v_constituent_code
+         and   fraction_code      = v_fraction_code
+         and   device_code        = v_device_code
+         and   method_code        = v_method_code
+         and   standard_code      = v_standard_code
+      ;
+      if (v_rec_count = 0 ) then
+         insert into survey_constituent
+            values
+            (
+               v_survey_id           ,
+               v_discipline_code     ,
+               v_constituent_code    ,
+               v_fraction_code       ,
+               v_device_code         ,
+               v_method_code         ,
+               v_standard_code
+            )
+            ;
+         commit;
+      end if;  --  (v_rec_count = 0)   then
+   end add_survey_constituent;
+
+   -- +------------------------------------------------------------+
+   -- | List survey constituent records                            |
+   -- +------------------------------------------------------------+
+   procedure list_survey_constituent
+   (
+      v_survey_id          in  varchar2           ,
+      v_discipline_code    in  varchar2           ,
+      constituent_code   out t_constituent_code ,
+      constituent_name   out t_constituent_name ,
+      html_unit          out t_html_unit        ,
+      fraction_code      out t_fraction_code    ,
+      fraction_name      out t_fraction_name    ,
+      device_code        out t_device_code      ,
+      device_name        out t_device_name      ,
+      method_code        out t_method_code      ,
+      method_name        out t_method_name      ,
+      standard_code      out t_standard_code    ,
+      standard_name      out t_standard_name
+   )
+   as
+      i  number;
+      cursor rcd is
+         select
+            survey_constituent.constituent_code ,
+            constituent.name   constituent_name ,
+                               html_unit        ,
+            survey_constituent.fraction_code    ,
+            constituent_fraction.name fraction_name    ,
+            survey_constituent.device_code      ,
+            sampling_device.name device_name      ,
+            survey_constituent.method_code      ,
+            analytic_method.name method_name    ,
+            survey_constituent.standard_code    ,
+            ref_standard.name standard_name
+         from
+            survey_constituent,
+            constituent,
+            constituent_fraction,
+            sampling_device,
+            analytic_method,
+            ref_standard
+         where
+                  survey_id                           = v_survey_id
+            and   survey_constituent.discipline_code  = v_discipline_code
+            and   survey_constituent.constituent_code = constituent.code
+            and   survey_constituent.fraction_code    = constituent_fraction.code
+            and   survey_constituent.device_code      = sampling_device.code
+            and   survey_constituent.method_code      = analytic_method.code
+            and   survey_constituent.standard_code    = ref_standard.code
+         order by
+            device_name,
+            method_name,
+            standard_name,
+            constituent_name,
+            fraction_name
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         constituent_code     (i)  := rec.constituent_code  ;
+         constituent_name     (i)  := rec.constituent_name  ;
+         html_unit            (i)  := rec.html_unit         ;
+         fraction_code        (i)  := rec.fraction_code     ;
+         fraction_name        (i)  := rec.fraction_name     ;
+         device_code          (i)  := rec.device_code       ;
+         device_name          (i)  := rec.device_name       ;
+         method_code          (i)  := rec.method_code       ;
+         method_name          (i)  := rec.method_name       ;
+         standard_code        (i)  := rec.standard_code     ;
+         standard_name        (i)  := rec.standard_name     ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_survey_constituent;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of status mode records                      |
+   -- +------------------------------------------------------------+
+   function count_status_mode
+      return number as rec_count number;
+   begin
+      select   count(*)
+      into     rec_count
+      from     status_mode
+      ;
+      return   rec_count;
+   end count_status_mode;
+
+   -- +------------------------------------------------------------+
+   -- | List status mode records                                   |
+   -- +------------------------------------------------------------+
+   procedure list_status_mode
+   (
+      status_code    out t_status_code ,
+      flagging       out t_flagging    ,
+      quality        out t_quality
+   )
+   as
+      i number;
+      cursor rcd is
+         select
+            code,
+            flagging   ,
+            quality
+         from
+            status_mode
+         ;
+   begin
+      i := 1;
+      for rec in rcd loop
+         status_code(i)       := rec.code  ;
+         flagging   (i)       := rec.flagging     ;
+         quality    (i)       := rec.quality      ;
+         i := i + 1;
+      end loop;  --  for rec in rcd loop
+   end list_status_mode;
+end;   --  create or replace package body SadSql as
+/
+show errors

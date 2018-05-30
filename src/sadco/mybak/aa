@@ -1,0 +1,295 @@
+AdminCheckStations.java.mybak:     * @param atlas     : WOAtlas array
+AdminCheckStations.java.mybak:    void checkProfiles(float latitude, float longitude, MrnWoatlas5[] atlas,
+AdminCheckStations.java.mybak:        float woaDepth[] = new float[atlas.length];
+AdminCheckStations.java.mybak:        float woaParmMin[] = new float[atlas.length];
+AdminCheckStations.java.mybak:        float woaParmMax[] = new float[atlas.length];
+AdminCheckStations.java.mybak:            for (int i = 0; i < atlas.length; i++) {
+AdminCheckStations.java.mybak:                woaDepth[i] = atlas[i].getDepth();
+AdminCheckStations.java.mybak:                woaParmMin[i] = atlas[i].getTemperatureMin();
+AdminCheckStations.java.mybak:                woaParmMax[i] = atlas[i].getTemperatureMax();
+AdminCheckStations.java.mybak:            } // for (int i = 0; i < atlas.length; i++)
+AdminCheckStations.java.mybak:            for (int i = 0; i < atlas.length; i++) {
+AdminCheckStations.java.mybak:                woaDepth[i] = atlas[i].getDepth();
+AdminCheckStations.java.mybak:                woaParmMin[i] = atlas[i].getSalinityMin();
+AdminCheckStations.java.mybak:                woaParmMax[i] = atlas[i].getSalinityMax();
+AdminCheckStations.java.mybak:            } // for (int i = 0; i < atlas.length; i++)
+AdminCheckStations.java.mybak:            for (int i = 0; i < atlas.length; i++) {
+AdminCheckStations.java.mybak:                woaDepth[i] = atlas[i].getDepth();
+AdminCheckStations.java.mybak:                woaParmMin[i] = atlas[i].getOxygenMin();
+AdminCheckStations.java.mybak:                woaParmMax[i] = atlas[i].getOxygenMax();
+AdminCheckStations.java.mybak:            } // for (int i = 0; i < atlas.length; i++)
+AdminCheckStations.java.mybak:            //if (atlas[i].getTemperatureMin() != MrnWoatlas.FLOATNULL)
+AdminCheckStations.java.mybak:            //        ec.frm(atlas[i].getDepth(),8,1) +
+AdminCheckStations.java.mybak:            //        ec.frm(atlas[i].getTemperatureMin(),8,3) +
+AdminCheckStations.java.mybak:            //        ec.frm(atlas[i].getTemperatureMax(),8,3));
+AdminCheckStations.java.mybak:            if (woaParmMin[i] == MrnWoatlas.FLOATNULL)
+AdminCheckStations.java.mybak:        } // for (int i = 0; i < atlas.length; i++)
+AdminCheckStations.java.mybak:            // look for depth in woatlas
+AdminCheckStations.java.mybak:            // if there is an atlas record
+AdminCheckStations.java.mybak:                } // if (atlas[j].getDepth() == watphyDep[i])
+AdminCheckStations.java.mybak:                System.out.println(" no more atlas records, last =  " +
+AdminCheckStations.java.mybak:            } // if (j < atlas.length())
+AdminCheckStations.java.mybak:                MrnWoatlas5[] atlas = getWOAtlas5(stations[i].getLatitude(),
+AdminCheckStations.java.mybak:                if (atlas.length > 0)
+AdminCheckStations.java.mybak:                    System.out.println("woatlas latitude = " + atlas[0].getLatitude() +
+AdminCheckStations.java.mybak:                        ", longitude = " + atlas[0].getLongitude());
+AdminCheckStations.java.mybak:                if (atlas.length > 0 ) {
+AdminCheckStations.java.mybak:                        stations[i].getLongitude(), atlas, watphyRecs);
+AdminCheckStations.java.mybak:                } //if (atlas.length > 0 )
+AdminCheckStations.java.mybak:    MrnWoatlas5[] getWOAtlas5(float latitude, float longitude) {
+AdminCheckStations.java.mybak:        String where = MrnWoatlas5.LATITUDE + " between " +
+AdminCheckStations.java.mybak:            MrnWoatlas5.LONGITUDE + " between " +
+AdminCheckStations.java.mybak:        String order = MrnWoatlas5.DEPTH;
+AdminCheckStations.java.mybak:        MrnWoatlas5 atlas = new MrnWoatlas5();
+AdminCheckStations.java.mybak:        MrnWoatlas5 atlasArray[] = atlas.get(fields, where, order);
+AdminCheckStations.java.mybak:        System.out.println("selStr = " + atlas.getSelStr());
+AdminCheckStations.java.mybak:        System.out.println("atlasArray.length = " + atlasArray.length);
+AdminCheckStations.java.mybak:        return atlasArray;
+MrnWoatlas.java.mybak:public class MrnWoatlas extends Tables {
+MrnWoatlas.java.mybak:    public MrnWoatlas() {
+MrnWoatlas.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlas constructor 1"); // debug
+MrnWoatlas.java.mybak:    } // MrnWoatlas constructor
+MrnWoatlas.java.mybak:     * Instantiate a MrnWoatlas object and initialize the instance variables.
+MrnWoatlas.java.mybak:    public MrnWoatlas(
+MrnWoatlas.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlas constructor 2"); // debug
+MrnWoatlas.java.mybak:    } // MrnWoatlas constructor
+MrnWoatlas.java.mybak:     * Instantiate a MrnWoatlas object and initialize the instance variables.
+MrnWoatlas.java.mybak:    public MrnWoatlas(
+MrnWoatlas.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlas constructor 3"); // debug
+MrnWoatlas.java.mybak:    } // MrnWoatlas constructor
+MrnWoatlas.java.mybak:     * are returned in an array of MrnWoatlas. e.g.<pre>
+MrnWoatlas.java.mybak:     * MrnWoatlas woatlas = new MrnWoatlas(<val1>);
+MrnWoatlas.java.mybak:     * MrnWoatlas woatlasArray[] = woatlas.get();</pre>
+MrnWoatlas.java.mybak:     * will get the MrnWoatlas record where latitude = <val1>.
+MrnWoatlas.java.mybak:     * @return Array of MrnWoatlas (MrnWoatlas[])
+MrnWoatlas.java.mybak:    public MrnWoatlas[] get() {
+MrnWoatlas.java.mybak:     * MrnWoatlas woatlasArray[] =
+MrnWoatlas.java.mybak:     *     new MrnWoatlas().get(MrnWoatlas.LATITUDE+"=<val1>");</pre>
+MrnWoatlas.java.mybak:     * will get the MrnWoatlas record where latitude = <val1>.
+MrnWoatlas.java.mybak:     * @return Array of MrnWoatlas (MrnWoatlas[])
+MrnWoatlas.java.mybak:    public MrnWoatlas[] get (String where) {
+MrnWoatlas.java.mybak:     * MrnWoatlas woatlasArray[] =
+MrnWoatlas.java.mybak:     *     new MrnWoatlas().get("1=1",woatlas.LATITUDE);</pre>
+MrnWoatlas.java.mybak:     * will get the all the MrnWoatlas records, and order them by latitude.
+MrnWoatlas.java.mybak:     * @return Array of MrnWoatlas (MrnWoatlas[])
+MrnWoatlas.java.mybak:    public MrnWoatlas[] get (String where, String order) {
+MrnWoatlas.java.mybak:     * String columns = MrnWoatlas.LATITUDE,MrnWoatlas.LONGITUDE;
+MrnWoatlas.java.mybak:     * String where = MrnWoatlas.LATITUDE + "=<val1";
+MrnWoatlas.java.mybak:     * String order = MrnWoatlas.LATITUDE;
+MrnWoatlas.java.mybak:     * MrnWoatlas woatlasArray[] =
+MrnWoatlas.java.mybak:     *     new MrnWoatlas().get(columns, where, order);</pre>
+MrnWoatlas.java.mybak:     * will get the latitude and longitude colums of all MrnWoatlas records,
+MrnWoatlas.java.mybak:     * @return Array of MrnWoatlas (MrnWoatlas[])
+MrnWoatlas.java.mybak:    public MrnWoatlas[] get (String fields, String where, String order) {
+MrnWoatlas.java.mybak:     * and transforms it into an array of MrnWoatlas.
+MrnWoatlas.java.mybak:    private MrnWoatlas[] doGet(Vector result) {
+MrnWoatlas.java.mybak:        MrnWoatlas[] cArray = new MrnWoatlas[result.size()];
+MrnWoatlas.java.mybak:            cArray[i] = new MrnWoatlas();
+MrnWoatlas.java.mybak:     *     new MrnWoatlas(
+MrnWoatlas.java.mybak:     * Boolean success = new MrnWoatlas(
+MrnWoatlas.java.mybak:     * MrnWoatlas woatlas = new MrnWoatlas();
+MrnWoatlas.java.mybak:     * success = woatlas.del(MrnWoatlas.LATITUDE+"=<val1>");</pre>
+MrnWoatlas.java.mybak:     * update are taken from the MrnWoatlas argument, .e.g.<pre>
+MrnWoatlas.java.mybak:     * MrnWoatlas updMrnWoatlas = new MrnWoatlas();
+MrnWoatlas.java.mybak:     * updMrnWoatlas.setLongitude(<val2>);
+MrnWoatlas.java.mybak:     * MrnWoatlas whereMrnWoatlas = new MrnWoatlas(<val1>);
+MrnWoatlas.java.mybak:     * success = whereMrnWoatlas.upd(updMrnWoatlas);</pre>
+MrnWoatlas.java.mybak:     * @param  woatlas  A MrnWoatlas variable in which the fields are to be used for
+MrnWoatlas.java.mybak:    public boolean upd(MrnWoatlas woatlas) {
+MrnWoatlas.java.mybak:        return db.update (TABLE, createColVals(woatlas), createWhere());
+MrnWoatlas.java.mybak:     * MrnWoatlas updMrnWoatlas = new MrnWoatlas();
+MrnWoatlas.java.mybak:     * updMrnWoatlas.setLongitude(<val2>);
+MrnWoatlas.java.mybak:     * MrnWoatlas whereMrnWoatlas = new MrnWoatlas();
+MrnWoatlas.java.mybak:     * success = whereMrnWoatlas.upd(
+MrnWoatlas.java.mybak:     *     updMrnWoatlas, MrnWoatlas.LATITUDE+"=<val1>");</pre>
+MrnWoatlas.java.mybak:     * @param  woatlas  A MrnWoatlas variable in which the fields are to be used for
+MrnWoatlas.java.mybak:    public boolean upd(MrnWoatlas woatlas, String where) {
+MrnWoatlas.java.mybak:        return db.update (TABLE, createColVals(woatlas), where);
+MrnWoatlas.java.mybak:    private String createColVals(MrnWoatlas aVar) {
+MrnWoatlas.java.mybak:} // class MrnWoatlas
+MrnWoatlas5.java.mybak:public class MrnWoatlas5 extends Tables {
+MrnWoatlas5.java.mybak:    public MrnWoatlas5() {
+MrnWoatlas5.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlas5 constructor 1"); // debug
+MrnWoatlas5.java.mybak:    } // MrnWoatlas5 constructor
+MrnWoatlas5.java.mybak:     * Instantiate a MrnWoatlas5 object and initialize the instance variables.
+MrnWoatlas5.java.mybak:    public MrnWoatlas5(
+MrnWoatlas5.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlas5 constructor 2"); // debug
+MrnWoatlas5.java.mybak:    } // MrnWoatlas5 constructor
+MrnWoatlas5.java.mybak:     * Instantiate a MrnWoatlas5 object and initialize the instance variables.
+MrnWoatlas5.java.mybak:    public MrnWoatlas5(
+MrnWoatlas5.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlas5 constructor 3"); // debug
+MrnWoatlas5.java.mybak:    } // MrnWoatlas5 constructor
+MrnWoatlas5.java.mybak:     * are returned in an array of MrnWoatlas5. e.g.<pre>
+MrnWoatlas5.java.mybak:     * MrnWoatlas5 woatlas5 = new MrnWoatlas5(<val1>);
+MrnWoatlas5.java.mybak:     * MrnWoatlas5 woatlas5Array[] = woatlas5.get();</pre>
+MrnWoatlas5.java.mybak:     * will get the MrnWoatlas5 record where latitude = <val1>.
+MrnWoatlas5.java.mybak:     * @return Array of MrnWoatlas5 (MrnWoatlas5[])
+MrnWoatlas5.java.mybak:    public MrnWoatlas5[] get() {
+MrnWoatlas5.java.mybak:     * MrnWoatlas5 woatlas5Array[] =
+MrnWoatlas5.java.mybak:     *     new MrnWoatlas5().get(MrnWoatlas5.LATITUDE+"=<val1>");</pre>
+MrnWoatlas5.java.mybak:     * will get the MrnWoatlas5 record where latitude = <val1>.
+MrnWoatlas5.java.mybak:     * @return Array of MrnWoatlas5 (MrnWoatlas5[])
+MrnWoatlas5.java.mybak:    public MrnWoatlas5[] get (String where) {
+MrnWoatlas5.java.mybak:     * MrnWoatlas5 woatlas5Array[] =
+MrnWoatlas5.java.mybak:     *     new MrnWoatlas5().get("1=1",woatlas5.LATITUDE);</pre>
+MrnWoatlas5.java.mybak:     * will get the all the MrnWoatlas5 records, and order them by latitude.
+MrnWoatlas5.java.mybak:     * @return Array of MrnWoatlas5 (MrnWoatlas5[])
+MrnWoatlas5.java.mybak:    public MrnWoatlas5[] get (String where, String order) {
+MrnWoatlas5.java.mybak:     * String columns = MrnWoatlas5.LATITUDE,MrnWoatlas5.LONGITUDE;
+MrnWoatlas5.java.mybak:     * String where = MrnWoatlas5.LATITUDE + "=<val1";
+MrnWoatlas5.java.mybak:     * String order = MrnWoatlas5.LATITUDE;
+MrnWoatlas5.java.mybak:     * MrnWoatlas5 woatlas5Array[] =
+MrnWoatlas5.java.mybak:     *     new MrnWoatlas5().get(columns, where, order);</pre>
+MrnWoatlas5.java.mybak:     * will get the latitude and longitude colums of all MrnWoatlas5 records,
+MrnWoatlas5.java.mybak:     * @return Array of MrnWoatlas5 (MrnWoatlas5[])
+MrnWoatlas5.java.mybak:    public MrnWoatlas5[] get (String fields, String where, String order) {
+MrnWoatlas5.java.mybak:     * and transforms it into an array of MrnWoatlas5.
+MrnWoatlas5.java.mybak:    private MrnWoatlas5[] doGet(Vector result) {
+MrnWoatlas5.java.mybak:        MrnWoatlas5[] cArray = new MrnWoatlas5[result.size()];
+MrnWoatlas5.java.mybak:            cArray[i] = new MrnWoatlas5();
+MrnWoatlas5.java.mybak:     *     new MrnWoatlas5(
+MrnWoatlas5.java.mybak:     * Boolean success = new MrnWoatlas5(
+MrnWoatlas5.java.mybak:     * MrnWoatlas5 woatlas5 = new MrnWoatlas5();
+MrnWoatlas5.java.mybak:     * success = woatlas5.del(MrnWoatlas5.LATITUDE+"=<val1>");</pre>
+MrnWoatlas5.java.mybak:     * update are taken from the MrnWoatlas5 argument, .e.g.<pre>
+MrnWoatlas5.java.mybak:     * MrnWoatlas5 updMrnWoatlas5 = new MrnWoatlas5();
+MrnWoatlas5.java.mybak:     * updMrnWoatlas5.setLongitude(<val2>);
+MrnWoatlas5.java.mybak:     * MrnWoatlas5 whereMrnWoatlas5 = new MrnWoatlas5(<val1>);
+MrnWoatlas5.java.mybak:     * success = whereMrnWoatlas5.upd(updMrnWoatlas5);</pre>
+MrnWoatlas5.java.mybak:     * @param  woatlas5  A MrnWoatlas5 variable in which the fields are to be used for
+MrnWoatlas5.java.mybak:    public boolean upd(MrnWoatlas5 woatlas5) {
+MrnWoatlas5.java.mybak:        return db.update (TABLE, createColVals(woatlas5), createWhere());
+MrnWoatlas5.java.mybak:     * MrnWoatlas5 updMrnWoatlas5 = new MrnWoatlas5();
+MrnWoatlas5.java.mybak:     * updMrnWoatlas5.setLongitude(<val2>);
+MrnWoatlas5.java.mybak:     * MrnWoatlas5 whereMrnWoatlas5 = new MrnWoatlas5();
+MrnWoatlas5.java.mybak:     * success = whereMrnWoatlas5.upd(
+MrnWoatlas5.java.mybak:     *     updMrnWoatlas5, MrnWoatlas5.LATITUDE+"=<val1>");</pre>
+MrnWoatlas5.java.mybak:     * @param  woatlas5  A MrnWoatlas5 variable in which the fields are to be used for
+MrnWoatlas5.java.mybak:    public boolean upd(MrnWoatlas5 woatlas5, String where) {
+MrnWoatlas5.java.mybak:        return db.update (TABLE, createColVals(woatlas5), where);
+MrnWoatlas5.java.mybak:    private String createColVals(MrnWoatlas5 aVar) {
+MrnWoatlas5.java.mybak:} // class MrnWoatlas5
+MrnWoatlasAnn.java.mybak:public class MrnWoatlasAnn extends Tables {
+MrnWoatlasAnn.java.mybak:    public MrnWoatlasAnn() {
+MrnWoatlasAnn.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlasAnn constructor 1"); // debug
+MrnWoatlasAnn.java.mybak:    } // MrnWoatlasAnn constructor
+MrnWoatlasAnn.java.mybak:     * Instantiate a MrnWoatlasAnn object and initialize the instance variables.
+MrnWoatlasAnn.java.mybak:    public MrnWoatlasAnn(
+MrnWoatlasAnn.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlasAnn constructor 2"); // debug
+MrnWoatlasAnn.java.mybak:    } // MrnWoatlasAnn constructor
+MrnWoatlasAnn.java.mybak:     * Instantiate a MrnWoatlasAnn object and initialize the instance variables.
+MrnWoatlasAnn.java.mybak:    public MrnWoatlasAnn(
+MrnWoatlasAnn.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlasAnn constructor 3"); // debug
+MrnWoatlasAnn.java.mybak:    } // MrnWoatlasAnn constructor
+MrnWoatlasAnn.java.mybak:     * are returned in an array of MrnWoatlasAnn. e.g.<pre>
+MrnWoatlasAnn.java.mybak:     * MrnWoatlasAnn woatlasAnn = new MrnWoatlasAnn(<val1>);
+MrnWoatlasAnn.java.mybak:     * MrnWoatlasAnn woatlasAnnArray[] = woatlasAnn.get();</pre>
+MrnWoatlasAnn.java.mybak:     * will get the MrnWoatlasAnn record where latitude = <val1>.
+MrnWoatlasAnn.java.mybak:     * @return Array of MrnWoatlasAnn (MrnWoatlasAnn[])
+MrnWoatlasAnn.java.mybak:    public MrnWoatlasAnn[] get() {
+MrnWoatlasAnn.java.mybak:     * MrnWoatlasAnn woatlasAnnArray[] =
+MrnWoatlasAnn.java.mybak:     *     new MrnWoatlasAnn().get(MrnWoatlasAnn.LATITUDE+"=<val1>");</pre>
+MrnWoatlasAnn.java.mybak:     * will get the MrnWoatlasAnn record where latitude = <val1>.
+MrnWoatlasAnn.java.mybak:     * @return Array of MrnWoatlasAnn (MrnWoatlasAnn[])
+MrnWoatlasAnn.java.mybak:    public MrnWoatlasAnn[] get (String where) {
+MrnWoatlasAnn.java.mybak:     * MrnWoatlasAnn woatlasAnnArray[] =
+MrnWoatlasAnn.java.mybak:     *     new MrnWoatlasAnn().get("1=1",woatlasAnn.LATITUDE);</pre>
+MrnWoatlasAnn.java.mybak:     * will get the all the MrnWoatlasAnn records, and order them by latitude.
+MrnWoatlasAnn.java.mybak:     * @return Array of MrnWoatlasAnn (MrnWoatlasAnn[])
+MrnWoatlasAnn.java.mybak:    public MrnWoatlasAnn[] get (String where, String order) {
+MrnWoatlasAnn.java.mybak:     * String columns = MrnWoatlasAnn.LATITUDE,MrnWoatlasAnn.LONGITUDE;
+MrnWoatlasAnn.java.mybak:     * String where = MrnWoatlasAnn.LATITUDE + "=<val1";
+MrnWoatlasAnn.java.mybak:     * String order = MrnWoatlasAnn.LATITUDE;
+MrnWoatlasAnn.java.mybak:     * MrnWoatlasAnn woatlasAnnArray[] =
+MrnWoatlasAnn.java.mybak:     *     new MrnWoatlasAnn().get(columns, where, order);</pre>
+MrnWoatlasAnn.java.mybak:     * will get the latitude and longitude colums of all MrnWoatlasAnn records,
+MrnWoatlasAnn.java.mybak:     * @return Array of MrnWoatlasAnn (MrnWoatlasAnn[])
+MrnWoatlasAnn.java.mybak:    public MrnWoatlasAnn[] get (String fields, String where, String order) {
+MrnWoatlasAnn.java.mybak:     * and transforms it into an array of MrnWoatlasAnn.
+MrnWoatlasAnn.java.mybak:    private MrnWoatlasAnn[] doGet(Vector result) {
+MrnWoatlasAnn.java.mybak:        MrnWoatlasAnn[] cArray = new MrnWoatlasAnn[result.size()];
+MrnWoatlasAnn.java.mybak:            cArray[i] = new MrnWoatlasAnn();
+MrnWoatlasAnn.java.mybak:     *     new MrnWoatlasAnn(
+MrnWoatlasAnn.java.mybak:     * Boolean success = new MrnWoatlasAnn(
+MrnWoatlasAnn.java.mybak:     * MrnWoatlasAnn woatlasAnn = new MrnWoatlasAnn();
+MrnWoatlasAnn.java.mybak:     * success = woatlasAnn.del(MrnWoatlasAnn.LATITUDE+"=<val1>");</pre>
+MrnWoatlasAnn.java.mybak:     * update are taken from the MrnWoatlasAnn argument, .e.g.<pre>
+MrnWoatlasAnn.java.mybak:     * MrnWoatlasAnn updMrnWoatlasAnn = new MrnWoatlasAnn();
+MrnWoatlasAnn.java.mybak:     * updMrnWoatlasAnn.setLongitude(<val2>);
+MrnWoatlasAnn.java.mybak:     * MrnWoatlasAnn whereMrnWoatlasAnn = new MrnWoatlasAnn(<val1>);
+MrnWoatlasAnn.java.mybak:     * success = whereMrnWoatlasAnn.upd(updMrnWoatlasAnn);</pre>
+MrnWoatlasAnn.java.mybak:     * @param  woatlasAnn  A MrnWoatlasAnn variable in which the fields are to be used for
+MrnWoatlasAnn.java.mybak:    public boolean upd(MrnWoatlasAnn woatlasAnn) {
+MrnWoatlasAnn.java.mybak:        return db.update (TABLE, createColVals(woatlasAnn), createWhere());
+MrnWoatlasAnn.java.mybak:     * MrnWoatlasAnn updMrnWoatlasAnn = new MrnWoatlasAnn();
+MrnWoatlasAnn.java.mybak:     * updMrnWoatlasAnn.setLongitude(<val2>);
+MrnWoatlasAnn.java.mybak:     * MrnWoatlasAnn whereMrnWoatlasAnn = new MrnWoatlasAnn();
+MrnWoatlasAnn.java.mybak:     * success = whereMrnWoatlasAnn.upd(
+MrnWoatlasAnn.java.mybak:     *     updMrnWoatlasAnn, MrnWoatlasAnn.LATITUDE+"=<val1>");</pre>
+MrnWoatlasAnn.java.mybak:     * @param  woatlasAnn  A MrnWoatlasAnn variable in which the fields are to be used for
+MrnWoatlasAnn.java.mybak:    public boolean upd(MrnWoatlasAnn woatlasAnn, String where) {
+MrnWoatlasAnn.java.mybak:        return db.update (TABLE, createColVals(woatlasAnn), where);
+MrnWoatlasAnn.java.mybak:    private String createColVals(MrnWoatlasAnn aVar) {
+MrnWoatlasAnn.java.mybak:} // class MrnWoatlasAnn
+MrnWoatlasSea.java.mybak:public class MrnWoatlasSea extends Tables {
+MrnWoatlasSea.java.mybak:    public MrnWoatlasSea() {
+MrnWoatlasSea.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlasSea constructor 1"); // debug
+MrnWoatlasSea.java.mybak:    } // MrnWoatlasSea constructor
+MrnWoatlasSea.java.mybak:     * Instantiate a MrnWoatlasSea object and initialize the instance variables.
+MrnWoatlasSea.java.mybak:    public MrnWoatlasSea(
+MrnWoatlasSea.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlasSea constructor 2"); // debug
+MrnWoatlasSea.java.mybak:    } // MrnWoatlasSea constructor
+MrnWoatlasSea.java.mybak:     * Instantiate a MrnWoatlasSea object and initialize the instance variables.
+MrnWoatlasSea.java.mybak:    public MrnWoatlasSea(
+MrnWoatlasSea.java.mybak:        if (dbg) System.out.println ("<br>in MrnWoatlasSea constructor 3"); // debug
+MrnWoatlasSea.java.mybak:    } // MrnWoatlasSea constructor
+MrnWoatlasSea.java.mybak:     * are returned in an array of MrnWoatlasSea. e.g.<pre>
+MrnWoatlasSea.java.mybak:     * MrnWoatlasSea woatlasSea = new MrnWoatlasSea(<val1>);
+MrnWoatlasSea.java.mybak:     * MrnWoatlasSea woatlasSeaArray[] = woatlasSea.get();</pre>
+MrnWoatlasSea.java.mybak:     * will get the MrnWoatlasSea record where latitude = <val1>.
+MrnWoatlasSea.java.mybak:     * @return Array of MrnWoatlasSea (MrnWoatlasSea[])
+MrnWoatlasSea.java.mybak:    public MrnWoatlasSea[] get() {
+MrnWoatlasSea.java.mybak:     * MrnWoatlasSea woatlasSeaArray[] =
+MrnWoatlasSea.java.mybak:     *     new MrnWoatlasSea().get(MrnWoatlasSea.LATITUDE+"=<val1>");</pre>
+MrnWoatlasSea.java.mybak:     * will get the MrnWoatlasSea record where latitude = <val1>.
+MrnWoatlasSea.java.mybak:     * @return Array of MrnWoatlasSea (MrnWoatlasSea[])
+MrnWoatlasSea.java.mybak:    public MrnWoatlasSea[] get (String where) {
+MrnWoatlasSea.java.mybak:     * MrnWoatlasSea woatlasSeaArray[] =
+MrnWoatlasSea.java.mybak:     *     new MrnWoatlasSea().get("1=1",woatlasSea.LATITUDE);</pre>
+MrnWoatlasSea.java.mybak:     * will get the all the MrnWoatlasSea records, and order them by latitude.
+MrnWoatlasSea.java.mybak:     * @return Array of MrnWoatlasSea (MrnWoatlasSea[])
+MrnWoatlasSea.java.mybak:    public MrnWoatlasSea[] get (String where, String order) {
+MrnWoatlasSea.java.mybak:     * String columns = MrnWoatlasSea.LATITUDE,MrnWoatlasSea.LONGITUDE;
+MrnWoatlasSea.java.mybak:     * String where = MrnWoatlasSea.LATITUDE + "=<val1";
+MrnWoatlasSea.java.mybak:     * String order = MrnWoatlasSea.LATITUDE;
+MrnWoatlasSea.java.mybak:     * MrnWoatlasSea woatlasSeaArray[] =
+MrnWoatlasSea.java.mybak:     *     new MrnWoatlasSea().get(columns, where, order);</pre>
+MrnWoatlasSea.java.mybak:     * will get the latitude and longitude colums of all MrnWoatlasSea records,
+MrnWoatlasSea.java.mybak:     * @return Array of MrnWoatlasSea (MrnWoatlasSea[])
+MrnWoatlasSea.java.mybak:    public MrnWoatlasSea[] get (String fields, String where, String order) {
+MrnWoatlasSea.java.mybak:     * and transforms it into an array of MrnWoatlasSea.
+MrnWoatlasSea.java.mybak:    private MrnWoatlasSea[] doGet(Vector result) {
+MrnWoatlasSea.java.mybak:        MrnWoatlasSea[] cArray = new MrnWoatlasSea[result.size()];
+MrnWoatlasSea.java.mybak:            cArray[i] = new MrnWoatlasSea();
+MrnWoatlasSea.java.mybak:     *     new MrnWoatlasSea(
+MrnWoatlasSea.java.mybak:     * Boolean success = new MrnWoatlasSea(
+MrnWoatlasSea.java.mybak:     * MrnWoatlasSea woatlasSea = new MrnWoatlasSea();
+MrnWoatlasSea.java.mybak:     * success = woatlasSea.del(MrnWoatlasSea.LATITUDE+"=<val1>");</pre>
+MrnWoatlasSea.java.mybak:     * update are taken from the MrnWoatlasSea argument, .e.g.<pre>
+MrnWoatlasSea.java.mybak:     * MrnWoatlasSea updMrnWoatlasSea = new MrnWoatlasSea();
+MrnWoatlasSea.java.mybak:     * updMrnWoatlasSea.setLongitude(<val2>);
+MrnWoatlasSea.java.mybak:     * MrnWoatlasSea whereMrnWoatlasSea = new MrnWoatlasSea(<val1>);
+MrnWoatlasSea.java.mybak:     * success = whereMrnWoatlasSea.upd(updMrnWoatlasSea);</pre>
+MrnWoatlasSea.java.mybak:     * @param  woatlasSea  A MrnWoatlasSea variable in which the fields are to be used for
+MrnWoatlasSea.java.mybak:    public boolean upd(MrnWoatlasSea woatlasSea) {
+MrnWoatlasSea.java.mybak:        return db.update (TABLE, createColVals(woatlasSea), createWhere());
+MrnWoatlasSea.java.mybak:     * MrnWoatlasSea updMrnWoatlasSea = new MrnWoatlasSea();
+MrnWoatlasSea.java.mybak:     * updMrnWoatlasSea.setLongitude(<val2>);
+MrnWoatlasSea.java.mybak:     * MrnWoatlasSea whereMrnWoatlasSea = new MrnWoatlasSea();
+MrnWoatlasSea.java.mybak:     * success = whereMrnWoatlasSea.upd(
+MrnWoatlasSea.java.mybak:     *     updMrnWoatlasSea, MrnWoatlasSea.LATITUDE+"=<val1>");</pre>
+MrnWoatlasSea.java.mybak:     * @param  woatlasSea  A MrnWoatlasSea variable in which the fields are to be used for
+MrnWoatlasSea.java.mybak:    public boolean upd(MrnWoatlasSea woatlasSea, String where) {
+MrnWoatlasSea.java.mybak:        return db.update (TABLE, createColVals(woatlasSea), where);
+MrnWoatlasSea.java.mybak:    private String createColVals(MrnWoatlasSea aVar) {
+MrnWoatlasSea.java.mybak:} // class MrnWoatlasSea

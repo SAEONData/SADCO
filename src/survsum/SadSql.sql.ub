@@ -1,0 +1,1831 @@
+create or replace package SadSql as
+   type t_survey_id      is table of varchar2( 9)   index by binary_integer;
+   type t_code           is table of number(4)      index by binary_integer;
+   type t_data_centre    is table of varchar2( 5)   index by binary_integer;
+   type t_project_name   is table of varchar2(100)  index by binary_integer;
+   type t_cruise_name    is table of varchar2(15)   index by binary_integer;
+   type t_platform_code  is table of number(4)      index by binary_integer;
+   type t_platform_name  is table of varchar2(20)   index by binary_integer;
+   type t_planam_code    is table of number(4)      index by binary_integer;
+   type t_planam_name    is table of varchar2(20)   index by binary_integer;
+   type t_callsign       is table of varchar2( 7)   index by binary_integer;
+   type t_country_code   is table of number(4)      index by binary_integer;
+   type t_country_name   is table of varchar2(20)   index by binary_integer;
+   type t_sci_code       is table of number(4)      index by binary_integer;
+   type t_surname        is table of varchar2(20)   index by binary_integer;
+   type t_f_name         is table of varchar2(20)   index by binary_integer;
+   type t_title          is table of varchar2( 5)   index by binary_integer;
+   type t_positions_code is table of number(4)      index by binary_integer;
+   type t_pi_code        is table of varchar2( 1)   index by binary_integer;
+   type t_type_code      is table of varchar2( 3)   index by binary_integer;
+   type t_type_name      is table of varchar2(65)   index by binary_integer;
+   type t_group_name     is table of varchar2(21)   index by binary_integer;
+   type t_remarks        is table of varchar2(40)   index by binary_integer;
+   type t_sample_id      is table of varchar2( 9)   index by binary_integer;
+   type t_samples_code   is table of number(4)      index by binary_integer;
+   type t_sample_number  is table of number(4)      index by binary_integer;
+   type t_sample_units   is table of varchar2(10)   index by binary_integer;
+   type t_instit_code    is table of number(4)      index by binary_integer;
+   type t_instit_name    is table of varchar2(50)   index by binary_integer;
+   type t_address        is table of varchar2(50)   index by binary_integer;
+   type t_date           is table of varchar2(10)   index by binary_integer;
+   type t_time           is table of varchar2( 8)   index by binary_integer;
+   type t_date_start     is table of varchar2(10)   index by binary_integer;
+   type t_date_start_f   is table of varchar2(10)   index by binary_integer;
+   type t_date_end       is table of varchar2(10)   index by binary_integer;
+   type t_date_end_f     is table of varchar2(10)   index by binary_integer;
+   type t_lat_north      is table of varchar2( 9)   index by binary_integer;
+   type t_lat_south      is table of varchar2( 9)   index by binary_integer;
+   type t_long_west      is table of varchar2( 9)   index by binary_integer;
+   type t_long_east      is table of varchar2( 9)   index by binary_integer;
+   type t_latitude       is table of varchar2( 9)   index by binary_integer;
+   type t_longitude      is table of varchar2( 9)   index by binary_integer;
+   type t_data_recorded  is table of varchar2( 1)   index by binary_integer;
+   type t_zone_code      is table of number(4)      index by binary_integer;
+   type t_marine_zone    is table of varchar2(30)   index by binary_integer;
+   type t_station_cnt    is table of number(10)     index by binary_integer;
+   type t_watphy_cnt     is table of number(10)     index by binary_integer;
+   type t_watnut_cnt     is table of number(10)     index by binary_integer;
+   type t_watpol1_cnt    is table of number(10)     index by binary_integer;
+   type t_watpol2_cnt    is table of number(10)     index by binary_integer;
+   type t_watchem1_cnt   is table of number(10)     index by binary_integer;
+   type t_watchem2_cnt   is table of number(10)     index by binary_integer;
+   type t_watchl_cnt     is table of number(10)     index by binary_integer;
+   type t_sedphy_cnt     is table of number(10)     index by binary_integer;
+   type t_sedpes_cnt     is table of number(10)     index by binary_integer;
+   type t_sedpol1_cnt    is table of number(10)     index by binary_integer;
+   type t_sedpol2_cnt    is table of number(10)     index by binary_integer;
+   type t_sedchem1_cnt   is table of number(10)     index by binary_integer;
+   type t_sedchem2_cnt   is table of number(10)     index by binary_integer;
+   type t_sedtax_cnt     is table of number(10)     index by binary_integer;
+   type t_plaphy_cnt     is table of number(10)     index by binary_integer;
+   type t_plapes_cnt     is table of number(10)     index by binary_integer;
+   type t_plapol1_cnt    is table of number(10)     index by binary_integer;
+   type t_plapol2_cnt    is table of number(10)     index by binary_integer;
+   type t_platax_cnt     is table of number(10)     index by binary_integer;
+
+   type t_plachl_cnt     is table of number(10)     index by binary_integer;
+   type t_tisphy_cnt     is table of number(10)     index by binary_integer;
+   type t_tispes_cnt     is table of number(10)     index by binary_integer;
+   type t_tispol1_cnt    is table of number(10)     index by binary_integer;
+   type t_tispol2_cnt    is table of number(10)     index by binary_integer;
+   type t_tisanimal_cnt  is table of number(10)     index by binary_integer;
+   type t_weather_cnt    is table of number(10)     index by binary_integer;
+   type t_batch_code     is table of number( 4)     index by binary_integer;
+   type t_batch_id       is table of varchar2( 1)   index by binary_integer;
+   type t_start_date_time is table of varchar2(16)   index by binary_integer;
+   type t_end_date_time  is table of varchar2(16)   index by binary_integer;
+   type t_period         is table of number( 8,2)   index by binary_integer;
+   type t_projection_code  is table of number( 4)     index by binary_integer;
+   type t_spheroid_code    is table of number( 4)     index by binary_integer;
+   type t_datum_code       is table of number( 4)     index by binary_integer;
+   type t_projection_name  is table of varchar2(25)   index by binary_integer;
+   type t_spheroid_name    is table of varchar2(25)   index by binary_integer;
+   type t_datum_name       is table of varchar2(25)   index by binary_integer;
+   type t_station_id       is table of varchar2(12)   index by binary_integer;
+   type t_stnnam           is table of varchar2(10)   index by binary_integer;
+   type t_stndep           is table of number(6,2)    index by binary_integer;
+   type t_prefix_id        is table of varchar2( 3)   index by binary_integer;
+   type t_prefix_name      is table of varchar2(40)   index by binary_integer;
+   type t_landtest         is table of number(2)      index by binary_integer;
+   type t_watphy_code      is table of number(10)     index by binary_integer;
+   type t_date_time        is table of varchar2(19)   index by binary_integer;
+   type t_spldep           is table of number(6,2)    index by binary_integer;
+   type t_max_spldep       is table of number(6,2)    index by binary_integer;
+   type t_fraction_name    is table of varchar2(25)   index by binary_integer;
+   type t_device_name      is table of varchar2(25)   index by binary_integer;
+   type t_method_name      is table of varchar2(25)   index by binary_integer;
+   type t_standard_name    is table of varchar2(25)   index by binary_integer;
+   type t_status_code      is table of number( 5)     index by binary_integer;
+   type t_flagging         is table of varchar2(10)   index by binary_integer;
+   type t_quality          is table of varchar2(10)   index by binary_integer;
+   type t_watphy_count     is table of number(10)     index by binary_integer;
+   type t_sedphy_count     is table of number( 5)     index by binary_integer;
+   type t_tisphy_count     is table of number( 5)     index by binary_integer;
+   type t_discipline_code  is table of number( 4)     index by binary_integer;
+   type t_discipline_name  is table of varchar2(20)   index by binary_integer;
+   type t_constituent_code is table of number( 4)     index by binary_integer;
+   type t_constituent_name is table of varchar2(35)   index by binary_integer;
+   type t_unit             is table of varchar2(20)   index by binary_integer;
+   type t_html_unit        is table of varchar2(20)   index by binary_integer;
+   type t_res_table        is table of varchar2(10)   index by binary_integer;
+   type t_fraction_code    is table of number( 4)     index by binary_integer;
+   type t_device_code      is table of number( 4)     index by binary_integer;
+   type t_method_code      is table of number( 4)     index by binary_integer;
+   type t_standard_code    is table of number( 4)     index by binary_integer;
+   type t_constituent_value is table of varchar2(20)   index by binary_integer;
+   type t_station_num      is table of number( 4)     index by binary_integer;
+   type t_depth_count      is table of number( 4)     index by binary_integer;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of positions                                |
+   -- +------------------------------------------------------------+
+   function count_positions
+      (
+      surveyid_in in varchar2
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | Get the number of samples                                  |
+   -- +------------------------------------------------------------+
+   function count_samples
+      (
+
+      surveyid_in in varchar2
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | Get the number of marine zones                             |
+   -- +------------------------------------------------------------+
+   function count_zones
+      (
+      surveyid_in in varchar2
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | Get the number of platforms                                |
+
+   -- +------------------------------------------------------------+
+   function count_planam
+      return number;
+   -- +------------------------------------------------------------+
+   -- | Get the number of institutes                               |
+   -- +------------------------------------------------------------+
+   function count_instit
+      return number;
+   -- +------------------------------------------------------------+
+   -- | Get the number of Scientists                               |
+   -- +------------------------------------------------------------+
+   function count_scientists
+      return number;
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of Countries                                |
+   -- +------------------------------------------------------------+
+   function count_country
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List marine zones                                          |
+   -- +------------------------------------------------------------+
+   procedure list_zones
+      (
+      survey_id_in   in varchar2       ,
+      marine_zone    out t_marine_zone
+      );
+
+   -- +------------------------------------------------------------+
+   -- | List Platforms                                             |
+   -- +------------------------------------------------------------+
+   procedure list_planam
+      (
+      planam_name_in in varchar2       ,
+      planam_code    out t_planam_code ,
+      planam_name    out t_planam_name ,
+      callsign       out t_callsign    ,
+      platform_name  out t_platform_name
+      );
+   -- +------------------------------------------------------------+
+   -- | List Scientists by surname                                 |
+
+   -- +------------------------------------------------------------+
+   procedure list_surname
+      (
+      surname_in     in varchar2       ,
+      sci_code       out t_sci_code    ,
+      surname        out t_surname     ,
+      f_name         out t_f_name      ,
+      title          out t_title       ,
+      instit_name    out t_instit_name
+      );
+   -- +------------------------------------------------------------+
+   -- | List Principal Investigators                               |
+   -- +------------------------------------------------------------+
+
+   procedure list_investigators
+      (
+      surveyid_in    in varchar2       ,
+      sci_code       out t_sci_code    ,
+      surname        out t_surname     ,
+      f_name         out t_f_name      ,
+      title          out t_title       ,
+      pi_code        out t_pi_code     ,
+      instit_name    out t_instit_name ,
+      address        out t_address
+      );
+   -- +------------------------------------------------------------+
+   -- | List Positions                                             |
+
+   -- +------------------------------------------------------------+
+   procedure list_positions
+      (
+      surveyid_in    in varchar2       ,
+      positions_code out t_positions_code,
+      pi_code        out t_pi_code     ,
+      type_code      out t_type_code   ,
+      type_name      out t_type_name   ,
+      latitude       out t_latitude    ,
+      longitude      out t_longitude   ,
+      remarks        out t_remarks
+      );
+   -- +------------------------------------------------------------+
+
+   -- | List Samples                                               |
+   -- +------------------------------------------------------------+
+   procedure list_samples
+      (
+      surveyid_in    in varchar2        ,
+      samples_code   out t_samples_code ,
+      pi_code        out t_pi_code      ,
+      sample_number  out t_sample_number,
+      sample_units   out t_sample_units ,
+      type_code      out t_type_code    ,
+      type_name      out t_type_name    ,
+      remarks        out t_remarks
+      );
+
+   -- +------------------------------------------------------------+
+   -- | List Institutes                                            |
+   -- +------------------------------------------------------------+
+   procedure list_institute
+      (
+      instit_name_in in varchar2       ,
+      instit_code    out t_sci_code    ,
+      instit_name    out t_instit_name ,
+      address        out t_address
+      );
+   -- +------------------------------------------------------------+
+   -- | List surveys in according to survey                        |
+   -- +------------------------------------------------------------+
+
+   procedure list_survey_survey
+      (
+      survey_id_in   in varchar2          ,
+      survey_id      out t_survey_id      ,
+      project_name   out t_project_name   ,
+      cruise_name    out t_cruise_name    ,
+      planam_name    out t_planam_name    ,
+      surname        out t_surname        ,
+      f_name         out t_f_name         ,
+      title          out t_title          ,
+      instit_name    out t_instit_name    ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+
+      data_recorded  out t_data_recorded
+      );
+   -- +------------------------------------------------------------+
+   -- | List surveys in according to start date                    |
+   -- +------------------------------------------------------------+
+   procedure list_survey_datestart
+      (
+      datestart_in   in varchar2          ,
+      survey_id      out t_survey_id      ,
+      project_name   out t_project_name   ,
+      cruise_name    out t_cruise_name    ,
+      planam_name    out t_planam_name    ,
+      surname        out t_surname        ,
+
+      f_name         out t_f_name         ,
+      title          out t_title          ,
+      instit_name    out t_instit_name    ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+      data_recorded  out t_data_recorded
+      );
+   -- +------------------------------------------------------------+
+   -- | List surveys in according to scientist                     |
+   -- +------------------------------------------------------------+
+   procedure list_survey_scientist
+      (
+      sci_code_in    in number            ,
+
+      startyear      in varchar2          ,
+      survey_id      out t_survey_id      ,
+      project_name   out t_project_name   ,
+      cruise_name    out t_cruise_name    ,
+      planam_name    out t_planam_name    ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+      data_recorded  out t_data_recorded
+      );
+   -- +------------------------------------------------------------+
+   -- | Display Platform Information                               |
+   -- +------------------------------------------------------------+
+   procedure display_planam
+
+      (
+      planam_code_in    in number,
+      min_start_out     out varchar2,
+      max_start_out     out varchar2,
+      records           out number,
+      planam_name_out   out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Display Data Type  Information                             |
+   -- +------------------------------------------------------------+
+   procedure display_data_type
+      (
+      grp_code_in      in varchar2,
+
+      v_type_name     out varchar2,
+      v_group_name    out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Display Scientist Information                              |
+   -- +------------------------------------------------------------+
+   procedure display_scientist_data
+      (
+      sci_code_in       in number,
+      v_surname       out varchar2,
+      v_f_name        out varchar2,
+      v_title         out varchar2,
+      v_instit_name   out varchar2,
+
+      v_address       out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Display Scientist Information                              |
+   -- +------------------------------------------------------------+
+   procedure display_scientist
+      (
+      sci_code_in       in number,
+      min_start_out     out varchar2,
+      max_start_out     out varchar2,
+      records           out number,
+      surname_out       out varchar2,
+      f_name_out        out varchar2,
+
+      title_out         out varchar2,
+      instit_name_out   out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Display Institute Information                              |
+   -- +------------------------------------------------------------+
+   procedure display_institute
+      (
+      instit_code_in     in number,
+      min_start_out     out varchar2,
+      max_start_out     out varchar2,
+      records           out number,
+      instit_name_out   out varchar2,
+
+      address_out       out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Display survey notes                                       |
+   -- +------------------------------------------------------------+
+   procedure display_survey_notes
+      (
+      survey_id_in         in varchar2          ,
+      v_line1              out varchar2         ,
+      v_line2              out varchar2         ,
+      v_line3              out varchar2         ,
+      v_line4              out varchar2         ,
+      v_line5              out varchar2         ,
+
+      v_line6              out varchar2         ,
+      v_line7              out varchar2         ,
+      v_line8              out varchar2         ,
+      v_line9              out varchar2         ,
+      v_line10             out varchar2
+      );
+   -- +-----------------------------------------------------------+
+   -- | Update survey notes                                       |
+   -- +-----------------------------------------------------------+
+   procedure update_survey_notes (
+      survey_id_in         in varchar2          ,
+      v_line1              in varchar2         ,
+      v_line2              in varchar2         ,
+      v_line3              in varchar2         ,
+      v_line4              in varchar2         ,
+      v_line5              in varchar2         ,
+      v_line6              in varchar2         ,
+      v_line7              in varchar2         ,
+      v_line8              in varchar2         ,
+      v_line9              in varchar2         ,
+      v_line10             in varchar2
+   );
+   -- +------------------------------------------------------------+
+   -- | Display full survey information                            |
+   -- +------------------------------------------------------------+
+   procedure display_survey_full
+      (
+      survey_id_in         in varchar2          ,
+      v_data_centre        out varchar2         ,
+
+      v_project_name       out varchar2         ,
+      v_cruise_name        out varchar2         ,
+      v_planam_name        out varchar2         ,
+      v_platform_name      out varchar2         ,
+      v_callsign           out varchar2         ,
+      v_country_name       out varchar2         ,
+      v_surname_1          out varchar2         ,
+      v_f_name_1           out varchar2         ,
+      v_title_1            out varchar2         ,
+      v_surname_2          out varchar2         ,
+      v_f_name_2           out varchar2         ,
+      v_title_2            out varchar2         ,
+      v_instit_name        out varchar2         ,
+
+      v_address            out varchar2         ,
+      v_instit_name_1      out varchar2         ,
+      v_address_1          out varchar2         ,
+      v_instit_name_2      out varchar2         ,
+      v_address_2          out varchar2         ,
+      v_instit_name_c      out varchar2         ,
+      v_address_c          out varchar2         ,
+      v_date_start_f       out varchar2         ,
+      v_date_end_f         out varchar2         ,
+      v_GMT_diff           out number           ,
+      v_lat_north          out number           ,
+      v_lat_south          out number           ,
+      v_long_west          out number           ,
+
+      v_long_east          out number           ,
+      v_track_chart        out varchar2         ,
+      v_target_country_name out varchar2        ,
+      v_data_recorded      out varchar2         ,
+      v_national_pgm       out varchar2         ,
+      v_exchange_restrict  out varchar2         ,
+      v_coop_pgm           out varchar2         ,
+      v_coordinated_int    out varchar2         ,
+      v_port_start         out varchar2         ,
+      v_port_end           out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Display survey information                                 |
+
+   -- +------------------------------------------------------------+
+   procedure display_survey
+      (
+      survey_id_in   in varchar2          ,
+      data_centre    out t_data_centre    ,
+      project_name   out t_project_name   ,
+      cruise_name    out t_cruise_name    ,
+      planam_name    out t_planam_name    ,
+      platform_name  out t_platform_name  ,
+      country_name   out t_country_name   ,
+      surname        out t_surname        ,
+      f_name         out t_f_name         ,
+      title          out t_title          ,
+
+      instit_name    out t_instit_name    ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+      lat_north      out t_lat_north      ,
+      lat_south      out t_lat_south      ,
+      long_west      out t_long_west      ,
+      long_east      out t_long_east      ,
+      data_recorded  out t_data_recorded
+      );
+   -- +------------------------------------------------------------+
+   -- | Display survey information (brief)                         |
+   -- +------------------------------------------------------------+
+   procedure display_survey_brief
+
+      (
+      survey_id_in      in varchar2         ,
+      v_project_name   out varchar2         ,
+      v_cruise_name    out varchar2         ,
+      v_planam_name    out varchar2         ,
+      v_surname        out varchar2         ,
+      v_f_name         out varchar2         ,
+      v_title          out varchar2         ,
+      v_instit_name    out varchar2         ,
+      v_date_start_f   out varchar2         ,
+      v_date_end_f     out varchar2         ,
+      v_GMT_diff       out number           ,
+      v_lat_north      out number           ,
+
+      v_lat_south      out number           ,
+      v_long_west      out number           ,
+      v_long_east      out number           ,
+      v_data_recorded  out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | List surveys in according to platform name                 |
+   -- +------------------------------------------------------------+
+   procedure list_survey_platform
+      (
+      planam_code_in   in number          ,
+      startyear        in varchar2        ,
+      survey_id      out t_survey_id      ,
+
+      project_name   out t_project_name   ,
+      cruise_name    out t_cruise_name    ,
+      surname        out t_surname        ,
+      f_name         out t_f_name         ,
+      title          out t_title          ,
+      instit_name    out t_instit_name    ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+      data_recorded  out t_data_recorded
+      );
+   -- +------------------------------------------------------------+
+   -- | List surveys in according to institute                     |
+   -- +------------------------------------------------------------+
+
+   procedure list_survey_institute
+      (
+      instit_code_in in number            ,
+      startyear       in varchar2         ,
+      survey_id      out t_survey_id      ,
+      project_name   out t_project_name   ,
+      planam_name    out t_planam_name    ,
+      cruise_name    out t_cruise_name    ,
+      surname        out t_surname        ,
+      f_name         out t_f_name         ,
+      title          out t_title          ,
+      date_start_f   out t_date_start_f   ,
+      date_end_f     out t_date_end_f     ,
+
+      data_recorded  out t_data_recorded
+      );
+   -- +------------------------------------------------------------+
+   -- | Display survey statistics information                      |
+   -- +------------------------------------------------------------+
+   procedure display_survey_stats
+      (
+      survey_id_in   in varchar2          ,
+      station_cnt    out t_station_cnt    ,
+      watphy_cnt     out t_watphy_cnt     ,
+      watnut_cnt     out t_watnut_cnt     ,
+      watpol1_cnt    out t_watpol1_cnt    ,
+      watpol2_cnt    out t_watpol2_cnt    ,
+
+      watchem1_cnt   out t_watchem1_cnt   ,
+      watchem2_cnt   out t_watchem2_cnt   ,
+      watchl_cnt     out t_watchl_cnt     ,
+      sedphy_cnt     out t_sedphy_cnt     ,
+      sedpes_cnt     out t_sedpes_cnt     ,
+      sedpol1_cnt    out t_sedpol1_cnt    ,
+      sedpol2_cnt    out t_sedpol2_cnt    ,
+      sedchem1_cnt   out t_sedchem1_cnt   ,
+      sedchem2_cnt   out t_sedchem2_cnt   ,
+      sedtax_cnt     out t_sedtax_cnt     ,
+      plaphy_cnt     out t_plaphy_cnt     ,
+      plapes_cnt     out t_plapes_cnt     ,
+      plapol1_cnt    out t_plapol1_cnt    ,
+
+      plapol2_cnt    out t_plapol2_cnt    ,
+      platax_cnt     out t_platax_cnt     ,
+      plachl_cnt     out t_plachl_cnt     ,
+      tisphy_cnt     out t_tisphy_cnt     ,
+      tispes_cnt     out t_tispes_cnt     ,
+      tispol1_cnt    out t_tispol1_cnt    ,
+      tispol2_cnt    out t_tispol2_cnt    ,
+      tisanimal_cnt  out t_tisanimal_cnt  ,
+      weather_cnt    out t_weather_cnt
+      );
+   -- +------------------------------------------------------------+
+   -- | Get Data block                                             |
+   -- +------------------------------------------------------------+
+
+   procedure get_data_block
+      (
+      v_survey_id          in varchar2,
+      v_data_centre        out varchar2,
+      v_exchange_restrict  out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Update Data block                                          |
+   -- +------------------------------------------------------------+
+   procedure update_data_block
+      (
+      v_survey_id          in varchar2,
+      v_data_centre        in varchar2,
+
+      v_exchange_restrict  in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Get Platform block                                         |
+   -- +------------------------------------------------------------+
+   procedure get_platform_block
+      (
+      v_survey_id           in varchar2,
+      v_planam_name         out varchar2,
+      v_platform_name       out varchar2,
+      v_callsign            out varchar2
+      );
+   -- +------------------------------------------------------------+
+
+   -- | List all Platforms                                         |
+   -- +------------------------------------------------------------+
+   procedure list_all_planam
+      (
+      planam_code    out t_planam_code,
+      planam_name    out t_planam_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Update Platform block                                      |
+   -- +------------------------------------------------------------+
+   procedure update_platform_block
+      (
+      v_survey_id          in varchar2,
+
+      v_planam_code        in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of platform types                           |
+   -- +------------------------------------------------------------+
+   function count_platform
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List all Platform Types                                    |
+   -- +------------------------------------------------------------+
+   procedure list_all_platform
+      (
+      platform_code    out t_platform_code,
+
+      platform_name    out t_platform_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new Platform block                                     |
+   -- +------------------------------------------------------------+
+   procedure add_platform_block
+      (
+      v_survey_id          in varchar2,
+      v_planam_name        in varchar2,
+      v_callsign           in varchar2,
+      v_platform_name      in varchar2,
+      v_planam_count       out number,
+      v_callsign_count     out number
+
+      ) ;
+   -- +------------------------------------------------------------+
+   -- | Update Survey Name block                                   |
+   -- +------------------------------------------------------------+
+   procedure update_survnam_block
+      (
+      v_survey_id          in varchar2,
+      v_cruise_name        in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Get Survey Name block                                      |
+   -- +------------------------------------------------------------+
+   procedure get_survnam_block
+
+      (
+      v_survey_id           in varchar2,
+      v_cruise_name        out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Update Periods block                                       |
+   -- +------------------------------------------------------------+
+   procedure update_periods_block
+      (
+      v_survey_id          in varchar2,
+      v_date_start         in varchar2,
+      v_date_end           in varchar2,
+      v_GMT_diff           in varchar2,
+
+      v_port_start         in varchar2,
+      v_port_end           in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Get Periods block                                          |
+   -- +------------------------------------------------------------+
+   procedure get_periods_block
+      (
+      v_survey_id           in varchar2,
+      v_date_start         out varchar2,
+      v_date_end           out varchar2,
+      v_GMT_diff           out number  ,
+      v_GMT_freeze         out varchar2,
+
+      v_port_start         out varchar2,
+      v_port_end           out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Update Responsible Lab Block                               |
+   -- +------------------------------------------------------------+
+   procedure update_reslab_block
+      (
+      v_survey_id          in varchar2,
+      v_instit_code        in varchar2,
+      v_country_code       in varchar2
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Get responsible Lab block                                  |
+   -- +------------------------------------------------------------+
+   procedure get_reslab_block
+      (
+      v_survey_id           in varchar2,
+      v_instit_code         out number,
+      v_instit_name         out varchar2,
+      v_address             out varchar2,
+      v_country_code        out number,
+      v_country_name        out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Update Target Country  Block                               |
+
+   -- +------------------------------------------------------------+
+   procedure update_target_country_block
+      (
+      v_survey_id             in varchar2,
+      v_target_country_code   in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Get target counntry block                                  |
+   -- +------------------------------------------------------------+
+   procedure get_target_country_block
+      (
+      v_survey_id           in varchar2,
+      v_target_country_code        out number,
+
+      v_target_country_name        out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | List all Institutes                                        |
+   -- +------------------------------------------------------------+
+   procedure list_all_instit
+      (
+      instit_code    out t_instit_code ,
+      instit_name    out t_instit_name
+      );
+   -- +------------------------------------------------------------+
+   -- | List all Institutes full data                              |
+   -- +------------------------------------------------------------+
+
+   procedure list_all_instit_full
+      (
+      instit_code    out t_instit_code,
+      instit_name    out t_instit_name
+      );
+   -- +------------------------------------------------------------+
+   -- | List all Countries                                         |
+   -- +------------------------------------------------------------+
+   procedure list_all_country
+      (
+      country_code    out t_country_code,
+      country_name    out t_country_name
+      );
+
+   -- +------------------------------------------------------------+
+   -- | Get Chief Scientist block                                  |
+   -- +------------------------------------------------------------+
+   procedure get_chiefsc_block
+      (
+      v_survey_id           in varchar2,
+      v_sci_code_1         out number           ,
+      v_surname_1          out varchar2         ,
+      v_f_name_1           out varchar2         ,
+      v_title_1            out varchar2         ,
+      v_sci_code_2         out number           ,
+      v_surname_2          out varchar2         ,
+      v_f_name_2           out varchar2         ,
+
+      v_title_2            out varchar2         ,
+      v_instit_name_1      out varchar2         ,
+      v_address_1          out varchar2         ,
+      v_instit_name_2      out varchar2         ,
+      v_address_2          out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Get track chart     block                                  |
+   -- +------------------------------------------------------------+
+   procedure get_trackch_block
+      (
+      v_survey_id           in varchar2,
+      v_track_chart        out varchar2
+
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new Institute block                                    |
+   -- +------------------------------------------------------------+
+   procedure add_institute_block
+      (
+      v_survey_id          in varchar2,
+      v_instit_name        in varchar2,
+      v_instit_address     in varchar2,
+      v_instit_count       out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new Country   block                                    |
+
+   -- +------------------------------------------------------------+
+   procedure add_country_block
+      (
+      v_survey_id          in varchar2,
+      v_country_name       in varchar2,
+      v_country_count      out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new Country   block                                    |
+   -- +------------------------------------------------------------+
+   procedure add_new_device
+      (
+      v_device_name       in varchar2,
+
+      v_device_count      out number
+      );
+   -- +------------------------------------------------------------+
+   -- | List all Scientists                                        |
+   -- +------------------------------------------------------------+
+   procedure list_all_scientists
+      (
+      sci_code       out t_sci_code   ,
+      surname        out t_surname    ,
+      f_name         out t_f_name     ,
+      title          out t_title
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Update Chief Scientists Block                              |
+   -- +------------------------------------------------------------+
+   procedure update_chiefsc_block
+      (
+      v_survey_id          in varchar2,
+      v_sci_code_1         in varchar2,
+      v_sci_code_2         in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new Scientist                                          |
+   -- +------------------------------------------------------------+
+   procedure add_scientist
+      (
+
+      v_title              in varchar2,
+      v_f_name             in varchar2,
+      v_surname            in varchar2,
+      v_instit_code        in varchar2,
+      v_instit_name        out varchar2,
+      v_scientist_count    out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Get project block                                          |
+   -- +------------------------------------------------------------+
+   procedure get_project_block
+      (
+      v_survey_id           in varchar2,
+
+      v_project_name       out varchar2,
+      v_coord_code         out number,
+      v_instit_name_c      out varchar2,
+      v_address_c          out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Get ocean area block                                       |
+   -- +------------------------------------------------------------+
+   procedure get_ocarea_block
+      (
+      v_survey_id           in varchar2,
+      v_lat_north          out number,
+      v_lat_south          out number,
+
+      v_long_west          out number,
+      v_long_east          out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Update Project Name                                        |
+   -- +------------------------------------------------------------+
+   procedure update_project_name
+      (
+      v_survey_id          in varchar2,
+      v_project_name       in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Update co-ordinating body                                  |
+
+   -- +------------------------------------------------------------+
+   procedure update_coord_code
+      (
+      v_survey_id          in varchar2,
+      v_coord_code         in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new Coord Institute                                    |
+   -- +------------------------------------------------------------+
+   procedure add_institute_coord
+      (
+      v_survey_id          in varchar2,
+      v_instit_name        in varchar2,
+
+      v_instit_address     in varchar2,
+      v_instit_count       out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Update investigors table                                   |
+   -- +------------------------------------------------------------+
+   procedure update_investigators
+      (
+      v_survey_id          in varchar2,
+      v_sci_code           in varchar2,
+      v_pi_code            in varchar2
+      );
+   -- +------------------------------------------------------------+
+
+   -- | List investigators for selected survey                     |
+   -- +------------------------------------------------------------+
+   procedure list_survey_investigators
+      (
+      v_survey_id in  varchar2      ,
+      pi_code     out t_pi_code     ,
+      sci_code    out t_sci_code    ,
+      surname     out t_surname     ,
+      f_name      out t_f_name      ,
+      title       out t_title
+      );
+   -- +------------------------------------------------------------+
+   -- | List all data types                                        |
+
+   -- +------------------------------------------------------------+
+   procedure list_all_data_types
+      (
+      type_code   out t_type_code   ,
+      group_name  out t_group_name  ,
+      type_name   out t_type_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of data types                               |
+   -- +------------------------------------------------------------+
+   function count_data_types
+      return number;
+   -- +------------------------------------------------------------+
+
+   -- | Update Positions record                                    |
+   -- +------------------------------------------------------------+
+   procedure update_positions_block
+      (
+      v_positions_code     in varchar2,
+      v_survey_id          in varchar2,
+      v_pi_code            in varchar2,
+      v_type_code          in varchar2,
+      v_latitude           in varchar2,
+      v_longitude          in varchar2,
+      v_remarks            in varchar2
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Add new Positions record                                   |
+   -- +------------------------------------------------------------+
+   procedure add_positions_block
+      (
+      v_survey_id          in varchar2,
+      v_pi_code            in varchar2,
+      v_type_code          in varchar2,
+      v_latitude           in varchar2,
+      v_longitude          in varchar2,
+      v_remarks            in varchar2,
+      v_count              out number
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Update Samples   record                                    |
+   -- +------------------------------------------------------------+
+   procedure update_samples_block
+      (
+      v_samples_code       in varchar2,
+      v_survey_id          in varchar2,
+      v_pi_code            in varchar2,
+      v_type_code          in varchar2,
+      v_sample_number      in varchar2,
+      v_sample_units       in varchar2,
+      v_remarks            in varchar2
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Add new Samples   record                                   |
+   -- +------------------------------------------------------------+
+   procedure add_samples_block
+      (
+      v_survey_id          in varchar2,
+      v_pi_code            in varchar2,
+      v_type_code          in varchar2,
+      v_sample_number      in varchar2,
+      v_sample_units       in varchar2,
+      v_remarks            in varchar2,
+      v_count              out number
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Update Track Chart block                                   |
+   -- +------------------------------------------------------------+
+   procedure update_trackchart_block
+      (
+      v_survey_id          in varchar2,
+      v_track_chart        in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Update Ocean Area  block                                   |
+   -- +------------------------------------------------------------+
+   procedure update_ocarea_block
+      (
+      v_survey_id          in varchar2,
+
+      v_lat_north          in varchar2,
+      v_lat_south          in varchar2,
+      v_long_west          in varchar2,
+      v_long_east          in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new inventory record                                   |
+   -- +------------------------------------------------------------+
+   procedure new_inventory
+      (
+      v_survey_id          in varchar2,
+      v_survey_count       out number
+      );
+
+   -- +------------------------------------------------------------+
+   -- | Get the number of marine zones                             |
+   -- +------------------------------------------------------------+
+   function count_marine_zones
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List all marine zones                                      |
+   -- +------------------------------------------------------------+
+   procedure list_all_marine_zones
+      (
+      zone_code   out t_zone_code   ,
+      marine_zone out t_marine_zone
+      );
+
+   -- +------------------------------------------------------------+
+   -- | Add new marine zone record                                 |
+   -- +------------------------------------------------------------+
+   procedure add_marine_zone
+      (
+      v_survey_id          in varchar2,
+      v_zone_code          in varchar2,
+      v_count              out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new Sampling batch record                              |
+   -- +------------------------------------------------------------+
+   procedure add_sampling_batch_record
+
+      (
+      v_survey_id          in varchar2,
+      v_batch_id           in varchar2,
+      v_start_date_time    in varchar2,
+      v_end_date_time      in varchar2,
+      v_count              out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of sampling batches                         |
+   -- +------------------------------------------------------------+
+   function count_sampling_batches
+      (
+      surveyid_in in varchar2
+
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List sampling batches                                      |
+   -- +------------------------------------------------------------+
+   procedure list_sampling_batches
+      (
+      surveyid_in       in varchar2       ,
+      batch_code        out t_batch_code  ,
+      batch_id          out t_batch_id    ,
+      v_start_date_time out t_start_date_time   ,
+      v_end_date_time   out t_end_date_time     ,
+      v_period          out t_period
+
+      );
+   -- +------------------------------------------------------------+
+   -- | Get start and end dates                                    |
+   -- +------------------------------------------------------------+
+   procedure get_start_end_dates
+      (
+      surveyid_in       in varchar2       ,
+      v_date_start      out varchar2      ,
+      v_date_end        out varchar2      ,
+      v_GMT_diff        out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of dates covered by the survey              |
+
+   -- +------------------------------------------------------------+
+   function count_survey_dates
+      (
+      surveyid_in in varchar2
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List survey dates between start and end dates of survey    |
+   -- +------------------------------------------------------------+
+   procedure list_survey_dates
+      (
+      surveyid_in       in varchar2       ,
+      v_date            out t_date        ,
+
+      v_GMT_diff        out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Get survey dates and GMT                                   |
+   -- +------------------------------------------------------------+
+   procedure get_survey_dates
+      (
+      surveyid_in       in varchar2       ,
+      v_date_start      out varchar2      ,
+      v_date_end        out varchar2      ,
+      v_GMT_diff        out number
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Get station id prefix                                      |
+   -- +------------------------------------------------------------+
+   procedure get_stnid_prefix
+      (
+      surveyid_in       in varchar2       ,
+      v_stnid_prefix    out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Update GIS Data block                                      |
+   -- +------------------------------------------------------------+
+   procedure update_psd_data_block
+      (
+      v_survey_id          in varchar2,
+
+      v_projection_code    in varchar2,
+      v_spheroid_code      in varchar2,
+      v_datum_code         in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of projection records                       |
+   -- +------------------------------------------------------------+
+   function count_projection
+      return number;
+   -- +------------------------------------------------------------+
+   -- | Get the number of spheroid   records                       |
+   -- +------------------------------------------------------------+
+   function count_spheroid
+
+      return number;
+   -- +------------------------------------------------------------+
+   -- | Get the number of datum      records                       |
+   -- +------------------------------------------------------------+
+   function count_datum
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List Projections                                           |
+   -- +------------------------------------------------------------+
+   procedure list_projections
+      (
+      projection_code   out t_projection_code,
+      projection_name   out t_projection_name
+
+      );
+   -- +------------------------------------------------------------+
+   -- | List Spheroids                                             |
+   -- +------------------------------------------------------------+
+   procedure list_spheroids
+      (
+      spheroid_code     out t_spheroid_code  ,
+      spheroid_name     out t_spheroid_name
+      );
+   -- +------------------------------------------------------------+
+   -- | List Datums                                                |
+   -- +------------------------------------------------------------+
+   procedure list_datums
+
+      (
+      datum_code        out t_datum_code     ,
+      datum_name        out t_datum_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Get GIS data                                               |
+   -- +------------------------------------------------------------+
+   procedure get_psd_data
+      (
+      v_survey_id           in varchar2,
+      v_projection_code    out number  ,
+      v_projection_name    out varchar2,
+      v_spheroid_code      out number  ,
+
+      v_spheroid_name      out varchar2,
+      v_datum_code         out number  ,
+      v_datum_name         out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of stations for the survey                  |
+   -- +------------------------------------------------------------+
+   function count_stations
+      (
+      surveyid_in in varchar2
+      )
+      return number;
+   -- +------------------------------------------------------------+
+
+   -- | Get a listing of the stations for the survey               |
+   -- +------------------------------------------------------------+
+   procedure list_stations
+      (
+      surveyid_in           in varchar2,
+      station_id           out t_station_id    ,
+      stnnam               out t_stnnam        ,
+      latitude             out t_latitude      ,
+      longitude            out t_longitude     ,
+      stndep               out t_stndep        ,
+      max_spldep           out t_max_spldep    ,
+      landtest             out t_landtest      ,
+      flagging             out t_flagging      ,
+
+      quality              out t_quality       ,
+      v_watphy_count       out t_watphy_count  ,
+      v_sedphy_count       out t_sedphy_count  ,
+      v_tisphy_count       out t_tisphy_count
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new Station Record                                     |
+   -- +------------------------------------------------------------+
+   procedure add_station_record
+      (
+      v_station_id         in varchar2,
+      v_survey_id          in varchar2,
+      v_stnnam             in varchar2,
+
+      v_date_start         in varchar2,
+      v_date_end           in varchar2,
+      v_latitude           in varchar2,
+      v_longitude          in varchar2,
+      v_stndep             in varchar2,
+      v_stnnam_count       out number ,
+      v_position_count     out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Get latest station_id in grouping                          |
+   -- +------------------------------------------------------------+
+   procedure get_latest_group_station_id
+      (
+
+      v_prefix             in varchar2,
+      v_station_id         out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of stnid_prefix records                     |
+   -- +------------------------------------------------------------+
+   function count_stnid_prefix
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List station_id prefixes                                   |
+   -- +------------------------------------------------------------+
+   procedure list_stnid_prefix
+      (
+
+      prefix_id         out t_prefix_id      ,
+      prefix_name       out t_prefix_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new Station Record                                     |
+   -- +------------------------------------------------------------+
+   procedure test
+      (
+      v_station_id         in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Edit Station Record                                        |
+   -- +------------------------------------------------------------+
+
+   procedure edit_station_record
+      (
+      v_station_id         in varchar2,
+      v_survey_id          in varchar2,
+      v_stnnam             in varchar2,
+      v_date_start         in varchar2,
+      v_date_end           in varchar2,
+      v_latitude           in varchar2,
+      v_longitude          in varchar2,
+      v_stndep             in varchar2,
+      v_stnnam_count       out number ,
+      v_position_count     out number
+      );
+
+   -- +------------------------------------------------------------+
+   -- | Delete Station Record                                      |
+   -- +------------------------------------------------------------+
+   procedure delete_station_record
+      (
+      v_station_id         in varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Add new Station ID prefix                                  |
+   -- +------------------------------------------------------------+
+   procedure add_new_prefix
+      (
+      v_prefix_id          in varchar2,
+
+      v_prefix_name        in varchar2,
+      v_count              out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of watphy records for a station             |
+   -- +------------------------------------------------------------+
+   function count_watphy_station
+      (
+      v_station_id in varchar2
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List Water Physical records for a station                  |
+
+   -- +------------------------------------------------------------+
+   procedure list_watphy_station
+      (
+      v_station_id      in varchar2          ,
+      watphy_code       out t_watphy_code    ,
+      spldattim         out t_date_time      ,
+      spldep            out t_spldep         ,
+      v_device_name       out t_device_name    ,
+      v_method_name       out t_method_name    ,
+      v_standard_name     out t_standard_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of watphy sample depths for a station       |
+
+   -- +------------------------------------------------------------+
+--   function count_watphy_spldep_station
+--      (
+--      v_station_id in varchar2
+--      )
+--      return number;
+   -- +------------------------------------------------------------+
+   -- | Get the number of watphy sample depths for a station       |
+   -- +------------------------------------------------------------+
+   function count_watphy_spldep_station
+      (
+      v_survey_id       in varchar2          ,
+      v_station_num     in varchar2
+
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | Get the number of water physical stations and sample depths|
+   -- +------------------------------------------------------------+
+   function count_watphy_stations_spldeps
+      (
+      v_survey_id       in varchar2
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List Water Physical sample depths for a station            |
+   -- +------------------------------------------------------------+
+
+--   procedure list_watphy_spldep_station
+--      (
+--      v_station_id      in varchar2          ,
+--      spldep            out t_spldep
+--      );
+   -- +------------------------------------------------------------+
+   -- | List Water Physical sample depths for a station            |
+   -- +------------------------------------------------------------+
+   procedure list_watphy_spldep_station
+      (
+      v_survey_id       in varchar2          ,
+      v_station_num     in varchar2          ,
+      sample_id         out t_sample_id      ,
+
+      v_time            out t_time           ,
+      spldep            out t_spldep
+      );
+   -- +------------------------------------------------------------+
+   -- | List Water Physical stations and sample depths             |
+   -- +------------------------------------------------------------+
+   procedure list_watphy_stations_spldeps
+      (
+      v_survey_id       in varchar2          ,
+      sample_id         out t_sample_id      ,
+      station_num       out t_station_num    ,
+      station_id        out t_station_id     ,
+      stnnam            out t_stnnam         ,
+
+      v_date_time       out t_date_time      ,
+      spldep            out t_spldep
+      );
+   -- +------------------------------------------------------------+
+   -- | Store water physical sample depths                         |
+   -- +------------------------------------------------------------+
+--   procedure add_watphy_spldep_station
+--      (
+--      v_rec_count    in number      ,
+--      v_survey_id    in varchar2    ,
+--      v_station_id   in varchar2    ,
+--      v_spldep       in t_spldep
+--      );
+
+   -- +------------------------------------------------------------+
+   -- | Store water physical sample depths                         |
+   -- +------------------------------------------------------------+
+--   procedure add_watphy_spldep_station
+--      (
+--      v_rec_count    in number         ,
+--      v_survey_id    in varchar2       ,
+--      v_sample_id    in t_sample_id    ,
+--      v_station_num  in varchar2       ,
+--      v_spldep       in t_spldep       ,
+--      v_spldattim    in t_date_time
+--      );
+   -- +------------------------------------------------------------+
+
+   -- | Store water physical sample depths                         |
+   -- +------------------------------------------------------------+
+--   procedure add_watphy_spldep_station_s
+--      (
+--      v_survey_id    in varchar2       ,
+--      v_sample_id    in varchar2       ,
+--      v_station_num  in varchar2       ,
+--      v_spldep       in varchar2       ,
+--      v_spldattim    in varchar2
+--      );
+   -- +------------------------------------------------------------+
+   -- | Add new Station Record                                     |
+   -- +------------------------------------------------------------+
+
+   procedure add_watphy_station
+      (
+      v_survey_id          in varchar2,
+      v_station_id         in varchar2,
+      v_start_date_time    in varchar2,
+      v_count              out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of watphy sequential stations               |
+   -- +------------------------------------------------------------+
+   function count_watphy_seq_stations
+      (
+      v_survey_id in varchar2
+
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List Water Sequential stations                             |
+   -- +------------------------------------------------------------+
+   procedure list_watphy_seq_stations
+      (
+      v_survey_id        in varchar2          ,
+      station_id        out t_station_id     ,
+      stnnam            out t_stnnam         ,
+      station_num       out t_station_num    ,
+      v_start_date_time out t_date_time      ,
+      v_depth_count     out t_depth_count
+
+      );
+   -- +------------------------------------------------------------+
+   -- | Display a selected station                                 |
+   -- +------------------------------------------------------------+
+   procedure display_station
+      (
+      v_station_id         in  varchar2        ,
+      v_stnnam             out varchar2        ,
+      v_latitude           out number          ,
+      v_longitude          out number          ,
+      v_stndep             out number          ,
+      v_max_spldep         out number          ,
+      v_status_code        out number
+
+      );
+   -- +------------------------------------------------------------+
+   -- | Display GMT - difference                                   |
+   -- +------------------------------------------------------------+
+   procedure display_GMTdiff
+      (
+      v_survey_id          in  varchar2        ,
+      v_GMT_diff           out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Display a selected sequential station                      |
+   -- +------------------------------------------------------------+
+   procedure display_seq_station
+
+      (
+      v_survey_id          in  varchar2        ,
+      v_station_num        in  varchar2        ,
+      v_station_id         out varchar2        ,
+      v_stnnam             out varchar2        ,
+      v_latitude           out number          ,
+      v_longitude          out number          ,
+      v_stndep             out number          ,
+      v_max_spldep         out number          ,
+      v_status_code        out number          ,
+      v_start_date_time    out varchar2
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Get the number of disciplines                              |
+   -- +------------------------------------------------------------+
+   function count_discipline
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List Disciplines                                           |
+   -- +------------------------------------------------------------+
+   procedure list_discipline
+      (
+      discipline_code   out t_discipline_code,
+      discipline_name   out t_discipline_name
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Get the number of constitents per selected discipline      |
+   -- +------------------------------------------------------------+
+   function count_constituent
+      (
+      v_discipline_code  in varchar2
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List Constituents per selected discipline                  |
+   -- +------------------------------------------------------------+
+   procedure list_constituent
+      (
+      v_discipline_code in  varchar2            ,
+
+      constituent_code  out t_constituent_code  ,
+      constituent_name  out t_constituent_name  ,
+      unit              out t_unit              ,
+      html_unit         out t_html_unit
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of fractions                                |
+   -- +------------------------------------------------------------+
+   function count_fraction
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List fractions                                             |
+   -- +------------------------------------------------------------+
+
+   procedure list_fraction
+      (
+      fraction_code    out t_fraction_code,
+      fraction_name    out t_fraction_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of sampling_devices                         |
+   -- +------------------------------------------------------------+
+   function count_sampling_device
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List Sampling devices                                      |
+   -- +------------------------------------------------------------+
+
+   procedure list_sampling_device
+      (
+      device_code    out t_device_code,
+      device_name    out t_device_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of sampling date times                      |
+   -- +------------------------------------------------------------+
+   function count_sample_dattim
+      (
+      v_station_id      in varchar2
+      )
+      return number;
+
+   -- +------------------------------------------------------------+
+   -- | List Sampling date times                                   |
+   -- +------------------------------------------------------------+
+   procedure list_sample_dattim
+      (
+      v_survey_id    in  varchar2      ,
+      v_station_id   in  varchar2      ,
+      v_spldattim    out t_date_time   ,
+      v_GMT_diff     out number
+      );
+   -- +------------------------------------------------------------+
+   -- | List Sampling date                                         |
+   -- +------------------------------------------------------------+
+
+   procedure list_sample_date
+      (
+      v_survey_id    in  varchar2      ,
+      v_station_id   in  varchar2      ,
+      v_spldattim    out t_date        ,
+      v_GMT_diff     out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of analytic methods                         |
+   -- +------------------------------------------------------------+
+   function count_analytic_method
+      return number;
+   -- +------------------------------------------------------------+
+
+   -- | List Sampling analytic methods                             |
+   -- +------------------------------------------------------------+
+   procedure list_analytic_method
+      (
+      method_code    out t_method_code,
+      method_name    out t_method_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of reference standards                      |
+   -- +------------------------------------------------------------+
+   function count_ref_standard
+      return number;
+   -- +------------------------------------------------------------+
+
+   -- | List reference standards                                   |
+   -- +------------------------------------------------------------+
+   procedure list_ref_standard
+      (
+      standard_code    out t_standard_code,
+      standard_name    out t_standard_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Display Discipline Record                                  |
+   -- +------------------------------------------------------------+
+   procedure display_discipline
+      (
+      v_discipline_code    in  varchar2        ,
+
+      v_discipline_name    out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Display Constituent Record                                 |
+   -- +------------------------------------------------------------+
+   procedure display_constituent
+      (
+      v_constituent_code    in  varchar2        ,
+      v_constituent_name    out varchar2        ,
+      v_abbreviation        out varchar2        ,
+      v_unit                out varchar2        ,
+      v_formatt             out varchar2        ,
+      v_res_table           out varchar2
+
+      );
+   -- +------------------------------------------------------------+
+   -- | Display Sampling Device                                    |
+   -- +------------------------------------------------------------+
+   procedure display_sampling_device
+      (
+      v_device_code    in  varchar2        ,
+      v_device_name    out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Display Analytic Method                                    |
+   -- +------------------------------------------------------------+
+   procedure display_analytic_method
+
+      (
+      v_method_code    in  varchar2        ,
+      v_method_name    out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Display Reference standard                                 |
+   -- +------------------------------------------------------------+
+   procedure display_ref_standard
+      (
+      v_standard_code    in  varchar2        ,
+      v_standard_name    out varchar2
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Update water data                                          |
+   -- +------------------------------------------------------------+
+   procedure update_water_data
+      (
+      v_station_id         in  varchar2            ,
+      v_constituent_code   in  varchar2            ,
+      v_spldattim          in  t_date_time         ,
+      v_device_code        in  varchar2            ,
+      v_method_code        in  varchar2            ,
+      v_standard_code      in  varchar2            ,
+      v_constituent_value  in  t_constituent_value ,
+      v_constituent_status in  t_status_code       ,
+      v_spldep             in  t_spldep            ,
+
+      v_rec_count          in  number              ,
+      v_name_out           out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | Update water sample data                                   |
+   -- +------------------------------------------------------------+
+   procedure update_water_sample_data
+      (
+      v_survey_id          in  varchar2            ,
+      v_station_id         in  t_station_id        ,
+      v_constituent_code   in  varchar2            ,
+      v_spldattim          in  t_date_time         ,
+      v_device_code        in  varchar2            ,
+
+      v_method_code        in  varchar2            ,
+      v_standard_code      in  varchar2            ,
+      v_constituent_value  in  t_constituent_value ,
+      v_constituent_status in  varchar2            ,
+      v_spldep             in  t_spldep            ,
+      v_rec_count          in  number              ,
+      v_name_out           out varchar2
+      );
+   -- +------------------------------------------------------------+
+   -- | List water constituent data                                |
+   -- +------------------------------------------------------------+
+   procedure list_water_data
+      (
+
+      v_station_id         in  varchar2            ,
+      v_spldate            in  varchar2            ,
+      v_constituent_code   in  varchar2            ,
+      v_device_code        in  varchar2            ,
+      v_method_code        in  varchar2            ,
+      v_standard_code      in  varchar2            ,
+      v_spldep             in  t_spldep            ,
+      v_rec_count          in  number              ,
+      v_constituent_value  out t_constituent_value ,
+      v_constituent_status out t_status_code       ,
+      v_spldattim          out t_date_time         ,
+      v_output             out varchar2
+      );
+
+   -- +------------------------------------------------------------+
+   -- | Insert new analytic_method                                 |
+   -- +------------------------------------------------------------+
+   procedure add_new_method
+      (
+      v_method_name      in  varchar2        ,
+      v_method_count     out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Insert new reference Standard                              |
+   -- +------------------------------------------------------------+
+   procedure add_new_standard
+      (
+
+      v_standard_name      in  varchar2        ,
+      v_standard_count     out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Insert new sample date time                                |
+   -- +------------------------------------------------------------+
+   procedure add_new_dattim
+      (
+      v_station_id          in varchar2,
+      v_spldattim           in varchar2,
+      v_spldattim_count     out number
+      );
+   -- +------------------------------------------------------------+
+
+   -- | Insert new sample date time                                |
+   -- +------------------------------------------------------------+
+   procedure add_new_date
+      (
+      v_station_id          in varchar2,
+      v_spldattim           in varchar2,
+      v_spldattim_count     out number
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of survey constituent records               |
+   -- +------------------------------------------------------------+
+   function count_survey_constituent
+      (
+
+      v_survey_id          in varchar2  ,
+      v_discipline_code    in varchar2
+      )
+      return number;
+   -- +------------------------------------------------------------+
+   -- | Insert new survey constituent record                       |
+   -- +------------------------------------------------------------+
+   procedure add_survey_constituent
+      (
+      v_survey_id           in varchar2,
+      v_discipline_code     in varchar2,
+      v_constituent_code    in varchar2,
+      v_fraction_code       in varchar2,
+
+      v_device_code         in varchar2,
+      v_method_code         in varchar2,
+      v_standard_code       in varchar2,
+      v_rec_count           out number
+      );
+   -- +------------------------------------------------------------+
+   -- | List survey constituent records                            |
+   -- +------------------------------------------------------------+
+   procedure list_survey_constituent
+      (
+      v_survey_id          in  varchar2           ,
+      v_discipline_code    in  varchar2           ,
+      constituent_code   out t_constituent_code ,
+
+      constituent_name   out t_constituent_name ,
+      html_unit          out t_html_unit        ,
+      fraction_code      out t_fraction_code    ,
+      fraction_name      out t_fraction_name    ,
+      device_code        out t_device_code      ,
+      device_name        out t_device_name      ,
+      method_code        out t_method_code      ,
+      method_name        out t_method_name      ,
+      standard_code      out t_standard_code    ,
+      standard_name      out t_standard_name
+      );
+   -- +------------------------------------------------------------+
+   -- | Get the number of status mode records                      |
+
+   -- +------------------------------------------------------------+
+   function count_status_mode
+      return number;
+   -- +------------------------------------------------------------+
+   -- | List status mode records                                   |
+   -- +------------------------------------------------------------+
+   procedure list_status_mode
+      (
+      status_code    out t_status_code ,
+      flagging       out t_flagging    ,
+      quality        out t_quality
+      );
+   end;  --  create or replace package SadSql as
+/
+show errors
+
