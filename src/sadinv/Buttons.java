@@ -29,18 +29,18 @@ public class Buttons extends CompoundItem {
     //url's for button images
 /*
     String src[] = {
-        "http://fred.csir.co.za/sadco-img/button_surveys.jpg",
-        "http://fred.csir.co.za/sadco-img/button_dates.jpg",
-        "http://fred.csir.co.za/sadco-img/button_institutes.jpg",
-        "http://fred.csir.co.za/sadco-img/button_scientists.jpg",
-        "http://fred.csir.co.za/sadco-img/button_platforms.jpg",
-        "http://fred.csir.co.za/sadco-img/button_areas.jpg",
-        "http://fred.csir.co.za/sadco-img/button_datatypes.jpg",
-        "http://fred.csir.co.za/sadco-img/button_projects.jpg"};
+        "http://sadco.int.ocean.gov.za/sadco-img/button_surveys.jpg",
+        "http://sadco.int.ocean.gov.za/sadco-img/button_dates.jpg",
+        "http://sadco.int.ocean.gov.za/sadco-img/button_institutes.jpg",
+        "http://sadco.int.ocean.gov.za/sadco-img/button_scientists.jpg",
+        "http://sadco.int.ocean.gov.za/sadco-img/button_platforms.jpg",
+        "http://sadco.int.ocean.gov.zaa/sadco-img/button_areas.jpg",
+        "http://sadco.int.ocean.gov.za/sadco-img/button_datatypes.jpg",
+        "http://sadco.int.ocean.gov.za/sadco-img/button_projects.jpg"};
 */
 
     // root url for button jpgs
-    static String ROOT = "http://fred.csir.co.za/sadco-img/button_";
+    static String ROOT = "http://sadco.int.ocean.gov.za/sadco-img/button_";
     static String EXT = ".jpg";
 
     // alternate text and titles for buttons

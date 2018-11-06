@@ -109,9 +109,9 @@ public class DbAccessC {
     String deleteStr = "";
     String selectStr = "";
 
-    String cfgFileNameLocalUX = "/home/localuser/Desktop/SadcoLoading/common2/DbAccess.cfg";   //ub06
+    String cfgFileNameLocalUX = "/home/localuser/Desktop/SADCO/websiteInventory/sourceCode/common2/DbAccess.cfg";   //ub06
     //String cfgFileNameLocalUX = "/usr2/people/sadco/www/webConfig/DbAccess.cfg";    //ub06
-    String cfgFileNameLocalPC = "/home/localuser/Desktop/SadcoLoading/common2/DbAccess.cfg";
+    String cfgFileNameLocalPC = "/home/localuser/Desktop/SADCO/websiteInventory/sourceCode/common2/DbAccess.cfg";
 
     // database connection variables
     String user;

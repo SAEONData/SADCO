@@ -25,7 +25,7 @@ public class MenuItem extends CompoundItem{
 
         // Create Image ID                                           //
         Image iTriangle = new Image
-            ("/edm-img/triang-r.gif",
+            ("triang-r.gif",
              "triang-r.gif",
              IVAlign.TOP, false);
 

@@ -92,7 +92,7 @@ public class SadInvCommon {
     static final public String DRIVER        = "org.postgresql.Driver";
     //static final public String CONNECTION1   = "jdbc:oracle:thin:";
     //static final public String CONNECTION1   = "jdbc:postgresql:";
-    static final public String CONNECTION    = "jdbc:postgresql://localhost:5432/sadco"; // stel-oradb
+    static final public String CONNECTION    = "jdbc:postgresql://localhost:5432/sadco?characterEncoding=SQL_ASCII"; // stel-oradb
     //static final public String CONNECTION    = "@steamer.csir.co.za:1522:etek8";
     //Class.forName("org.postgresql.Driver");
     //conn = DriverManager.getConnection(

@@ -62,7 +62,7 @@ public class DisplayKML extends CompoundItem  {
         // | Add the SADCO banner at the top                            |
         // +------------------------------------------------------------+
         Image banner = new Image
-            ("http://stel-apps.csir.co.za/sadco-img/banner.jpg",
+            ("http://sadco.int.ocean.gov.za/sadco-img/banner.jpg",
             "banner.jpg",
             IVAlign.TOP, false);
 
@@ -179,7 +179,7 @@ public class DisplayKML extends CompoundItem  {
         }  //  catch (SQLException e)
 */
 //        Image track = new Image
-//            ("http://fred.csir.co.za/sadco-img/noload.gif",
+//            ("http://sadco.int.ocean.gov.za/sadco-img/noload.gif",
 //             "DATA NOT LOADED",
 //             IVAlign.TOP, true);
 
@@ -240,8 +240,8 @@ public class DisplayKML extends CompoundItem  {
                     ".kml";
 
                 this.addItem("<iframe " +
-                    "src=\"http://stel-apps.csir.co.za/sadco-img/kml/fake-kmlgadget.html?" +
-                    "up_kml_url=http://stel-apps.csir.co.za/sadco-img/kml/" + kmlFile +
+                    "src=\"http://sadco.int.ocean.gov.za/sadco-img/kml/fake-kmlgadget.html?" +
+                    "up_kml_url=http://sadco.int.ocean.gov.za/sadco-img/kml/" + kmlFile +
                     "&up_view_mode=maps&up_lat=&up_lng=&up_zoom=&" +
                     "up_earth_fly_from_space=1&up_earth_show_nav_controls=1&" +
                     "up_earth_show_buildings=1&up_earth_show_terrain=1&" +
@@ -327,7 +327,7 @@ public class DisplayKML extends CompoundItem  {
             String quality_file = pSurveyId.substring(0,4) + "_" +
                 pSurveyId.substring(5,9) + ".pdf";
 
-            String linkString = "http://fred.csir.co.za/sadco-pdf/" + quality_file;
+            String linkString = "http://sadco.int.ocean.gov.za/sadco-pdf/" + quality_file;
             Link link1 = new Link(linkString, "Click to view detail");
 
 

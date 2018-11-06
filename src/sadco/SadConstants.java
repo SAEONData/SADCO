@@ -41,8 +41,8 @@ public class SadConstants {
 
     /** host name */
     //static final public String HOST = "freddy";
-    static final public String HOST = "localuser-VirtualBox";
-    static final public String HOST2 = "localuser-VirtualBox";
+    static final public String HOST = "sadco.int.ocean.gov.za";
+    static final public String HOST2 = "sadco.int.ocean.gov.za";
     //static final public String HOST     = "fred";
     //static final public String HOST_ST = "steamer";
 

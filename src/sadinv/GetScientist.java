@@ -22,8 +22,8 @@ import oracle.html.*;
 
 public class GetScientist extends CompoundItem  {
 
-    //boolean dbg = true;
-    boolean dbg = false;
+    boolean dbg = true;
+    //boolean dbg = false;
 
     // contains the method to parse URL-type arguments
     static common.edmCommon ec = new common.edmCommon();
@@ -48,6 +48,7 @@ public class GetScientist extends CompoundItem  {
         // +------------------------------------------------------------+
         String surname = ec.getArgument(args,sc.SURNAME);
         String sessionCode  = ec.getArgument(args,sc.PSC);
+        if (dbg) System.out.println("surname = " + surname);
 
         // +------------------------------------------------------------+
         // | Enter a Scientist Name                                     |
@@ -111,18 +112,23 @@ public class GetScientist extends CompoundItem  {
                     " where upper(sc.surname) >= upper('"+surname+"')"+
                     " and inst.code = sc.instit_code "+
                     " order by upper(sc.surname)" ;
+                
+                if (dbg) System.out.println("sql = " + sql);
 
                 stmt = conn.createStatement();
                 rset = stmt.executeQuery(sql);
 
                 int i = 0;
+                
                 while (rset.next() && (i < MAX_RECS)) {
+                	
+                	
                     surnames[i]   = checkNull(rset.getString(1));
                     fNames  [i]   = checkNull(rset.getString(2));
                     titles  [i]   = checkNull(rset.getString(3));
                     institutes[i] = checkNull(rset.getString(4));
                     scientistsCodes[i] = checkNull(rset.getString(5));
-
+                    if (dbg) System.out.println("surnames[i] = " + i + " " + surnames[i]);
                     i++;
                 } //while (rset.next() && (i < MAX_RECS)) {
 
@@ -134,7 +140,9 @@ public class GetScientist extends CompoundItem  {
                 rset = null;
                 stmt = null;
 
-            } catch (SQLException e) { }
+            } catch (SQLException e) {
+            	if (dbg) e.printStackTrace() ;
+            }
 
 
             // +------------------------------------------------------------+

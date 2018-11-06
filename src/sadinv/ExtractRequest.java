@@ -398,7 +398,7 @@ public class ExtractRequest extends CompoundItem {
 
 
             // create the url
-            url = "http://sadcodata.csir.co.za/sadco1/" + application +
+            url = "http://sadcodata.int.ocean.gov.za/sadco1/" + application +
                 "?psc=" + sessionCode + "&pscreen=extract&" +
                 "pversion=progress&pmversion=form&pmenuno=" + menuNo + "&put=0&" +
                 "preqnumber=" + emailName + "&pfilename=" + fileName;

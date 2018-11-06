@@ -31,8 +31,8 @@ import oracle.html.*;
  */
 public class PreLoadWETDataFrame extends CompoundItem {
 
-    //boolean     dbg = false;
-    boolean     dbg = true;
+    boolean     dbg = false;
+    //boolean     dbg = true;
 
     static common.edmCommon ec = new common.edmCommon();
 
@@ -373,7 +373,6 @@ public class PreLoadWETDataFrame extends CompoundItem {
         line = ec.getNextValidLine(lfile);
         String dataID = line.substring(0,3);
         if (dbg) System.out.println ("<br>=== dataID = " + dataID);
-        try {
         if (!dataID.equals("END")) {
             numberRecords++;
             dateTime = line.substring(startCol[0],endCol[0]) + "-" +
