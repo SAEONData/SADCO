@@ -19,12 +19,12 @@ public class Footer extends CompoundItem {
     public Footer (String args[]) {
 
         // create the email-to link
-        Link email = new Link ("mailto:mgrundli@csir.co.za", "Webmaster");
+        Link email = new Link ("mailto:data@ocean.gov.za", "Webmaster");
         email.setItal();
 
         // create the csir copyright, add the email link
         SimpleItem csir = new SimpleItem(
-            "CSIR - Copyright 2008 &copy; All Rights Reserved - " +
+            "Copyright 2008 &copy; All Rights Reserved - " +
             "Updated: January 2009<br>" + email.toHTML());
         csir.setFontColor(Color.gray);
         csir.setFontSize(1);

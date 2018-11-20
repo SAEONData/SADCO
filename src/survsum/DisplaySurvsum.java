@@ -1449,7 +1449,7 @@ public class DisplaySurvsum extends CompoundItem  {
         if (!passCode.equals("ter91qes")) {
             //prevProg = new String("DisplaySurvey");
             //prevProg = new String("http://sadcoinv.csir.co.za/sadco1/SadInv");
-            prevProg = new String("http://sadcoinv.csir.co.za/");
+            prevProg = new String("http://sadcoinv.ocean.gov.za/");
             prevProgTitle = new String(">>> Survey Listing");
         } else {
             prevProg = new String("SurvSum");
