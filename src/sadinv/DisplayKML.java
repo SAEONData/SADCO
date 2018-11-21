@@ -62,7 +62,7 @@ public class DisplayKML extends CompoundItem  {
         // | Add the SADCO banner at the top                            |
         // +------------------------------------------------------------+
         Image banner = new Image
-            ("http://sadco.int.ocean.gov.za/sadco-img/banner.jpg",
+            ("http://sadco.ocean.gov.za/sadco-img/banner.jpg",
             "banner.jpg",
             IVAlign.TOP, false);
 
@@ -240,8 +240,8 @@ public class DisplayKML extends CompoundItem  {
                     ".kml";
 
                 this.addItem("<iframe " +
-                    "src=\"http://sadco.int.ocean.gov.za/sadco-img/kml/fake-kmlgadget.html?" +
-                    "up_kml_url=http://sadco.int.ocean.gov.za/sadco-img/kml/" + kmlFile +
+                    "src=\"http://sadco.ocean.gov.za/sadco-img/kml/fake-kmlgadget.html?" +
+                    "up_kml_url=http://sadco.ocean.gov.za/sadco-img/kml/" + kmlFile +
                     "&up_view_mode=maps&up_lat=&up_lng=&up_zoom=&" +
                     "up_earth_fly_from_space=1&up_earth_show_nav_controls=1&" +
                     "up_earth_show_buildings=1&up_earth_show_terrain=1&" +

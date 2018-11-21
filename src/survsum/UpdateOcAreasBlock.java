@@ -58,7 +58,7 @@ public class UpdateOcAreasBlock extends CompoundItem {
         // | Print SADCO logo                                           |
         // +------------------------------------------------------------+
         Image slogo = new Image
-            ("http://sadco.int.ocean.gov.za/sadco-img/sadlogo.gif",
+            ("http://sadco.ocean.gov.za/sadco-img/sadlogo.gif",
             "sadlog.gif", IVAlign.TOP, false);
         this.addItem(slogo.setCenter());
 

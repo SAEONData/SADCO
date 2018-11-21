@@ -40,7 +40,7 @@ public class Buttons extends CompoundItem {
 */
 
     // root url for button jpgs
-    static String ROOT = "http://sadco.int.ocean.gov.za/sadco-img/button_";
+    static String ROOT = "http://sadco.ocean.gov.za/sadco-img/button_";
     static String EXT = ".jpg";
 
     // alternate text and titles for buttons

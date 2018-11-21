@@ -19,7 +19,7 @@ public class Header extends CompoundItem {
     public Header (String args[]) {
 
         Image banner = new Image
-            ("http://sadco.int.ocean.gov.za/sadco-img/banner.jpg",
+            ("http://sadco.ocean.gov.za/sadco-img/banner.jpg",
             "banner.jpg",
             IVAlign.TOP, false);
 

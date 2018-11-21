@@ -358,7 +358,7 @@ public class DisplaySurvey extends CompoundItem  {
         } // if ("".equals(available))                                  // ub04
 
         Image track = new Image
-            ("http://sadco.int.ocean.gov.za/sadco-img/noload.gif",
+            ("http://sadco.ocean.gov.za/sadco-img/noload.gif",
              "DATA NOT LOADED",
              IVAlign.TOP, true);
 
@@ -575,7 +575,7 @@ public class DisplaySurvey extends CompoundItem  {
                 ".gif";
 
             track = new Image(
-                "http://sadco.int.ocean.gov.za/sadco-img/" + image_file,
+                "http://sadco.ocean.gov.za/sadco-img/" + image_file,
                 image_file,
                 IVAlign.TOP, true);
 
@@ -1922,7 +1922,7 @@ public class DisplaySurvey extends CompoundItem  {
             String quality_file = pSurveyId.substring(0,4) + "_" +
                 pSurveyId.substring(5,9) + ".pdf";
 
-            String linkString = "http://sadco.int.ocean.gov.za/sadco-pdf/" + quality_file;
+            String linkString = "http://sadco.ocean.gov.za/sadco-pdf/" + quality_file;
             Link link1 = new Link(linkString, "Click to view detail");
 
 
