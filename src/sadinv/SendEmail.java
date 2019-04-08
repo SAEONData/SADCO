@@ -31,8 +31,8 @@ import sadco.SadConstants;
 public class SendEmail extends CompoundItem {
 
     /** For debugging code: true/false */
-    //static boolean dbg = false;
-    static boolean dbg = true;
+    static boolean dbg = false;
+    //static boolean dbg = true;
     static boolean dbg2 = false;
     //static boolean dbg2 = true;
     RandomAccessFile dbgFile = null;
@@ -182,7 +182,7 @@ public class SendEmail extends CompoundItem {
             //version=sc.STARTUP;
             //version = sc.REGISTER;
             version = sc.EXTRACT;
-            email = "ursula.vonstange@gmail.com";
+            email = "data@ocean.gov.za";
             method = sc.ONLINE;
             version2 = sc.CHECK;
             dataFileName = "test";
@@ -190,7 +190,7 @@ public class SendEmail extends CompoundItem {
             userType = "0";
             //firstName = "Ursula";
             //surname = "von St Ange";
-            //affiliation = "SADCO / CSIR";
+            //affiliation = "SADCO / DEA";
             //address = "PO Box 320, Stellenbosch, 7599";
             //email = "sadreq";
             //password = "ter91qes";
@@ -258,12 +258,13 @@ public class SendEmail extends CompoundItem {
         firstNameToUse = firstName;
         //String dataTypeName = "";
         if (sc.EXTRACT.equals(version) && sc.OFFLINE.equals(method)) {
-            emailToUse = " lwatt@csir.co.za uvstange@csir.co.za bbackeberg@csir.co.za ursula.vonstange@gmail.com ";
-            //emailToUse = "uvstange@csir.co.za";
-            firstNameToUse = "Louise";
+            //emailToUse = " kyle@saeon.ac.za ";
+            emailToUse = "data@ocean.gov.za";
+            firstNameToUse = "Data";
         } else if (sc.REGISTER.equals(version) || (sc.CHECK.equals(version2))){
             //emailToUse = " -b \"mgrundli@csir.co.za uvstange@csir.co.za\" " + emailToUse;
-            emailToUse += " bbackeberg@csir.co.za uvstange@csir.co.za ursula.vonstange@gmail.com ";
+            //emailToUse += " kyle@saeon.ac.za ";
+            emailToUse = "data@ocean.gov.za";
         } // if (sc.REQUEST.equals(version))
         if (dbg) ec.writeFileLine(dbgFile, "emailToUse = " + emailToUse);
 
@@ -349,7 +350,7 @@ public class SendEmail extends CompoundItem {
 
                 // do products?
                 if (".dbm".equals(extension)) {
-                    URLStr = "http://sadcodata.int.ocean.gov.za/sadco1/" +
+                    URLStr = "http://sadcodata.ocean.gov.za/sadco1/" +
                         sc2.MRN_APP + "?" +
                         sc2.SCREEN + "=product&" +
                         sc2.VERSION + "=getfile&" +
@@ -364,7 +365,7 @@ public class SendEmail extends CompoundItem {
                     ec.writeFileLine(file, URLStr);
                 } // if (".dbm".equals(extension))
                 if (".dbv".equals(extension)) {
-                    URLStr = "http://sadcodata.csir.co.za/sadco1/" +
+                    URLStr = "http://sadcodata.ocean.gov.za/sadco1/" +
                         sc2.VOS_APP + "?" +
                         sc2.SCREEN + "=product&" +
                         sc2.VERSION + "=getfile&" +
@@ -388,7 +389,7 @@ public class SendEmail extends CompoundItem {
         ec.writeFileLine(file, "The following acknowledgement should be used in any products:");
         ec.writeFileLine(file, "'The data has been supplied by the Southern African Data Centre for Oceanography'.");
         ec.writeFileLine(file, "SADCO kindly requests a copy of any product (report, publication) where the data is used");
-        ec.writeFileLine(file, "(for address please see 'Contacts' on SADCO web site (SADCO.csir.co.za)");
+        ec.writeFileLine(file, "(for address please see 'Contacts' on SADCO web site (sadco.ocean.gov.za)");
 
         ec.writeFileLine(file, "");
         ec.writeFileLine(file, "Regards");
