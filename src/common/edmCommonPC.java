@@ -254,8 +254,8 @@ public class edmCommonPC {
         //    e.printStackTrace();
         //} // try .. catch
 
-        //boolean dbgl = true;
-        boolean dbgl = false;
+        boolean dbgl = true;
+//        boolean dbgl = false;
 
         if (dbgl) {
             System.out.println("command = ");

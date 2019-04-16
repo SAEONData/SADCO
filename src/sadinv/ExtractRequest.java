@@ -299,6 +299,16 @@ public class ExtractRequest extends CompoundItem {
                 if (dbg3) ec.submitJob(
                     "rm -f /u02/people/sadco/www/data/inv_user/ExtractRequest.dbg");
                 //ec.submitJob(command.toString());
+                System.out.println("**************************");
+                System.out.println("ARGUMENTS FOR JAVA.SH");
+                System.out.println("**************************");
+                for (int counter = 0; counter < command2.length; counter++) {
+                    System.out.println(command2[counter]);
+                }
+                System.out.println("***************************");
+                System.out.println("END ARGUMENTS FOR JAVA.SH");
+                System.out.println("***************************");
+
                 ec.submitJob(command2);
                 if (dbg) System.out.println("<br>" + thisClass + " command submitted");
             } // if (ec.getHost().equals(sc2.HOST))

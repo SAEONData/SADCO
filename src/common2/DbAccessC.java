@@ -74,8 +74,8 @@ public class DbAccessC {
 
     boolean dbg = false;
     //boolean dbg = true;
-    //boolean dbg2 = false;
-    boolean dbg2 = true;
+    boolean dbg2 = false;
+    //boolean dbg2 = true;
     String thisClass = this.getClass().getName();
     static common.edmCommonPC ec = new common.edmCommonPC();
 

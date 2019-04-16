@@ -1,5 +1,9 @@
 package sadco;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.Vector;
 
@@ -86,6 +90,18 @@ public class SadUserQueue extends Tables {
     Exception dateTime2OutOfBoundsException =
         new Exception ("'dateTime2' out of bounds: " +
             DATE_TIME2_MN + " - " + DATE_TIME2_MX);
+    
+    private static PrintWriter pw;
+    static {
+        File file = new File("/opt/tomcat/logs/javash.log");
+        file.getParentFile().mkdirs();
+
+        try {
+        	pw = new PrintWriter(new FileOutputStream(file), true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     //======================//
@@ -97,7 +113,7 @@ public class SadUserQueue extends Tables {
      */
     public SadUserQueue() {
         clearVars();
-        if (dbg) System.out.println ("<br>in SadUserQueue constructor 1"); // debug
+        if (dbg) pw.println ("<br>in SadUserQueue constructor 1"); // debug
     } // SadUserQueue constructor
 
     /**
@@ -108,7 +124,7 @@ public class SadUserQueue extends Tables {
             int code) {
         this();
         setCode       (code      );
-        if (dbg) System.out.println ("<br>in SadUserQueue constructor 2"); // debug
+        if (dbg) pw.println ("<br>in SadUserQueue constructor 2"); // debug
     } // SadUserQueue constructor
 
     /**
@@ -135,7 +151,7 @@ public class SadUserQueue extends Tables {
         setDateTime   (dateTime  );
         setExtraction (arguments );
         setDateTime2  (dateTime2 );
-        if (dbg) System.out.println ("<br>in SadUserQueue constructor 3"); // debug
+        if (dbg) pw.println ("<br>in SadUserQueue constructor 3"); // debug
     } // SadUserQueue constructor
 
     /**
@@ -240,7 +256,7 @@ public class SadUserQueue extends Tables {
             if (this.userid != CHARNULL) {
                 this.userid = stripCRLF(this.userid.replace('\'','"'));
             }
-            if (dbg) System.out.println ("<br>userid = " + this.userid);
+            if (dbg) pw.println ("<br>userid = " + this.userid);
         } catch (Exception e) {
             setUseridError(CHARNULL, e, ERROR_SYSTEM);
         } // try
@@ -268,7 +284,7 @@ public class SadUserQueue extends Tables {
             if (this.extraction != CHARNULL) {
                 this.extraction = stripCRLF(this.extraction.replace('\'','"'));
             }
-            if (dbg) System.out.println ("<br>extraction = " + this.extraction);
+            if (dbg) pw.println ("<br>extraction = " + this.extraction);
         } catch (Exception e) {
             setExtractionError(CHARNULL, e, ERROR_SYSTEM);
         } // try
@@ -339,7 +355,7 @@ public class SadUserQueue extends Tables {
                 case 5: dateTime = "1800-01-01 " + dateTime + ":00"; break;
                 case 8: dateTime = "1800-01-01 " + dateTime; break;
             } // switch
-            if (dbg) System.out.println ("dateTime = " + dateTime);
+            if (dbg) pw.println ("dateTime = " + dateTime);
             setDateTime(Timestamp.valueOf(dateTime));
         } catch (Exception e) {
             setDateTimeError(DATENULL, e, ERROR_SYSTEM);
@@ -368,7 +384,7 @@ public class SadUserQueue extends Tables {
             if (this.arguments != CHARNULL) {
                 this.arguments = stripCRLF(this.arguments.replace('\'','"'));
             }
-            if (dbg) System.out.println ("<br>arguments = " + this.arguments);
+            if (dbg) pw.println ("<br>arguments = " + this.arguments);
         } catch (Exception e) {
             setArgumentsError(CHARNULL, e, ERROR_SYSTEM);
         } // try
@@ -439,7 +455,7 @@ public class SadUserQueue extends Tables {
                 case 5: dateTime2 = "1800-01-01 " + dateTime2 + ":00"; break;
                 case 8: dateTime2 = "1800-01-01 " + dateTime2; break;
             } // switch
-            if (dbg) System.out.println ("dateTime2 = " + dateTime2);
+            if (dbg) pw.println ("dateTime2 = " + dateTime2);
             setDateTime2(Timestamp.valueOf(dateTime2));
         } catch (Exception e) {
             setDateTime2Error(DATENULL, e, ERROR_SYSTEM);
@@ -860,7 +876,7 @@ public class SadUserQueue extends Tables {
      * @param  result  (Vector (rows) of Vectors (columns)).
      */
     private SadUserQueue[] doGet(Vector result) {
-        if (dbg) System.out.println ("vector size = " + result.size());
+        if (dbg) pw.println ("vector size = " + result.size());
         int codeCol       = db.getColNumber(CODE);
         int useridCol     = db.getColNumber(USERID);
         int extractionCol = db.getColNumber(EXTRACTION);
@@ -935,15 +951,15 @@ public class SadUserQueue extends Tables {
      * @return success = true/false (boolean)
      */
     public boolean putLock() {
-        //System.out.println("<br>SadUserQueue.putLock: start");
+        //pw.println("<br>SadUserQueue.putLock: start");
         db.lock(TABLE);
-        //System.out.println("<br>SadUserQueue.putLock: after db.lock");
-        //System.out.println("<br>SadUserQueue.putLock: createColumns() = " + createColumns());
-        //System.out.println("<br>SadUserQueue.putLock: createValues() = " + createValues());
+        //pw.println("<br>SadUserQueue.putLock: after db.lock");
+        //pw.println("<br>SadUserQueue.putLock: createColumns() = " + createColumns());
+        //pw.println("<br>SadUserQueue.putLock: createValues() = " + createValues());
         boolean success = db.insert (TABLE, createColumns(), createValues());
-        //System.out.println("<br>SadUserQueue.putLock: after insert: " + success);
+        //pw.println("<br>SadUserQueue.putLock: after insert: " + success);
         db.commit();
-        //System.out.println("<br>SadUserQueue.putLock: after commit");
+        //pw.println("<br>SadUserQueue.putLock: after commit");
         return success;
     } // method putLock
 
@@ -1082,7 +1098,7 @@ public class SadUserQueue extends Tables {
             where = where + DATE_TIME2 +
                 "=" + Tables.getDateFormat(getDateTime2());
         } // if getDateTime
-        if (dbg) System.out.println ("<br>where = " + where);   // debug
+        if (dbg) pw.println ("<br>where = " + where);   // debug
         return (!where.equals("") ? where : null);
     } // method createWhere
 
@@ -1142,7 +1158,7 @@ public class SadUserQueue extends Tables {
             colVals += (aVar.getDateTime2().equals(DATENULL2) ?
                 "null" : Tables.getDateFormat(aVar.getDateTime2()));
         } // if aVar.getDateTime2
-        if (dbg) System.out.println ("<br>colVals = " + colVals);   // debug
+        if (dbg) pw.println ("<br>colVals = " + colVals);   // debug
         return colVals;
     } // method createColVals
 
@@ -1168,7 +1184,7 @@ public class SadUserQueue extends Tables {
         if (!getDateTime2().equals(DATENULL)) {
             columns = columns + "," + DATE_TIME2;
         } // if getDateTime2
-        if (dbg) System.out.println ("<br>columns = " + columns);   // debug
+        if (dbg) pw.println ("<br>columns = " + columns);   // debug
         return columns;
     } // method createColumns
 
@@ -1178,9 +1194,9 @@ public class SadUserQueue extends Tables {
      * @return  values (String)
      */
     private String createValues() {
-        //System.out.println ("<br>SadUserQueue.createValues: start");   // debug
+        //pw.println ("<br>SadUserQueue.createValues: start");   // debug
         setCode(getMaxCode()+1);
-        //System.out.println ("<br>SadUserQueue.createValues: code = " + getCode());   // debug
+        //pw.println ("<br>SadUserQueue.createValues: code = " + getCode());   // debug
         String values  = getCode("");
         if (getUserid() != CHARNULL) {
             values  = values  + ",'" + getUserid() + "'";
@@ -1197,7 +1213,7 @@ public class SadUserQueue extends Tables {
         if (!getDateTime2().equals(DATENULL)) {
             values  = values  + "," + Tables.getDateFormat(getDateTime2());
         } // if getDateTime2
-        if (dbg)System.out.println ("<br>values = " + values);   // debug
+        if (dbg)pw.println ("<br>values = " + values);   // debug
         return values;
     } // method createValues
 

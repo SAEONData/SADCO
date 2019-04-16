@@ -50,7 +50,7 @@ public class SadConstants {
     //static final public String DISK = "/usr2";
     static final public String DISK = "/home";
     static final public String HOSTDIR = DISK+"/localuser/sadco/output/";
-    static final public String LOCALDIR = "/home/localuser/Desktop/";
+    static final public String LOCALDIR = DISK+"/localuser/sadco/output/"; // "/home/localuser/Desktop/";
     static final public String HOSTDIRL = DISK+"/localuser/sadco_constants/loads/";
     static final public String HOSTDIRLOG = DISK+"/localuser/sadco_constants/logs/";
 

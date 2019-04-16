@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+
 import sadco.ExtractCURDepthsData;
 import sadco.ExtractMRNCurData;
 import sadco.ExtractMRNCurDataODV;
@@ -46,6 +51,18 @@ public class SadInvApps {
     String screen = "";
     String dataType = "";
     int    extrType = 0;    // hydro
+    
+    private static PrintWriter pw;
+    static {
+        File file = new File("/opt/tomcat/logs/javash.log");
+        file.getParentFile().mkdirs();
+
+        try {
+        	pw = new PrintWriter(new FileOutputStream(file), true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * The only constructor.
@@ -57,8 +74,8 @@ public class SadInvApps {
         String screen   = ec.getArgument(args, sc.SCREEN).toLowerCase();
         String dataType = ec.getArgument(args, sc.DATATYPE);
 
-        if (dbg) System.out.println("SadInvApps: screen = " + screen);
-        //if (dbg) System.out.println("SadInvApps: version = " + version);
+        if (dbg) pw.println("SadInvApps: screen = " + screen);
+        //if (dbg) pw.println("SadInvApps: version = " + version);
 
         // the body of the 'menu'
         if (screen.equals("extract")) {

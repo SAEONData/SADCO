@@ -1,5 +1,10 @@
 package common2;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+
 import sadco.SadUserQueue;
 
 /**
@@ -14,8 +19,8 @@ import sadco.SadUserQueue;
 public class Queue {
 
     /** For debugging code: true/false */
-    boolean dbg = false;
-    //boolean dbg = true;
+    //boolean dbg = false;
+    boolean dbg = true;
 
     /** The class name for error reporting purposes */
     String thisClass = this.getClass().getName();
@@ -32,6 +37,18 @@ public class Queue {
     String  fields      = "min(" + SadUserQueue.CODE + ") as " + SadUserQueue.CODE;
     String  where       = "";
     String  order       = SadUserQueue.CODE;
+    
+    private static PrintWriter pw;
+    static {
+        File file = new File("/opt/tomcat/logs/javash.log");
+        file.getParentFile().mkdirs();
+
+        try {
+        	pw = new PrintWriter(new FileOutputStream(file), true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Creates the instance
@@ -46,8 +63,8 @@ public class Queue {
         queue.setUserid(userid);
         queue.setExtraction(extraction);
         queue.setDateTime(new java.util.Date());
-        if (dbg) System.out.println ("<br>" + thisClass + ".constructor: " + userid);
-        if (dbg) System.out.println ("<br>" + thisClass + ".constructor: queue = " +
+        if (dbg) pw.println ("<br>" + thisClass + ".constructor: " + userid);
+        if (dbg) pw.println ("<br>" + thisClass + ".constructor: queue = " +
             queue.toString());
     } // Queue constructor
 
@@ -67,8 +84,8 @@ public class Queue {
         queue.setExtraction(extraction);
         queue.setDateTime(new java.util.Date());
         queue.setArguments(convert2String(args));
-        if (dbg) System.out.println ("<br>" + thisClass + ".constructor: " + userid);
-        if (dbg) System.out.println ("<br>" + thisClass + ".constructor: queue = " +
+        if (dbg) pw.println ("<br>" + thisClass + ".constructor: " + userid);
+        if (dbg) pw.println ("<br>" + thisClass + ".constructor: queue = " +
             queue.toString());
     } // Queue constructor
 
@@ -77,11 +94,11 @@ public class Queue {
      * Enqueue the extraction
      */
     public void enQueue() {
-        if (dbg) System.out.println ("<br>" + thisClass + ".enQueue: start");
+        if (dbg) pw.println ("<br>" + thisClass + ".enQueue: start");
         queue.putLock();
         code = queue.getCode();
         where = SadUserQueue.CODE + "=" + code;
-        if (dbg) System.out.println ("<br>" + thisClass + ".enQueue: code = " + code);
+        if (dbg) pw.println ("<br>" + thisClass + ".enQueue: code = " + code);
     } // enQueue
 
 
@@ -90,10 +107,10 @@ public class Queue {
      */
     public void deQueue() {
         queue.del(where);
-        if (dbg) System.out.println ("<br>" + thisClass + ".deQueue: code = " + code);
-        if (dbg) System.out.println ("<br>" + thisClass + ".deQueue: delStr = " + queue.getDelStr());
-        if (dbg) System.out.println ("<br>" + thisClass + ".deQueue: numRecs = " + queue.getNumRecords());
-        if (dbg) System.out.println ("<br>" + thisClass + ".deQueue: messages = " + queue.getMessages());
+        if (dbg) pw.println ("<br>" + thisClass + ".deQueue: code = " + code);
+        if (dbg) pw.println ("<br>" + thisClass + ".deQueue: delStr = " + queue.getDelStr());
+        if (dbg) pw.println ("<br>" + thisClass + ".deQueue: numRecs = " + queue.getNumRecords());
+        if (dbg) pw.println ("<br>" + thisClass + ".deQueue: messages = " + queue.getMessages());
     } // enQueue
 
 
@@ -102,25 +119,29 @@ public class Queue {
      */
     public void wait4Turn() {
 
+    	pw.println("wait4Turn starting");
         // get the minimum value of code
-        if (dbg) System.out.println ("<br>" + thisClass + ".deQueue: fields = " + fields);
+        if (dbg) pw.println ("<br>" + thisClass + ".deQueue: fields = " + fields);
         //queues = queue.get(fields, "1=1", order);
         queues = queue.get("*", "1=1", order);
         //queues = queue.get(fields, "1=1");
         int minCode = queues[0].getCode();
+        pw.println("mincode = " + minCode);
+        pw.println("code = " + code);
         //int minCode = queue.getMinCode();
 
         // loop while code is not the minimum code
         while (code != minCode) {
 
-            if (dbg) System.out.println ("<br>" + thisClass + ".wait1: code, minCode = " +
+            if (dbg) pw.println ("<br>" + thisClass + ".wait1: code, minCode = " +
                 code + " " + minCode);
 
             //Pause for 5 seconds
             try {
+            	pw.println("Sleeping for 5 seconds");
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                pw.println(e.getMessage());
             } // try - catch
 
             // check again
@@ -128,6 +149,7 @@ public class Queue {
             queues = queue.get("*", "1=1", order);
             //queues = queue.get(fields, "1=1");
             minCode = queues[0].getCode();
+            pw.println("minCode = " + minCode);
             //minCode = queue.getMinCode();
 
         } // while (code != minCode)
@@ -137,10 +159,10 @@ public class Queue {
         updQueue.setDateTime2(new java.util.Date());
         whereQueue = new SadUserQueue();
         whereQueue.upd(updQueue, where);
-        if (dbg) System.out.println ("<br>" + thisClass + ".deQueue: updStr = " +
+        if (dbg) pw.println ("<br>" + thisClass + ".deQueue: updStr = " +
             whereQueue.getUpdStr());
 
-        if (dbg) System.out.println ("<br>" + thisClass + ".wait2: code, minCode = " +
+        if (dbg) pw.println ("<br>" + thisClass + ".wait2: code, minCode = " +
             code + " " + minCode);
 
     } // wait4Turn

@@ -1,9 +1,15 @@
 package sadco;
 
-import common2.Queue;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.sql.Timestamp;
 import java.util.Date;
+
+import common2.Queue;
 
 /**
  * Does the actual extraction of the requested data in ODV format.
@@ -33,10 +39,10 @@ import java.util.Date;
  */
 public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
 
-    boolean dbg = false;
-    //boolean dbg = true;
-    //boolean dbgQ = false;
-    boolean dbgQ = true;  // set false when HOST is known.
+    //boolean dbg = false;
+    boolean dbg = true;
+    boolean dbgQ = false;
+    //boolean dbgQ = true;  // set false when HOST is known.
 
     String thisClass = this.getClass().getName();
 
@@ -108,6 +114,18 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
 */
     // constant for extracting watphy records
     int             spldepInterval = 500;
+    
+    private static PrintWriter pw;
+    static {
+        File file = new File("/opt/tomcat/logs/javash.log");
+        file.getParentFile().mkdirs();
+
+        try {
+        	pw = new PrintWriter(new FileOutputStream(file), true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Main constructor ExtractMRNPhysNutDataODV
@@ -116,18 +134,23 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
     public ExtractMRNPhysNutDataODV(String args[])  {
 
         // Get the arguments
+    	pw.println("Getting arguments");
         getArgParms(args);
+        pw.println("Got arguments");
 
         // extract the user record from db
+        pw.println("Getting session stuff");
         LogSessions session = new LogSessions();
         session.setCode(sessionCode);
         LogSessions sessions[] = session.get();
         String userid = sessions[0].getUserid();
-        if (dbg) System.out.println("<br>userid = " + userid);
+        pw.println("Got session stuff");
+        if (dbg) pw.println("<br>userid = " + userid);
 
         // get the correct PATH NAME - used while debugging
+        pw.println("Getting rootPath");
         String rootPath = "";
-        if (dbg) System.out.println("<br>" + thisClass + ": host = " +
+        if (dbg) pw.println("<br>" + thisClass + ": host = " +
             ec.getHost());
         //if (ec.getHost().equals("morph")) {
         //if (ec.getHost().equals("morph")) {
@@ -147,6 +170,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
             rootPath = sc.LOCALDIR + "marine/";
         } // if host
 
+        pw.println("Got rootPath: " + rootPath);
         // new filename, but keep the original file name                //ub02
         fileNameIn = fileName;                                          //ub02
         if (!reqNumber.equals("")) {
@@ -155,7 +179,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
 
         //changing file exstention from dbm to txt for ODV programme.
         fileName += ".txt";
-        if (dbg) System.out.println("<br>" + thisClass + ": " + fileName);
+        if (dbg) pw.println("<br>" + thisClass + ": " + fileName);
 
         // delete an old dummy file for Progress purposes ......
         String dummyFile = rootPath + fileName + ".finished";
@@ -164,36 +188,59 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
         // create .queued file for Progress purposes ......             //ub02
         String dummyFile2 = rootPath + fileName + ".queued";            //ub02
         Queue queue = null;
+        
+        pw.println("Dummyfile2: " + dummyFile2);
 
         Timestamp startQDate = new Timestamp(new Date().getTime());     //ub04
         if ("0".equals(userType)) {  // from inventory                  //ub03
+        	pw.println("Usertype is 0");
             // create .queued file for Progress purposes ......         //ub02
+        	pw.println("Creating new .queued file");
             ec.createNewFile(dummyFile2);                               //ub02
+            pw.println("Done creating .queued file");
 
             // queue the extraction                                     //ub02
             if (!dbgQ) {
+            	pw.println("Creating a new Queue with userId[" + userid + "], filename[" + thisClass+" "+fileNameIn + ", args");
                 queue = new Queue(userid,thisClass+" "+fileNameIn,args);//ub02
-                queue.enQueue();                                        //ub02
-                queue.wait4Turn();                                      //ub02
-                if (dbg) System.out.println("<br>" + thisClass + ": queued");
+                pw.println("Queue created");
+                queue.enQueue(); 
+                pw.println("Enqueued");//ub02
+                queue.wait4Turn();  
+                pw.println("Waiting for my turn");//ub02
+                if (dbg) pw.println("<br>" + thisClass + ": queued");
             } // if (!dbgQ)
 
             // delete .queued file, and create .progressing file        //ub02
+            pw.println("deleting old file: " + dummyFile2);
             ec.deleteOldFile(dummyFile2);                               //ub02
+            pw.println("deleted old file: " + dummyFile2);
         } // if ("0".equals(userType)) {                                //ub03
 
         // create the user_log entry                                    //ub04
+        pw.println("Getting timestamp");
         Timestamp endQDate = new Timestamp(new Date().getTime());       //ub04
+        pw.println("Timestamp received: " + endQDate.toString());
+        pw.println("Log being created");
         LogUsers log = createLogUsers(                                  //ub04
             userid, endQDate, ec.timeDiff(endQDate, startQDate));       //ub04
-
+        pw.println("Log created");
         // create the 'processing' file
+        pw.println("Creating .processing file");
         dummyFile2 = rootPath + fileName + ".processing";
         ec.createNewFile(dummyFile2);
+        pw.println("Finished creating .processing file");
 
         // Open the data file.
+        pw.println("delete old file");
         ec.deleteOldFile(rootPath + fileName);
         ofile = ec.openFile(rootPath + fileName, "rw");
+        try {
+			pw.println("Opened file of length: " + ofile.length());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         if (ec.getHost().startsWith(sc.HOST)) {
             ec.submitJob("chmod 644 " + rootPath + fileName);
@@ -226,7 +273,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
 
         // check if flagType combination is valid.  If not, revert back to
         // unflagged data extraction only
-        if (dbg) System.out.println("<br>flagType = " + flagType +
+        if (dbg) pw.println("<br>flagType = " + flagType +
             ", dataSet = " + dataSet + ", password = " + password);
         if (!"".equals(flagType)) {
             // was there a dataSet or a Password
@@ -237,8 +284,8 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
                 //SadUserDset[] userDset = new SadUserDset(userid, dataSet).get();
                 SadUserDset tmp = new SadUserDset(userid, dataSet);
                 SadUserDset[] userDset = tmp.get();
-                if (dbg) System.out.println("<br>tmp.getSelStr() = " + tmp.getSelStr());
-                if (dbg) System.out.println("<br>userDset.length = " +
+                if (dbg) pw.println("<br>tmp.getSelStr() = " + tmp.getSelStr());
+                if (dbg) pw.println("<br>userDset.length = " +
                     userDset.length);
                 if (userDset.length == 0) {
                     flagType = "1";
@@ -247,10 +294,10 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
                     SadUsers[] users = new SadUsers().get(
                         SadUsers.FLAG_PASSWORD,
                         SadUsers.USERID + "='" + userid + "'", "");
-                    if (dbg) System.out.println("<br>password = " + password +
+                    if (dbg) pw.println("<br>password = " + password +
                         ", users[0].getFlagPassword() = " +
                         users[0].getFlagPassword());
-                    if (dbg) System.out.println("<br>users[0] = " + users[0]);
+                    if (dbg) pw.println("<br>users[0] = " + users[0]);
                     if (!users[0].getFlagPassword().equals(password)) {
                         flagType = "1";
                     } else {
@@ -271,8 +318,8 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
         } // if (!"".equals(flagType))
         System.gc();
 
-        if (dbg) System.out.println("<br>flagType = " + flagType);
-        if (dbg) System.out.println("<br>validQuery = " + validQuery);
+        if (dbg) pw.println("<br>flagType = " + flagType);
+        if (dbg) pw.println("<br>validQuery = " + validQuery);
         //
         if (validQuery) {
             MrnStation[] stations = getStationRecords();
@@ -295,7 +342,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
         if ("0".equals(userType)) {  // from inventory                  //ub03
             if (!dbgQ) {
                 queue.deQueue();                                        //ub02
-                if (dbg) System.out.println("<br>" + thisClass + ": dequeued");
+                if (dbg) pw.println("<br>" + thisClass + ": dequeued");
             } // if (!dbgQ)
         } // if ("0".equals(userType))                                  //ub03
 
@@ -308,7 +355,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
      */
     void getArgParms(String args[])   {
         if (dbg) for (int i = 0; i < args.length; i++) {
-            System.out.println("<br>" + args[i]);
+            pw.println("<br>" + args[i]);
         } // for i
         sessionCode = ec.getArgument(args, sc.SESSIONCODE);
         reqNumber = ec.getArgument(args, sc.REQNUMBER);
@@ -371,10 +418,10 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
             MrnStation.STNDEP + "," + MrnStation.MAX_SPLDEP + "," +
             MrnStation.PASSKEY;
         String order = MrnStation.SURVEY_ID + "," + MrnStation.DATE_START;
-        if (dbg) System.out.println("<br>station where = " + where);
+        if (dbg) pw.println("<br>station where = " + where);
         MrnStation[] stations = new MrnStation().get(fields, where, order);
-        if (dbg) System.out.println("<br>station where = " + where);
-        if (dbg) System.out.println("<br>stations.length = " + stations.length);
+        if (dbg) pw.println("<br>station where = " + where);
+        if (dbg) pw.println("<br>stations.length = " + stations.length);
         return stations;
     } // getStationRecords
 
@@ -389,7 +436,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
 
         for (int i = 0; i < stations.length; i++) {
 
-            if (dbg) System.out.println("<br>i = " + i + " " + stations[i].getStationId());
+            if (dbg) pw.println("<br>i = " + i + " " + stations[i].getStationId());
 
             // get profiles QC flag                                     // ub07
 //            getProfQCFlags(stations[i].getStationId());                 // ub07
@@ -400,14 +447,14 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
             where =
                 MrnWatphy.STATION_ID + "='" + stations[i].getStationId() + "'";
             order = MrnWatphy.SPLDEP;
-            if (dbg) System.out.println("<br>watphy where = " + where);
+            if (dbg) pw.println("<br>watphy where = " + where);
             MrnWatphy[] watphy2 = new MrnWatphy().get(fields, where, order);
             float maxSpldep = 0;
             if (watphy2.length > 0) {
-                //if (dbg) System.out.println("<br>watphy = " + watphy[0]);
+                //if (dbg) pw.println("<br>watphy = " + watphy[0]);
                 maxSpldep = watphy2[0].getSpldep();
             }
-            if (dbg) System.out.println("<br>watphy2.length = " + watphy2.length +
+            if (dbg) pw.println("<br>watphy2.length = " + watphy2.length +
                 ", maxSpldep = " + maxSpldep);
 
             fields =
@@ -423,14 +470,14 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
                 where =
                     MrnWatphy.STATION_ID + "='" + stations[i].getStationId() + "' and " +
                     MrnWatphy.SPLDEP + " between " + k + " and " + (k+spldepInterval-0.01);
-                //if (dbg) System.out.println("<br>where = " + where);
+                //if (dbg) pw.println("<br>where = " + where);
                 MrnWatphy[] watphy = new MrnWatphy().get(fields, where, order);
-                if (dbg) System.out.println("<br>i = " + i +
+                if (dbg) pw.println("<br>i = " + i +
                     ", where = " + where +
                     ", watphy.length = " + watphy.length);
 
                 for (int j = 0; j < watphy.length; j++) {
-                    //if (dbg) System.out.println("<br>j = " + j);
+                    //if (dbg) pw.println("<br>j = " + j);
                     int code = watphy[j].getCode();
 
                     // get the parameter QC values                      // ub07
@@ -447,19 +494,19 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
                         MrnWatnut.SIO3;
                     where = MrnWatnut.WATPHY_CODE + "=" + code;
                     MrnWatnut[] watnut = new MrnWatnut().get(fields2, where, "");
-                    //if (dbg) System.out.println("<br>watnut.length = " + watnut.length);
+                    //if (dbg) pw.println("<br>watnut.length = " + watnut.length);
 
                     // get the water chemical data
                     fields2 = MrnWatchem1.PH;
                     where = MrnWatchem1.WATPHY_CODE + "=" + code;
                     MrnWatchem1[] watchem1 = new MrnWatchem1().get(fields2, where, "");
-                    //if (dbg) System.out.println("<br>watchem1.length = " + watchem1.length);
+                    //if (dbg) pw.println("<br>watchem1.length = " + watchem1.length);
 
                     // get the water chlorofil data
                     fields2 = MrnWatchl.CHLA;
                     where = MrnWatchl.WATPHY_CODE + "=" + code;
                     MrnWatchl[] watchl = new MrnWatchl().get(fields2, where, "");
-                    if (dbg) System.out.println("<br>j = " + j +
+                    if (dbg) pw.println("<br>j = " + j +
                         ", watnut.length = " + watnut.length +
                         ", watchem1.length = " + watchem1.length +
                         ", watchl.length = " + watchl.length);
@@ -508,7 +555,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
             profDic = true;                                             //ub07
             profPh = true;                                              //ub07
         } // if (profqc.length > 0)                                     //ub07
-        System.out.println("getProfQCFlags : " + stationId +
+        pw.println("getProfQCFlags : " + stationId +
             ": profSal = " + profSal + ", profTmp = " + profTmp +
             " " + profqc[0].getTemperature());
     } // getProfQCFlags                                                 //ub07
@@ -544,7 +591,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
             parmDic = true;                                             //ub07
             parmPh = true;                                              //ub07
         } // if (profqc.length > 0)                                     //ub07
-        System.out.println("getParmQCFlags : " + code +
+        pw.println("getParmQCFlags : " + code +
             ": parmSal = " + parmSal + ", parmTmp = " + parmTmp +
             " " + qc[0].getTemperature());
     } // getParmQCFlags                                                 //ub07
@@ -575,7 +622,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
         //    planamName = planam[0].getName("");
         //    //ec.writeFileLine(ofile, "planam:  " + planam[0].toString());
         //} //
-        //if (dbg) System.out.println("<br>planamName = " + planamName);
+        //if (dbg) pw.println("<br>planamName = " + planamName);
 
         //ec.writeFileLine(ofile, "station: " + station.toString());
         //ec.writeFileLine(ofile, "watphy:  " + watphy.toString());
@@ -661,7 +708,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
             sub = "*";
         } //if ("Bottl".equalsIgnoreCase(sub))
 
-        if (dbg) System.out.println("<br>maxLatitude = " + maxLatitude +
+        if (dbg) pw.println("<br>maxLatitude = " + maxLatitude +
             ", minLatitude = " + minLatitude +
             ", maxLongitude = " + maxLongitude +
             ", minLongitude = " + minLongitude +
@@ -670,7 +717,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
         //if (dbg) {
         //    String tLine = dateT.toString() + " " + year + " " + month + " " +
         //        day + " " + ftime;
-        //    System.out.println("<br>" + thisClass +  ".printRecords: " +
+        //    pw.println("<br>" + thisClass +  ".printRecords: " +
         //    tLine);
         //} // if (dbg)
 
@@ -686,7 +733,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
         //    stName=giveName;                                            //ub04
         //} //if ("".equals(stName)) {                                    //ub04
 
-//        System.out.println("temp: " + station.getStationId() + " " +
+//        pw.println("temp: " + station.getStationId() + " " +
 //            watphy.getTemperature() + " " + profTmp + " " + parmTmp + " " +
 //            nullToNULL2(watphy.getTemperature(),8,2,profTmp,parmTmp));
 
@@ -766,10 +813,10 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
         ec.frm(ec.nullToNines(station.getMaxSpldep(),9999.0f),8,2);
         */
 
-        //if (dbg) System.out.println("<br>" + thisClass + ".printRecords: " +
+        //if (dbg) pw.println("<br>" + thisClass + ".printRecords: " +
         //    line1);
 
-        //if (dbg) System.out.println("<br>" + thisClass + ".printRecords: " +
+        //if (dbg) pw.println("<br>" + thisClass + ".printRecords: " +
         //    line);
 
         ec.writeFileLine(ofile,line);
@@ -782,8 +829,8 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
     void ColumnHeadings() {
         // method to write headings of estraxted data
         String head =
-            "Cruise\tStation\tType\tmon/day/yr\thh:mm\tLon (°E)\t"+
-            "Lat (°N)\tBot. Depth [m]\tEtopo2 Depth [m]\tDepth [m]\tQF\t"+  //ub06 ub08
+            "Cruise\tStation\tType\tmon/day/yr\thh:mm\tLon (ï¿½E)\t"+
+            "Lat (ï¿½N)\tBot. Depth [m]\tEtopo2 Depth [m]\tDepth [m]\tQF\t"+  //ub06 ub08
             "Temperature [deg C]\tQF\tSalinity [ppt]\tQF\tDisolved Oxygen [ml/l]\tQF\t"+ //ub08
             "Nitrite [~$m~#g atom/l]\tNitrate [~$m~#g atom/l]\tQF\t"+           //ub08
             "Phosphate [~$m~#g atom/l]\tQF\tPhosporus [~$m~#g atom/l]\t"+       //ub08
@@ -821,7 +868,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
      * return ODV null value if invalid value
      */
     String nullToNULL2(float value, int length, int decimal, boolean prof, boolean parm) {
-        //System.out.println("nullToNULL2: " + value + " " + prof + " " + parm);
+        //pw.println("nullToNULL2: " + value + " " + prof + " " + parm);
         if (prof && parm)
             return
                 (value == Tables.FLOATNULL
@@ -897,7 +944,7 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
         logs.setSurveyId(surveyId);
         logs.setNumRecords(noRecords);
         logs.setJobDuration(timeDiff);
-        System.out.println(logs);
+        pw.println(logs);
         boolean success = logs.put();
     } // updateLogUsers
 */
@@ -916,14 +963,14 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
         updateLogs.setDateEnd(maxDate);                                 //ub04
         updateLogs.setNumRecords(noRecords);                            //ub04
         updateLogs.setJobDuration(timeDiff);                            //ub04
-        if (dbg) System.out.println("updateLogUsers: minLatitude = " + minLatitude);
-        if (dbg) System.out.println("updateLogUsers: maxLatitude = " + maxLatitude);
-        if (dbg) System.out.println("updateLogUsers: minLongitude = " + minLongitude);
-        if (dbg) System.out.println("updateLogUsers: maxLongitude = " + maxLongitude);
-        if (dbg) System.out.println("updateLogUsers: minDate = " + minDate);
-        if (dbg) System.out.println("updateLogUsers: maxDate = " + maxDate);
-        if (dbg) System.out.println("updateLogUsers: noRecords = " + noRecords);
-        if (dbg) System.out.println("updateLogUsers: timeDiff = " + timeDiff);
+        if (dbg) pw.println("updateLogUsers: minLatitude = " + minLatitude);
+        if (dbg) pw.println("updateLogUsers: maxLatitude = " + maxLatitude);
+        if (dbg) pw.println("updateLogUsers: minLongitude = " + minLongitude);
+        if (dbg) pw.println("updateLogUsers: maxLongitude = " + maxLongitude);
+        if (dbg) pw.println("updateLogUsers: minDate = " + minDate);
+        if (dbg) pw.println("updateLogUsers: maxDate = " + maxDate);
+        if (dbg) pw.println("updateLogUsers: noRecords = " + noRecords);
+        if (dbg) pw.println("updateLogUsers: timeDiff = " + timeDiff);
                                                                         //ub04
         // define the 'where' clause                                    //ub04
         LogUsers whereLogs = new LogUsers();                            //ub04
