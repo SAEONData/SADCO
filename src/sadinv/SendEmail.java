@@ -343,14 +343,13 @@ public class SendEmail extends CompoundItem {
                 ec.writeFileLine(file, "Occupation: " + occupation);
                 ec.writeFileLine(file, "Postal adress: " + address);
             } else {
-                // http://sadco.int.ocean.gov.za/sadco-data/sadreq/1_martena.dbm
                 String URLStr = sc2.DATA_URL + "inv_user/" + dataFileName;
                 ec.writeFileLine(file, "The file can be downloaded at the following URL");
                 ec.writeFileLine(file, URLStr);
 
                 // do products?
                 if (".dbm".equals(extension)) {
-                    URLStr = "http://sadcodata.ocean.gov.za/sadco1/" +
+                    URLStr = SadConstants.LIVE ? "http://sadcodata.ocean.gov.za/sadco1/" : "http://sadcodata.int.ocean.gov.za/sadco1/" +
                         sc2.MRN_APP + "?" +
                         sc2.SCREEN + "=product&" +
                         sc2.VERSION + "=getfile&" +
@@ -365,7 +364,7 @@ public class SendEmail extends CompoundItem {
                     ec.writeFileLine(file, URLStr);
                 } // if (".dbm".equals(extension))
                 if (".dbv".equals(extension)) {
-                    URLStr = "http://sadcodata.ocean.gov.za/sadco1/" +
+                    URLStr = sadco.SadConstants.LIVE ? "http://sadcodata.ocean.gov.za/sadco1/" : "http://sadcodata.int.ocean.gov.za/sadco1/" +
                         sc2.VOS_APP + "?" +
                         sc2.SCREEN + "=product&" +
                         sc2.VERSION + "=getfile&" +

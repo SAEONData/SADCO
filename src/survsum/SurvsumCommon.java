@@ -28,8 +28,9 @@ public class SurvsumCommon {
      * return the sadco logo
      */
     Image getSlogo() {
+        String host = sadco.SadConstants.LIVE : "sadco.ocean.gov.za" : "sadco.int.ocean.gov.za";
         Image slogo = new Image
-            ("http://sadco.ocean.gov.za/sadco-img/sadlogo.gif",
+            ("http://" + host + "/sadco-img/sadlogo.gif",
             "sadlog.gif", IVAlign.TOP, false);
         return slogo;
     } // getSlogo

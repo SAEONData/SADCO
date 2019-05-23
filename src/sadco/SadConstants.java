@@ -31,18 +31,19 @@ public class SadConstants {
     static final public String CR = System.getProperty("line.separator");
 
     /** the applications */
-    static final public String LOGIN_USER_APP = "Sadco";
-    static final public String MENU_APP       = "SadcoMenu";
-    static final public String VOS_APP        = "SadcoVOS";
-    static final public String MRN_APP        = "SadcoMRN";
-    static final public String CUR_APP        = "SadcoCUR";
-    static final public String WET_APP        = "SadcoWET";
-    static final public String WAV_APP        = "SadcoWAV";
+    static final public String LOGIN_USER_APP   = "Sadco";
+    static final public String MENU_APP         = "SadcoMenu";
+    static final public String VOS_APP          = "SadcoVOS";
+    static final public String MRN_APP          = "SadcoMRN";
+    static final public String CUR_APP          = "SadcoCUR";
+    static final public String WET_APP          = "SadcoWET";
+    static final public String WAV_APP          = "SadcoWAV";
+    public static final boolean LIVE            = true;
 
     /** host name */
     //static final public String HOST = "freddy";
-    static final public String HOST = "sadco.ocean.gov.za";
-    static final public String HOST2 = "sadco.ocean.gov.za";
+    static final public String HOST = SadConstants.LIVE ? "sadco.ocean.gov.za" : "sadco.int.ocean.gov.za";
+    static final public String HOST2 = SadConstants.LIVE ? "sadco.ocean.gov.za" : "sadco.int.ocean.gov.za";
     //static final public String HOST     = "fred";
     //static final public String HOST_ST = "steamer";
 

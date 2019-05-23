@@ -70,8 +70,9 @@ public class UpdateResLabBlock extends CompoundItem {
         // +------------------------------------------------------------+
         // | Print SADCO logo                                           |
         // +------------------------------------------------------------+
-        Image slogo = new Image
-            ("http://sadco.ocean.gov.za/sadco-img/sadlogo.gif",
+       String host = sadco.SadConstants.LIVE : "sadco.ocean.gov.za" : "sadco.int.ocean.gov.za";
+       Image slogo = new Image
+               ("http://" + host + "/sadco-img/sadlogo.gif",
             "sadlog.gif", IVAlign.TOP, false);
         this.addItem(slogo.setCenter());
 

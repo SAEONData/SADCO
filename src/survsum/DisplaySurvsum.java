@@ -156,8 +156,9 @@ public class DisplaySurvsum extends CompoundItem  {
         // +------------------------------------------------------------+
         // | The SADCO logo                                             |
         // +------------------------------------------------------------+
+        String host = sadco.SadConstants.LIVE : "sadco.ocean.gov.za" : "sadco.int.ocean.gov.za";
         Image slogo = new Image
-            ("http://sadco.ocean.gov.za/sadco-img/sadlogo.gif",
+            ("http://" + host + "/sadco-img/sadlogo.gif",
             "sadlog.gif",
             IVAlign.TOP, false);
         //this.addItem(slogo.setCenter()); //print later, only if survsum system
@@ -1449,7 +1450,7 @@ public class DisplaySurvsum extends CompoundItem  {
         if (!passCode.equals("ter91qes")) {
             //prevProg = new String("DisplaySurvey");
             //prevProg = new String("http://sadcoinv.csir.co.za/sadco1/SadInv");
-            prevProg = new String("http://sadcoinv.ocean.gov.za/");
+            prevProg = new String(sadco.SadConstants.LIVE ? "http://sadcoinv.ocean.gov.za/" : "http://sadcoinv.int.ocean.gov.za/");
             prevProgTitle = new String(">>> Survey Listing");
         } else {
             prevProg = new String("SurvSum");

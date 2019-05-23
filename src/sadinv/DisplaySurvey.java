@@ -357,8 +357,10 @@ public class DisplaySurvey extends CompoundItem  {
             } // try-catch
         } // if ("".equals(available))                                  // ub04
 
+        String host = sadco.SadConstants.LIVE ? "sadco.ocean.gov.za" : "sadco.int.ocean.gov.za";
+
         Image track = new Image
-            ("http://sadco.ocean.gov.za/sadco-img/noload.gif",
+            ("http://" + host + "/sadco-img/noload.gif",
              "DATA NOT LOADED",
              IVAlign.TOP, true);
 
