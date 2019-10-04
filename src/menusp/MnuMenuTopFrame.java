@@ -117,7 +117,7 @@ public class MnuMenuTopFrame extends CompoundItem {
         } // for i
 
         // add the title to the class itself
-        this.addItem(new Bar(new SimpleItem(title).setBold().setFontSize(4).toHTML()));
+        this.addItem(new Heading(1, new SimpleItem(title).setBold().setFontSize(4).toHTML()));
 
         // only create if usertype is not 0, i.e. not inventory user
         if (!"0".equals(userType)) {                                    //ub01

@@ -110,6 +110,7 @@ public class SadInvCommon {
     static final public String DATATYPES     = "datatypes";
     static final public String DATATYPES2    = "datatypes2";
     static final public String DATATYPEVOS   = "datatypevos";
+    static final public String DATATYPEVOS2  = "datatypevos2";
     static final public String DATES         = "dates";
     static final public String DISPLAYSURVEY = "displaysurvey";
     static final public String EXTRACT       = "extract";

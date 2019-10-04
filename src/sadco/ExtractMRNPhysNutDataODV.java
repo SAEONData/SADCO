@@ -201,9 +201,9 @@ public class ExtractMRNPhysNutDataODV { //extends CompoundItem {
 
             // queue the extraction                                     //ub02
             if (!dbgQ) {
-            	pw.println("Creating a new Queue with userId[" + userid + "], filename[" + thisClass+" "+fileNameIn + ", args");
+            	pw.println("Creating a new sadinv.Queue with userId[" + userid + "], filename[" + thisClass+" "+fileNameIn + ", args");
                 queue = new Queue(userid,thisClass+" "+fileNameIn,args);//ub02
-                pw.println("Queue created");
+                pw.println("sadinv.Queue created");
                 queue.enQueue(); 
                 pw.println("Enqueued");//ub02
                 queue.wait4Turn();  

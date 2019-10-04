@@ -66,7 +66,7 @@ public class Queue {
         if (dbg) pw.println ("<br>" + thisClass + ".constructor: " + userid);
         if (dbg) pw.println ("<br>" + thisClass + ".constructor: queue = " +
             queue.toString());
-    } // Queue constructor
+    } // sadinv.Queue constructor
 
 
     /**
@@ -87,7 +87,7 @@ public class Queue {
         if (dbg) pw.println ("<br>" + thisClass + ".constructor: " + userid);
         if (dbg) pw.println ("<br>" + thisClass + ".constructor: queue = " +
             queue.toString());
-    } // Queue constructor
+    } // sadinv.Queue constructor
 
 
     /**
@@ -183,4 +183,4 @@ public class Queue {
     } // convert2String
 
 
-}   // class Queue
+}   // class sadinv.Queue

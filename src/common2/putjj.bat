@@ -120,16 +120,16 @@ if not exist i:\Environ\medm\it_lab\javaS\common2 goto error20
   echo *** ERROR *** - LAN might not be available
 :cont20
 if not exist i:\Environ\medm\it_lab\javaS\common2 goto error26
-  echo Putting Queue files
+  echo Putting sadinv.Queue files
   cd i:\Environ\medm\it_lab\javaS\common2
-  copy Queue.java  i:
-  copy Queue.class i:
-  copy Queue.java  mybak\Queue.java.mybak
+  copy sadinv.Queue.java  i:
+  copy sadinv.Queue.class i:
+  copy sadinv.Queue.java  mybak\sadinv.Queue.java.mybak
   i:
-  copy Queue.java.ub oldjava\Queue.java
-  del Queue.java.ub
+  copy sadinv.Queue.java.ub oldjava\sadinv.Queue.java
+  del sadinv.Queue.java.ub
   d:
-  del Queue.java
+  del sadinv.Queue.java
   goto cont26
 :error26
   echo *** ERROR *** - LAN might not be available

@@ -85,7 +85,7 @@ public class BottomFrame extends CompoundItem{
         if (title.equals("")) { setTitle(); }
 
         Container con = new Container();
-        con.addItem(new Bar(title + date));
+        con.addItem(new Heading(1, title + date));
         return con;
     } // createCon()
 

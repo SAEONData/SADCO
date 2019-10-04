@@ -4,7 +4,7 @@ import java.io.*;
 import oracle.html.*;
 import java.sql.*;
 import common.*;
-import waves.*;
+//import waves.*;
 
 /**
  * Program does actual insert or update of the station details, and confirms it

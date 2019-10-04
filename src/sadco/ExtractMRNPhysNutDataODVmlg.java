@@ -170,7 +170,7 @@ public class ExtractMRNPhysNutDataODVmlg { //extends CompoundItem {
 
             // queue the extraction                                     //ub02
 //            if (!dbgQ) {
-//                queue = new Queue(userid,thisClass+" "+fileNameIn,args);//ub02
+//                queue = new sadinv.Queue(userid,thisClass+" "+fileNameIn,args);//ub02
 //                queue.enQueue();                                        //ub02
 //                queue.wait4Turn();                                      //ub02
 //                if (dbg) System.out.println("<br>" + thisClass + ": queued");
@@ -727,8 +727,8 @@ public class ExtractMRNPhysNutDataODVmlg { //extends CompoundItem {
     void ColumnHeadings() {
         // method to write headings of estraxted data
         String head =
-            "Cruise\tStation\tType\tmon/day/yr\thh:mm\tLon (°E)\t"+
-            "Lat (°N)\tBot. Depth [m]\tEtopo2 Depth [m]\tDepth [m]\t"+  //ub06
+            "Cruise\tStation\tType\tmon/day/yr\thh:mm\tLon (ï¿½E)\t"+
+            "Lat (ï¿½N)\tBot. Depth [m]\tEtopo2 Depth [m]\tDepth [m]\t"+  //ub06
             "Temperature [deg C]\tSalinity [ppt]\tDisolved Oxygen [ml/l]\t"+
             "Nitrite [~$m~#g atom/l]\tNitrate [~$m~#g atom/l]\t"+
             "Phosphate [~$m~#g atom/l]\tPhosporus [~$m~#g atom/l]\t"+

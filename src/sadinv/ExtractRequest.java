@@ -408,7 +408,7 @@ public class ExtractRequest extends CompoundItem {
 
 
             // create the url
-            String host = sadco.SadConstants.LIVE ? "http://sadcodata.ocean.gov.za/sadco1/" : "http://sadcodata.int.ocean.gov.za/sadco1/"
+            String host = sadco.SadConstants.LIVE ? "http://sadcodata.ocean.gov.za/sadco1/" : "http://sadcodata.int.ocean.gov.za/sadco1/";
             url = host + application +
                 "?psc=" + sessionCode + "&pscreen=extract&" +
                 "pversion=progress&pmversion=form&pmenuno=" + menuNo + "&put=0&" +

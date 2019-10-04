@@ -1,6 +1,6 @@
 package sadco;
 
-//import common2.Queue;
+//import common2.sadinv.Queue;
 import java.util.Vector;
 import java.sql.Timestamp;
 import java.io.RandomAccessFile;
@@ -153,7 +153,7 @@ public class ExtractVOSDataP { //extends CompoundItem {
 //        ec.createNewFile(dummyFile2);                                   //ub02
 
         // queue the extraction                                         //ub02
-//        Queue queue = new Queue(userid, thisClass +" "+fileNameIn);     //ub02
+//        sadinv.Queue queue = new sadinv.Queue(userid, thisClass +" "+fileNameIn);     //ub02
 //        queue.enQueue();                                                //ub02
 //        queue.wait4Turn();                                              //ub02
 

@@ -423,7 +423,7 @@ public class ExtractMRNPhysNutDataIMT {
 
         // create .queued file for Progress purposes ......             //ub02
         String dummyFile2 = rootPath + fileName + ".queued";            //ub02
-        Queue queue = null;
+        sadinv.Queue queue = null;
 
         Timestamp startQDate = new Timestamp(new Date().getTime());     //ub04
         if ("0".equals(userType)) {  // from inventory                  //ub03
@@ -432,7 +432,7 @@ public class ExtractMRNPhysNutDataIMT {
 
             // queue the extraction                                     //ub02
             if (!dbgQ) {
-                queue = new Queue(userid,thisClass+" "+fileNameIn,args);//ub02
+                queue = new sadinv.Queue(userid,thisClass+" "+fileNameIn,args);//ub02
                 queue.enQueue();                                        //ub02
                 queue.wait4Turn();                                      //ub02
             } // if (!dbgQ)

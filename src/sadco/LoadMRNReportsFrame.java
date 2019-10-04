@@ -16,7 +16,7 @@ public class LoadMRNReportsFrame extends CompoundItem {
     /** A general purpose class used to extract the url-type parameters*/
     static common.edmCommon ec = new common.edmCommon();
     SadConstants sc = new SadConstants();
-    LoadMRNWatCommon lc = new LoadMRNWatCommon();
+//    LoadMRNWatCommon lc = new LoadMRNWatCommon();
 
     boolean dbg = false;
     //boolean dbg = true;

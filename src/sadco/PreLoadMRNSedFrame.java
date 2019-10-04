@@ -40,7 +40,7 @@ public class PreLoadMRNSedFrame extends CompoundItem {
     String mVersion = "";
     String menuNo = "";
 
-    //DynamicTable fatalErrorsTable = new DynamicTable(1);
+    DynamicTable fatalErrorsTable = new DynamicTable(1);
     DynamicTable dupStationsTable = new DynamicTable(1);
 
 
@@ -235,7 +235,7 @@ public class PreLoadMRNSedFrame extends CompoundItem {
             true, "", IHAlign.CENTER));
 
         // set other tables attributes
-        lc.fatalErrorsTable.setFrame(ITableFrame.BOX);
+        fatalErrorsTable.setFrame(ITableFrame.BOX);
         dupStationsTable.setBorder(0);
         dupStationsTable.setCenter();
 
@@ -243,7 +243,7 @@ public class PreLoadMRNSedFrame extends CompoundItem {
         if (lc.fatalCount > 0) {
             if (dbg) System.out.println("<br>in if(lc.fatalCount > 0)");
             mainTable.addRow(ec.cr1ColRow("<br>"));
-            mainTable.addRow(ec.cr1ColRow(lc.fatalErrorsTable.toHTML()));
+            mainTable.addRow(ec.cr1ColRow(fatalErrorsTable.toHTML()));
         } // if (lc.fatalCount > 0)
 
         //mainTable.addRow(ec.cr1ColRow(debugTable.toHTML()));
@@ -483,11 +483,11 @@ public class PreLoadMRNSedFrame extends CompoundItem {
 
                 // sort out the header
                 String head = "Duplicate ";
-                head += (lc.stationStatus[i].startsWith("di")
+                head += (lc.stationStatusDB[i].startsWith("di")
                     ? "Station-Id" : "station (date,lat,lon,time,subdes)");
                 if (dbg) System.out.println("<br>displayStationDetails: " +
                     "lc.stationStatus[i] = " +
-                    lc.stationStatus[i] + " " + head);
+                    lc.stationStatusDB[i] + " " + head);
 
                 //String colour = (lc.loadFlag ? "green" : "red");
                 String colour = "red";

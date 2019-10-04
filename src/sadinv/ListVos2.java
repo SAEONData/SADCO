@@ -27,9 +27,9 @@ public class ListVos2 extends CompoundItem {
     static common.edmCommon ec = new common.edmCommon();
     static SadInvCommon sc = new SadInvCommon();
 
-//    static private Connection conn = null;
-//    static private java.sql.Statement stmt = null;
-//    static private ResultSet rset = null;
+    static private Connection conn = null;
+    static private java.sql.Statement stmt = null;
+    static private ResultSet rset = null;
 
 //    static private int MAX_RECS = 20;
 
@@ -38,14 +38,14 @@ public class ListVos2 extends CompoundItem {
     // +------------------------------------------------------------+
     public ListVos2 (String args[]) {
 
-/*
+
         // +------------------------------------------------------------+
         // | Load the Oracle JDBC driver and connect to the dabase      |
         // +------------------------------------------------------------+
         try {
             Class.forName(sc.DRIVER);
             conn = DriverManager.getConnection
-                (sc.CONNECTION1 + sc.USER + "/" + sc.PWD +
+                (sc.CONNECTION + sc.USER + "/" + sc.PWD +
                  sc.CONNECTION);          // steamer
             conn.setAutoCommit(false);
         } catch (Exception e) {
@@ -54,7 +54,7 @@ public class ListVos2 extends CompoundItem {
 
         // prepare the sql string
         String sql = "";
-*/
+
 
         // +------------------------------------------------------------+
         // | Get input paramaters                                       |

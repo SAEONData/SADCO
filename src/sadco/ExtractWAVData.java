@@ -122,7 +122,7 @@ public class ExtractWAVData {
 
         // create .queued file for Progress purposes ......             //ub02
         String dummyFile2 = rootPath + fileName + ".queued";            //ub02
-        //Queue queue = null;
+        //sadinv.Queue queue = null;
 
         Timestamp startQDate = new Timestamp(new Date().getTime());     //ub04
         if ("0".equals(userType)) {  // from inventory                  //ub03

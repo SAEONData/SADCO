@@ -62,7 +62,7 @@ public class DisplayKML extends CompoundItem  {
         // | Add the SADCO banner at the top                            |
         // +------------------------------------------------------------+
         Image banner = new Image
-            (SadConstants.LIVE ? "http://sadco.ocean.gov.za/sadco-img/banner.jpg" : "http://sadco.int.ocean.gov.za/sadco-img/banner.jpg" ,
+            (sadco.SadConstants.LIVE ? "http://sadco.ocean.gov.za/sadco-img/banner.jpg" : "http://sadco.int.ocean.gov.za/sadco-img/banner.jpg" ,
             "banner.jpg",
             IVAlign.TOP, false);
 

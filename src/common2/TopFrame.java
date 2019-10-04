@@ -77,7 +77,7 @@ public class TopFrame extends CompoundItem{
     Container createCon()  {
         if (title.equals("")) { setTitle(); }
         Container con = new Container();
-        con.addItem(new Bar(title));
+        con.addItem(new Heading(1, title));
         return con;
     } // createCon()
 
