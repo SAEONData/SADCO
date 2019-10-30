@@ -110,7 +110,7 @@ public class ExtractMRNCurDataComponent {
             if ("0".equals(userType)) {  // from inventory              //ub01
                 rootPath = sc.HOSTDIR + "inv_user/";                    //ub01
             } else {                                                    //ub01
-                rootPath = sc.HOSTDIR + userid + "/";                   //ub01
+                rootPath = sc.HOSTDIR;                   //ub01
             } // if ("0".equals(userType))                              //ub01
             dbgQ = false;                                               //ub08
         } else {
@@ -519,33 +519,33 @@ public class ExtractMRNCurDataComponent {
                     if (x > 0) System.out.println("CalcBearings: Y>0,x>0: Math.toDegrees(Math.atan(y/x));");
                     if (x < 0) System.out.println("CalcBearings: Y>0,x<0: 180 - Math.toDegrees(Math.atan(-y/x));");
                     if (x == 0)System.out.println("CalcBearings: Y>0,x=0: 90;");
-                } // if (y > 0}
+                } // if (yï¿½>ï¿½0}
                 if (y < 0) {
                     if (x > 0) System.out.println("CalcBearings: Y<0,x>0: Math.toDegrees(-Math.atan(-y/x));");
                     if (x < 0) System.out.println("CalcBearings: Y<0,x<0: Math.toDegrees(Math.atan(y/x)-180);");
                     if (x == 0) System.out.println("CalcBearings: Y<0,x=0: 270;");
-                } // if (y < 0)
+                } // ifï¿½(yï¿½<ï¿½0)
                 if (y == 0) {
                     if (x > 0) System.out.println("CalcBearings: Y=0,x>0: 0;");
                     if (x < 0) System.out.println("CalcBearings: Y=0,x<0: 180;");
-                    if (x == 0) System.out.println("CalcBearings: Y=0,x=0: 0;  // [the 2 points are the same]");
-                } // if (y = 0)
+                    if (x == 0) System.out.println("CalcBearings: Y=0,x=0: 0;  // [theï¿½2ï¿½pointsï¿½areï¿½theï¿½same]");
+                } // ifï¿½(y = 0)
             } // if (dbg)
             if (y > 0) {
                 if (x > 0) tc1 = Math.toDegrees(Math.atan(y/x));
                 if (x < 0) tc1 = 180 - Math.toDegrees(Math.atan(-y/x));
                 if (x == 0) tc1 = 90;
-            } // if (y > 0}
+            } // if (yï¿½>ï¿½0}
             if (y < 0) {
                 if (x > 0) tc1 = Math.toDegrees(-Math.atan(-y/x));
                 if (x < 0) tc1 = Math.toDegrees(Math.atan(y/x))-180;
                 if (x == 0) tc1 = 270;
-            } // if (y < 0)
+            } // ifï¿½(yï¿½<ï¿½0)
             if (y == 0) {
                 if (x > 0) tc1 = 0;
                 if (x < 0) tc1 = 180;
-                if (x == 0) tc1 = 0;  // [the 2 points are the same]
-            } // if (y = 0)
+                if (x == 0) tc1 = 0;  // [theï¿½2ï¿½pointsï¿½areï¿½theï¿½same]
+            } // ifï¿½(y = 0)
             if (tc1 < 0) tc1 = 360 + tc1;
             bearings[i] = (float)tc1;
 
@@ -724,7 +724,7 @@ public class ExtractMRNCurDataComponent {
 
         String head = "\n\n" +                                              //ub07
             "  The ship bearing between two stations is the\n" +            //ub07
-            "    *initial* heading for a great-circle route.\n" +           //ub07
+            "   ï¿½*initial*ï¿½headingï¿½forï¿½aï¿½great-circleï¿½route.\n" +           //ub07
             "  The cross-bearing current component is perpindicular to the\n" + //ub07
             "    ship bearing, positive to the right.\n"+                   //ub07
             "  If the angle between two consecutive bearings are\n" +       //ub07

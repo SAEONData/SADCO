@@ -110,7 +110,7 @@ public class ExtractMRNSedPolData { //extends CompoundItem {
             if ("0".equals(userType)) {  // from inventory              //ub01
                 rootPath = sc.HOSTDIR + "inv_user/";                    //ub01
             } else {                                                    //ub01
-                rootPath = sc.HOSTDIR + userid + "/";                   //ub01
+                rootPath = sc.HOSTDIR;                   //ub01
             } // if ("0".equals(userType))                              //ub01
         } else {
             rootPath = sc.LOCALDIR + "marine/";

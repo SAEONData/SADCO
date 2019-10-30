@@ -38,7 +38,7 @@ public class SadConstants {
     static final public String CUR_APP          = "SadcoCUR";
     static final public String WET_APP          = "SadcoWET";
     static final public String WAV_APP          = "SadcoWAV";
-    public static final boolean LIVE            = true;
+    public static final boolean LIVE            = false;
 
     /** host name */
     //static final public String HOST = "freddy";

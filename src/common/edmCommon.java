@@ -151,10 +151,10 @@ public class edmCommon extends edmCommonPC {
      * @param  name  the argument name
      * @return the argument value or empty string if the parameter does not exist
      */
-//    public String getArgument(HttpServletRequest req, String name) {  // ub01
-//        String value = req.getParameter(name);
-//        return (value != null ? value : "");
-//    } //  public String getArgument
+ //   public String getArgument(HttpServletRequest req, String name) {  // ub01
+ //       String value = req.getParameter(name);
+ //       return (value != null ? value : "");
+ //   } //  public String getArgument
 
 
     /**

@@ -134,7 +134,7 @@ public class ProductVOSFrame extends CompoundItem{
         //if (dbg) System.out.println("<br>pathName = " + pathName);
 
         if (ec.getHost().startsWith(sc.HOST)) {
-            //pathName = sc.HOSTDIR + userId + "/";                     //ub01
+            //pathName = sc.HOSTDIR;                     //ub01
             pathName = sc.HOSTDIR + directory + "/";                    //ub01
         } else {
             pathName = sc.LOCALDIR;

@@ -172,7 +172,7 @@ public class ExtractCURAllDepthsData {
         //} // if host
 
         if (ec.getHost().startsWith(sc.HOST)) {
-            rootPath = sc.HOSTDIR + userid + "/";
+            rootPath = sc.HOSTDIR;
         } else {
             rootPath = sc.LOCALDIR;
         } // if host

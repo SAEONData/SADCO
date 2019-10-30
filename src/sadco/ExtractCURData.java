@@ -102,7 +102,7 @@ public class ExtractCURData {
         // get the correct PATH NAME
         String rootPath = "";
         if (ec.getHost().startsWith(sc.HOST)) {
-            rootPath = sc.HOSTDIR + userid + "/";
+            rootPath = sc.HOSTDIR;
         } else {
             rootPath = sc.LOCALDIR + "currents/";
         } // if host

@@ -106,7 +106,7 @@ public class ExtractMRNCurDataODV {
             if ("0".equals(userType)) {  // from inventory              //ub01
                 rootPath = sc.HOSTDIR + "inv_user/";                    //ub01
             } else {                                                    //ub01
-                rootPath = sc.HOSTDIR + userid + "/";                   //ub01
+                rootPath = sc.HOSTDIR;                   //ub01
             } // if ("0".equals(userType))                              //ub01
         } else {
             rootPath = sc.LOCALDIR + "marine/";
@@ -637,8 +637,8 @@ public class ExtractMRNCurDataODV {
     void ColumnHeadings() {
         // method to write headings of estraxted data
         String head =
-            "Cruise\tStation\tType\tmon/day/yr\thh:mm\tLon (°E)\t"+
-            "Lat (°N)\tBot. Depth [m]\tEtopo2 Depth [m]\tDepth [m]\t"+  //ub06
+            "Cruise\tStation\tType\tmon/day/yr\thh:mm\tLon (ï¿½E)\t"+
+            "Lat (ï¿½N)\tBot. Depth [m]\tEtopo2 Depth [m]\tDepth [m]\t"+  //ub06
             "Current Dir [deg TN]\tCurrent Speed [m/s]\tPercent Good [%]\t"+
             "Deepest Obs. Depth [m]";
         ec.writeFileLine(ofile,head);

@@ -98,9 +98,9 @@ public class ProductMRNGetParmsFrame extends CompoundItem{
             if ("0".equals(userType)) {  // from inventory              //ub01
                 pathName = sc.HOSTDIR + "inv_user/";                    //ub01
             } else {                                                    //ub01
-                pathName = sc.HOSTDIR + userId + "/";                   //ub01
+                pathName = sc.HOSTDIR;                   //ub01
             } // if ("0".equals(userType))                              //ub01
-            //pathName = sc.HOSTDIR + userId + "/";                     //ub01
+            //pathName = sc.HOSTDIR;                     //ub01
         } else {
             pathName = sc.LOCALDIR;
         } // if (ec.getHost().startsWith(sc.HOST)) {

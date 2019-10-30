@@ -2,7 +2,7 @@ package sadinv;
 
 //import sadco.LogSessions;
 //import sadco.SadUsers;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -79,18 +79,33 @@ public class ExtractRequest extends CompoundItem {
     String application = "";
     String menuNo = "";
 
+    private static PrintWriter pw;
+    static {
+        File file = new File("/opt/tomcat/logs/javash.log");
+        file.getParentFile().mkdirs();
+
+        try {
+            pw = new PrintWriter(new FileOutputStream(file), true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * main constructor
      */
     public ExtractRequest (String args[]) {
 
+        pw.println("Getting extraction arguments");
         // get the argument values
         dataType     = ec.getArgument(args,sc.DATATYPE);
         dataTypeName = ec.getArgument(args,sc.DATANAME);
         surveyId     = ec.getArgument(args,sc.SURVEYID);
         method       = ec.getArgument(args,sc.ACTION);
         sessionCode  = ec.getArgument(args,sc.PSC);
+
+        pw.println("Data Type for extraction: " + dataType + "Data type name: " + dataTypeName + "Survey ID: " + surveyId + "Method:" + method);
+
         // hydro
         if ("1".equals(dataType) || "-1".equals(dataType)) {            //ub01
             extrType = Integer.parseInt(ec.getArgument(args,sc.EXTRTYPE));
@@ -119,7 +134,7 @@ public class ExtractRequest extends CompoundItem {
         // +------------------------------------------------------------+
         conn = sc.getConnected(thisClass, sessionCode);
         String sql = "";
-
+        pw.println("Connected to DB:" + conn);
         if (dbg2) {
             args2[0] = "platitudenorth=29";
             dataType = "-1";
@@ -212,6 +227,7 @@ public class ExtractRequest extends CompoundItem {
             while (rset.next()) {
                 userType = checkNull(rset.getString(1));
             } // while (rset.next())
+            pw.println("Extract email from DB" + rset);
             rset.close();
             stmt.close();
             rset = null;
@@ -221,7 +237,7 @@ public class ExtractRequest extends CompoundItem {
 
         // which method for extraction?
         if (sc.OFFLINE.equals(method)) {
-
+            pw.println("Data extraction is taking place with the" + method + "method");
             // send email to request the extractions
             String args2[] = new String[args.length+2];
             args2[0] = sc.VERSION + "=" + sc.EXTRACT;
@@ -231,7 +247,7 @@ public class ExtractRequest extends CompoundItem {
             SendEmail mail = new SendEmail(args2);
 
         } else {
-
+            pw.println("Data extraction is taking place with the" + method + "method");
             // get the email name
             StringTokenizer t = new StringTokenizer(email,"@");
             emailName = t.nextToken();
@@ -266,6 +282,7 @@ public class ExtractRequest extends CompoundItem {
                 name.append(year);
             } // if ("1".equals(dataType))
             fileName = name.toString();
+            pw.println("Extracted dataset to have the following filename: " + fileName);
             if (dbg) System.out.println("<br>" + thisClass + " fileName = " + fileName);
 
             // create the command that will do the extraction
@@ -276,6 +293,7 @@ public class ExtractRequest extends CompoundItem {
                 command.append(" " + sc2.USERTYPE + "=" + userType);
                 command.append(" " + sc.VERSION + "=" + sc.EXTRACT);
                 command.append(" " + sc.EMAIL + "=" + email);
+            pw.println("The following command is being used for extraction" + command);
 
             if ("3".equals(dataType) || "4".equals(dataType)) { // weather, waves
                 command.append(" " + sc.STARTDATE + "=" + year+"-01-01");
@@ -291,10 +309,13 @@ public class ExtractRequest extends CompoundItem {
             String command2[] = command.toString().split(" ");
             if (dbg) for(int i = 0; i < command2.length; i++)
                 System.out.println("<br>" + thisClass + " command2["+i+"] = " + command2[i]);
-
+            pw.println("Just check what command 2 is:" + command2);
             // submit the job
             if (dbg) System.out.println("<br>" + thisClass + " ec.getHost() = " + ec.getHost() +
                 ", sc2.HOST = " + sc2.HOST);
+            pw.println("This is the ec host for extraction:" +ec.getHost());
+            pw.println("This is the SadConstants host for extraction:" +sc2.HOST);
+
             if (ec.getHost().startsWith(sc2.HOST)) {
                 if (dbg3) ec.submitJob(
                     "rm -f /u02/people/sadco/www/data/inv_user/ExtractRequest.dbg");

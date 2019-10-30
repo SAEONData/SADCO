@@ -88,7 +88,7 @@ public class ProductProgressFrame extends CompoundItem {
         // .................PATH NAME: Get the correct........................
         String pathName = "";
         if (ec.getHost().startsWith(sc.HOST)) {
-            pathName = sc.HOSTDIR + userId + "/";
+            pathName = sc.HOSTDIR;
         } else {
             pathName = sc.LOCALDIR;
         } // if (ec.getHost().startsWith(sc.HOST))
@@ -349,7 +349,7 @@ public class ProductProgressFrame extends CompoundItem {
         if (ec.fileExists(pathName + tempFile)) {
             if (dbg) System.out.println("<br>addFile2List: tempFile = " + tempFile);
             Link link =
-                new Link (sc.DATA_URL + userId + "/" + tempFile, tempFile + " (" +
+                new Link (sc.DATA_URL + tempFile, tempFile + " (" +
                 ec.frm(length,10,3) + " kb)");
             fileTable.addRow(ec.cr1ColRow(link.toHTML()));
         } // if (ec.fileExists(pathName + tempFile))

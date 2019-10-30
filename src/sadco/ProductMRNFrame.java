@@ -146,7 +146,7 @@ public class ProductMRNFrame extends CompoundItem{
         //} // if host
 
         if (ec.getHost().startsWith(sc.HOST)) {
-            //pathName = sc.HOSTDIR + userId + "/";                     //ub01
+            //pathName = sc.HOSTDIR;                     //ub01
             pathName = sc.HOSTDIR + directory + "/";                    //ub01
         } else {
             pathName = sc.LOCALDIR;

@@ -128,7 +128,7 @@ public class ExtractMRNPhysNutDataIMT {
         // get the correct PATH NAME - used while debugging
         //if (ec.getHost().startsWith(sc.HOST) || ec.getHost().startsWith(sc.HOST_ST)) {
         if (ec.getHost().startsWith(sc.HOST)) {
-            rootPath = sc.HOSTDIR + USERID + "/";                   //ub01
+            rootPath = sc.HOSTDIR;                   //ub01
         } else {
             rootPath = sc.LOCALDIR + "imt/";
         } // if host

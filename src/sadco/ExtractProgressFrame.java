@@ -1,6 +1,10 @@
 package sadco;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+
 import oracle.html.CompoundItem;
 import oracle.html.DynamicTable;
 import oracle.html.HtmlBody;
@@ -28,10 +32,14 @@ import oracle.html.Link;
  * 040609 - Ursula von St Ange - add .dbc for underway currents for mrn ub01<br>
  * 091215 - Ursula von St Ange - change for inventory users (ub02)          <br>
  */
+
+
+
 public class ExtractProgressFrame extends CompoundItem {
 
     /** some common functions */
     common.edmCommon ec = new common.edmCommon();
+    //common.edmCommonPC ec = new common.edmCommonPC();
     /** url parameters names & applications */
     SadConstants sc = new SadConstants();
 
@@ -49,7 +57,6 @@ public class ExtractProgressFrame extends CompoundItem {
     String CUR_EXTENSIONS[] = {".cur",".dbc"}; // currents
     String WET_EXTENSIONS[] = {".wet"}; // weather
     String WAV_EXTENSIONS[] = {".wav"}; // waves
-
 
     /**
      * Calls the method that does the actual work within a
@@ -117,7 +124,7 @@ public class ExtractProgressFrame extends CompoundItem {
         String pathName = "";
         if (dbg) System.out.println("<br>host = " + ec.getHost() + " " + sc.HOST);
         if (ec.getHost().startsWith(sc.HOST)) {
-            pathName = sc.HOSTDIR + userId + "/";
+            pathName = sc.HOSTDIR;
         } else {
             pathName = sc.LOCALDIR;
         } // if host
@@ -303,7 +310,7 @@ public class ExtractProgressFrame extends CompoundItem {
 
                     if (".finished".equals(fileType)) {
                         Link link = new Link (
-                            sc.DATA_URL + userId + "/" + tempFile, tempFile + fileSize);
+                            sc.DATA_URL + tempFile, tempFile + fileSize);
                         fileTable.addRow(ec.cr1ColRow(link.toHTML()));
                     } else {
                         fileTable.addRow(ec.cr1ColRow(tempFile + fileSize));
