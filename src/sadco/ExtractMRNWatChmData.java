@@ -110,7 +110,7 @@ public class ExtractMRNWatChmData { //extends CompoundItem {
 
         if (ec.getHost().startsWith(sc.HOST)) {
             if ("0".equals(userType)) {  // from inventory              //ub01
-                rootPath = sc.HOSTDIR + "inv_user/";                    //ub01
+                rootPath = sc.HOSTDIR;                    //ub01
             } else {                                                    //ub01
                 rootPath = sc.HOSTDIR;                   //ub01
             } // if ("0".equals(userType))                              //ub01
