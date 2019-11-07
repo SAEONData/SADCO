@@ -240,7 +240,7 @@ public class SendEmail extends CompoundItem {
             stmt = conn.createStatement();
             rset = stmt.executeQuery(sql);
             while (rset.next()) {
-                password = checkNull(rset.getString(1));
+                //password = checkNull(rset.getString(1));
                 firstName = checkNull(rset.getString(2));
                 surname = checkNull(rset.getString(3));
                 affiliation = checkNull(rset.getString(4));
@@ -280,11 +280,11 @@ public class SendEmail extends CompoundItem {
         ec.writeFileLine(file, "Dear " + firstNameToUse);
         ec.writeFileLine(file, "");
         if (sc.STARTUP.equals(version)) {
-            ec.writeFileLine(file, "Your password is " + password);
-            subject = "SADCO_Password";
+            //ec.writeFileLine(file, "Your password is " + password);
+            //subject = "SADCO_Password";
         } else if (sc.REGISTER.equals(version)){
             subject = "SADCO_Registration";
-            if (dbg) System.out.println("<br>" + thisClass + " 2password = " + password);
+            //if (dbg) System.out.println("<br>" + thisClass + " 2password = " + password);
             if (dbg) System.out.println("<br>" + thisClass + " 2firstName = " + firstName);
             if (dbg) System.out.println("<br>" + thisClass + " 2surname = " + surname);
             if (dbg) System.out.println("<br>" + thisClass + " 2affiliation = " + affiliation);
@@ -300,7 +300,7 @@ public class SendEmail extends CompoundItem {
             ec.writeFileLine(file, "Affiliation: " + affiliation);
             ec.writeFileLine(file, "Occupation: " + occupation);
             ec.writeFileLine(file, "Postal adress: " + address);
-            ec.writeFileLine(file, "Password: " + password);
+            //ec.writeFileLine(file, "Password: " + password);
         } else {
             if (sc.CHECK.equals(version2)) {
                 ec.writeFileLine(file, "There is might be a problem with the following online request");
