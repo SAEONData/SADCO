@@ -54,7 +54,7 @@
     <jetty.version>6.1.26</jetty.version>
     <jsp-api.version>2.0</jsp-api.version>
     <jtds.version>1.2.5</jtds.version>
-    <junit.version>4.9</junit.version>
+    <junit.version>4.13.1</junit.version>
     <log4j.version>1.2.16</log4j.version>
     <mockito-all.version>1.8.5</mockito-all.version>
     <mysql-connector-java.version>5.1.17</mysql-connector-java.version>
